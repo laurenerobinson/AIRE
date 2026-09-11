@@ -1,0 +1,842 @@
+[
+  {
+    "path": ".claude/settings.local.json",
+    "size": 131,
+    "sha256": "b561e88bfe7a6dc8de0b3de9b672f811db17de80c3da838b695b99571e0f4550"
+  },
+  {
+    "path": "AIRE_DEMO_SCRIPT.md",
+    "size": 10771,
+    "sha256": "ef10fd69f71790c1f5bdf1b893ecad253f6ef9aff079c03c632c9a2c1985194f"
+  },
+  {
+    "path": "RAPTOR7_FUNCTION_MAP.txt",
+    "size": 545,
+    "sha256": "b4030d2f823b32af2fe39ac6de73f1e863beb930e3e58c3e7736d880b9e38077"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/HEAD",
+    "size": 23,
+    "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/config",
+    "size": 92,
+    "sha256": "cfe7ba1238c9a78be7535d7c63bcaf5a4d5011d46b07c9b45d3bbf7d6c312dfe"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/description",
+    "size": 73,
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/applypatch-msg.sample",
+    "size": 478,
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/commit-msg.sample",
+    "size": 896,
+    "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/fsmonitor-watchman.sample",
+    "size": 4726,
+    "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/post-update.sample",
+    "size": 189,
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/pre-applypatch.sample",
+    "size": 424,
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/pre-commit.sample",
+    "size": 1649,
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/pre-merge-commit.sample",
+    "size": 416,
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/pre-push.sample",
+    "size": 1374,
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/pre-rebase.sample",
+    "size": 4898,
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/pre-receive.sample",
+    "size": 544,
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/prepare-commit-msg.sample",
+    "size": 1492,
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/push-to-checkout.sample",
+    "size": 2783,
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/sendemail-validate.sample",
+    "size": 2308,
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/hooks/update.sample",
+    "size": 3650,
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106"
+  },
+  {
+    "path": "aire-ghidra-extension/.git/info/exclude",
+    "size": 240,
+    "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/4.4.1/fileChanges/last-build.bin",
+    "size": 1,
+    "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/4.4.1/fileHashes/fileHashes.bin",
+    "size": 18597,
+    "sha256": "44e4742e4de1c82ee9a67921bb1c64fd5964a6e16dc4d8749fcc16abe3911588"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/4.4.1/fileHashes/fileHashes.lock",
+    "size": 17,
+    "sha256": "b9ad3631abb612e42d5536c2c60c40be7fdf308c3cebb8dcace2a2195aa718c3"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/checksums/checksums.lock",
+    "size": 17,
+    "sha256": "fe8ef82eeae3c3f18e5269a64d345fa7167be0ad59b98cb694ec1df151baaf99"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/checksums/md5-checksums.bin",
+    "size": 18697,
+    "sha256": "ca22a0d96b17621dc68845f7919966c992b25f66f9fec6c40c627c091930edaf"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/checksums/sha1-checksums.bin",
+    "size": 18983,
+    "sha256": "493a4f54e10f5d283125d17e44de8daa01da385bb9b2558a0dbd36d5d20a2f7b"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/dependencies-accessors/dependencies-accessors.lock",
+    "size": 17,
+    "sha256": "9bd08e90a15d18f7099c93070ddf41457893466854a27c36e0d489c30afd1a15"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/dependencies-accessors/gc.properties",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/executionHistory/executionHistory.bin",
+    "size": 658814,
+    "sha256": "3a724b82b301d9047aa66291676516e9902db0d1188503d9fa5ae541d0047e4c"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/executionHistory/executionHistory.lock",
+    "size": 17,
+    "sha256": "93b275a92c1f0a511e7fee3542600f7576e8525c4fb97396dae6716065a3513f"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/fileChanges/last-build.bin",
+    "size": 1,
+    "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/fileHashes/fileHashes.bin",
+    "size": 37197,
+    "sha256": "96cd3a89cd043b90b21586dbe5df16d481ce0e17b2baedff7665727f0caf5d44"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/fileHashes/fileHashes.lock",
+    "size": 17,
+    "sha256": "4208c32d7b94b3a1308d00f14f417d37482066b42e29fe83445a263574312f18"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/fileHashes/resourceHashesCache.bin",
+    "size": 33457,
+    "sha256": "e75e46146436c131b2308e44020ecbbc95fc6afdaaf1c390489b6ad6c4846b7a"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/8.5/gc.properties",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/buildOutputCleanup/buildOutputCleanup.lock",
+    "size": 17,
+    "sha256": "8bccd4b67837f4a70c695eda572b4dd48c841eb82eb09b193aab0dc18f76f216"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/buildOutputCleanup/cache.properties",
+    "size": 49,
+    "sha256": "46a87c82c4290081e4871fed73f9861335d2f251964028f16abc9c7ab96a44da"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/buildOutputCleanup/outputFiles.bin",
+    "size": 19667,
+    "sha256": "dac7bcfa3b635e077dee3083de7e82e87e322ccd686863aefc7b2678edf628fb"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/file-system.probe",
+    "size": 8,
+    "sha256": "382f0c0557bf3e386ebd9e05d15aaec8693af60c26abf3fe159d60aa9deae97f"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/vcs-1/gc.properties",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/workspace-id.txt",
+    "size": 28,
+    "sha256": "e872a03d30806ae7a04ca5f1cfe940272c2fa21aa5d4422e8803944de4f8cd6d"
+  },
+  {
+    "path": "aire-ghidra-extension/.gradle/workspace-id.txt.lock",
+    "size": 17,
+    "sha256": "7678dfab64e9e7369909e391ac748ad84ec9bf2a2e1859ff3a3b7bf1ca6d6387"
+  },
+  {
+    "path": "aire-ghidra-extension/Module.manifest",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "aire-ghidra-extension/README.md",
+    "size": 11,
+    "sha256": "81b01c9fc97de3351c7dd82a8ebff87053c157dff7021838fc432eac594482e4"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/AirePlugin$1.class",
+    "size": 1169,
+    "sha256": "d2f304d473013732f94af631fe856dc35ad3a9c3b48f7682a3e4a3cf09c5fca8"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/AirePlugin.class",
+    "size": 2975,
+    "sha256": "0f68346b4b20d8ffcb2008cc868dd9b2511590b884b925a36ee9baca181b02bb"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/AirePluginPackage.class",
+    "size": 443,
+    "sha256": "8dc3b103321f6359b7936363f915fca254da079d462a534e45d79aad98d8655e"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider$1.class",
+    "size": 806,
+    "sha256": "ac336d8b42b0003e43e7091da5a5e6e773c93d212ecbc8f0dcc41ac8880c3b5e"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider$2.class",
+    "size": 6489,
+    "sha256": "8fb43775bb832ea23eecb3c756b6a7cd9576dacc99d73bbc47023c9497e4aa80"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider$3.class",
+    "size": 1391,
+    "sha256": "b69e9ccd7d8c1ccea71fc9bac2bcc759a2f09a889ba96e5add2fd14767544a41"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider.class",
+    "size": 28845,
+    "sha256": "ebe023c999eb1c5c9ae3327fa3b1a2ac9038ab129fc50ff639d3575a792e7327"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/model/NameSuggestion.class",
+    "size": 519,
+    "sha256": "ece76c802b2c624554e18d902126b28e28d66e0da753d2d30a2c90ea56d9ae1b"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/model/SuggestionStatus.class",
+    "size": 1198,
+    "sha256": "83be168d84e5acd639bc7c2ae94a97c216e4e3c269bcf24a7eff17b7c4e74888"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/model/SymbolContext.class",
+    "size": 2612,
+    "sha256": "eed67825bca0a0b3c1e9668d5fcd4f4c70760f8e60d7b994fed64a605fd204b4"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/services/ContextExtractor$1.class",
+    "size": 1414,
+    "sha256": "8afc76e59ae03841c3e78ea8aeceef1c697f7516114f83cc913447c25b5055e4"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/services/ContextExtractor.class",
+    "size": 22519,
+    "sha256": "762a89d0dd8b4803cb1477c473acc0d988b76d838a15fef40c83278adbabd0ab"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/services/OllamaSuggestionProvider$ConfidenceScore.class",
+    "size": 1304,
+    "sha256": "7151ade868e26e638fd20d9e901c56f1ef5db73e7a3152e6ed176bdf1c429a6e"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/services/OllamaSuggestionProvider.class",
+    "size": 31104,
+    "sha256": "e5debf57b7f6b4c2b53cffc8eef7c5e692599b3f83820c19162961a84a18c5b7"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/services/SuggestionProvider.class",
+    "size": 650,
+    "sha256": "52769c29f0ba4528c61bae3d828fb416f9ad5db29a64bc9668af0d6a9c78027f"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/ui/SuggestionRow.class",
+    "size": 1784,
+    "sha256": "e24b0d4bcdea09b6f352422356cf12553f6e7c33fc2a5cc1f3c6b64b6007ba9f"
+  },
+  {
+    "path": "aire-ghidra-extension/build/classes/java/main/aire/ui/SuggestionsTableModel.class",
+    "size": 2896,
+    "sha256": "d116479a50bb57ae07eea967332d7944ffc936f1417571d6bb519ef7c925ca88"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_HelpSet.hs",
+    "size": 941,
+    "sha256": "c4fe6e174145ff76642e4f1cdaeacf82e2267e6f4c0e3bf861767b6b5e2c9bd4"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/DOCS",
+    "size": 44,
+    "sha256": "835174a2926ec8ad2d1d9438aa8e911cdaab54a28cf122a773162829d76260d9"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/DOCS.TAB",
+    "size": 16,
+    "sha256": "13ee4af4a50146eae9900d6595b2f0adfbc16f54e97de4553992fec2c36146a1"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/OFFSETS",
+    "size": 7,
+    "sha256": "040650c85ad9d4155fc71728b5e98d5932c8ff21a25437350b7eb21ffba3bdfc"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/POSITIONS",
+    "size": 52,
+    "sha256": "9fc6942d31c89eba88db8d306ed4052d98ee58b52dbc28aa280aa5427f24fa47"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/SCHEMA",
+    "size": 52,
+    "sha256": "33a3d4bcb8a0bd53c9bd60699a733c1efe66419ca6e8818ff4a1a7228cb6d7f5"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/TMAP",
+    "size": 2048,
+    "sha256": "de5b41cc4b25fe8da51e1d1715b5dbe1c252e32750289282bb98c6855e8d27fb"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_TOC.xml",
+    "size": 129,
+    "sha256": "9bee00bb21fc25563f9f9e5eea7fc4fb97b61a4d2788935a2aade0c74a0bc364"
+  },
+  {
+    "path": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_map.xml",
+    "size": 374,
+    "sha256": "7c550d27153aefcc6488929b7b0608831109bfae8be07ac87df9839b364faa6f"
+  },
+  {
+    "path": "aire-ghidra-extension/build/helpconfig",
+    "size": 70,
+    "sha256": "7451db1f1ef85371ef5d831586e21b660810ef236ba28fe2c922b28fe1acf0da"
+  },
+  {
+    "path": "aire-ghidra-extension/build/libs/aire-ghidra-extension.jar",
+    "size": 61787,
+    "sha256": "841474832151ee92c3a6d718c45096930898369c5bffeeb731c0639da3ee44e7"
+  },
+  {
+    "path": "aire-ghidra-extension/build/resources/main/help/TOC_Source.xml",
+    "size": 2880,
+    "sha256": "b1e2fd2c11232164ccd7a3c23472d61cae785feed82fa5282496a4936e11144e"
+  },
+  {
+    "path": "aire-ghidra-extension/build/resources/main/help/topics/skeleton/help.html",
+    "size": 981,
+    "sha256": "8bad069b4acf45f3a968e91ca4fe8493924efc706905e56a9750d4a1dcfcb853"
+  },
+  {
+    "path": "aire-ghidra-extension/build/resources/main/images/README.txt",
+    "size": 99,
+    "sha256": "19e43882bb2f0e80601508fa5435181569d39ac401450d5ec297e3d840c511da"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AirePlugin$1.class.uniqueId0",
+    "size": 1169,
+    "sha256": "d2f304d473013732f94af631fe856dc35ad3a9c3b48f7682a3e4a3cf09c5fca8"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AirePlugin.class.uniqueId9",
+    "size": 2975,
+    "sha256": "0f68346b4b20d8ffcb2008cc868dd9b2511590b884b925a36ee9baca181b02bb"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider$1.class.uniqueId5",
+    "size": 806,
+    "sha256": "ac336d8b42b0003e43e7091da5a5e6e773c93d212ecbc8f0dcc41ac8880c3b5e"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider$2.class.uniqueId2",
+    "size": 6489,
+    "sha256": "8fb43775bb832ea23eecb3c756b6a7cd9576dacc99d73bbc47023c9497e4aa80"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider$3.class.uniqueId8",
+    "size": 1391,
+    "sha256": "b69e9ccd7d8c1ccea71fc9bac2bcc759a2f09a889ba96e5add2fd14767544a41"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider.class.uniqueId10",
+    "size": 28845,
+    "sha256": "ebe023c999eb1c5c9ae3327fa3b1a2ac9038ab129fc50ff639d3575a792e7327"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/ContextExtractor$1.class.uniqueId7",
+    "size": 1414,
+    "sha256": "01b2aeb2edb8bbba10b893ccd3f876be450bb1cbc604b1d9852ea4625126d3bc"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/ContextExtractor.class.uniqueId6",
+    "size": 22381,
+    "sha256": "a4e93b543aaf505bd981c86c823d47708fb1b40c58b2ae53c2893204befb35bb"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/OllamaSuggestionProvider.class.uniqueId3",
+    "size": 39161,
+    "sha256": "c506c09831e09f813742d968ccf8dc9f25a394bf8c2c7ad7ccbf471163b46c0b"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/SuggestionProvider.class.uniqueId4",
+    "size": 650,
+    "sha256": "52769c29f0ba4528c61bae3d828fb416f9ad5db29a64bc9668af0d6a9c78027f"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/SymbolContext.class.uniqueId1",
+    "size": 2390,
+    "sha256": "3ade25664d98c113028fe55206189c55dfbf131197493a01f93db96e5daa8d78"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/compileJava/previous-compilation-data.bin",
+    "size": 65074,
+    "sha256": "8c5f252fd8f13c70e9216d19bb428be7b53215c54f26e6a6b27bd8d0a8f8773a"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/jar/MANIFEST.MF",
+    "size": 25,
+    "sha256": "566ad1a80220026d05099562645ce968ff0e7c36cde22634332605bb34cc3eff"
+  },
+  {
+    "path": "aire-ghidra-extension/build/tmp/src/aire-ghidra-extension-src.zip",
+    "size": 24891,
+    "sha256": "3632e4b796bf27a1bc567daf6bc154340b6d137869e5757d005a80a35a7c59ad"
+  },
+  {
+    "path": "aire-ghidra-extension/build.gradle",
+    "size": 2448,
+    "sha256": "f59c3dae28c80e92f382a969ed661f2cbc9760d6ab924070c7f6b87445e25887"
+  },
+  {
+    "path": "aire-ghidra-extension/build.gradle.bak",
+    "size": 331,
+    "sha256": "393e429a7401775c38bb406b445d4aa14eb7f26dcbe7a2830a8f84c4473d4f7c"
+  },
+  {
+    "path": "aire-ghidra-extension/buildTemplate.gradle",
+    "size": 2366,
+    "sha256": "55da6a9cd14111c8e36c8bcd98e4b5ca1baf9a314f7f0057fd02a72735c049a6"
+  },
+  {
+    "path": "aire-ghidra-extension/data/README.txt",
+    "size": 789,
+    "sha256": "2aca61f871b9d0b6522c4fa766d89e2f59053c10783cff5643707cec81feae67"
+  },
+  {
+    "path": "aire-ghidra-extension/data/buildLanguage.xml",
+    "size": 1662,
+    "sha256": "5a816edd08ff1b72c7846a6c6496d456b32bb4273ef5203544b40bc409d4cfb8"
+  },
+  {
+    "path": "aire-ghidra-extension/data/languages/skel.cspec",
+    "size": 3495,
+    "sha256": "1d14032b41487080abe3f99ee98b19954b813d82860a3e4284bbcc8aed713c44"
+  },
+  {
+    "path": "aire-ghidra-extension/data/languages/skel.ldefs",
+    "size": 656,
+    "sha256": "9135b8e768ffba22da9df5dcb8a03bb24246a41119a1953bdf9819b164cf49b8"
+  },
+  {
+    "path": "aire-ghidra-extension/data/languages/skel.opinion",
+    "size": 612,
+    "sha256": "1724ea4807e937cc735df9cf03c0383de6843b6e7e7325ae7b7df8f3ba34b00a"
+  },
+  {
+    "path": "aire-ghidra-extension/data/languages/skel.pspec",
+    "size": 917,
+    "sha256": "ec3035b084e029280f9e2419aec4706405ec1cf74efd6d2caec725e3defaba75"
+  },
+  {
+    "path": "aire-ghidra-extension/data/languages/skel.sinc",
+    "size": 5457,
+    "sha256": "4d5c8138d0cf109d7b47c8ff257272dc47967e4a51c4ab08456fe08227608390"
+  },
+  {
+    "path": "aire-ghidra-extension/data/languages/skel.slaspec",
+    "size": 1371,
+    "sha256": "ddc5ec5f7228562ba9e2dd1f1b51577aa5562dd9036105c5e57a675a253d823b"
+  },
+  {
+    "path": "aire-ghidra-extension/data/sleighArgs.txt",
+    "size": 231,
+    "sha256": "d9c7ab44c8b72a2d1f3d323c8e00df70294a4dcf541c9dcf2c1d7358988f6522"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260122_aire-ghidra-extension.zip",
+    "size": 288949,
+    "sha256": "c1c8ff51b23c55eb968ec7e577e68c6823d68c9161a4509cfa1c23ee53429616"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260305_aire-ghidra-extension.zip",
+    "size": 292535,
+    "sha256": "6a4de0476ff9e76232ea2f52c5e178f87353c1f4f6c19231598c983ea09739f0"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260306_aire-ghidra-extension.zip",
+    "size": 306367,
+    "sha256": "eabc7f300180d0805106772e23452553a91ae5183590d8b000fb6a17d1651891"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260319_aire-ghidra-extension-v2.zip",
+    "size": 331525,
+    "sha256": "843fc9092f6ba64fed3411dd9225e90988b19506cbb4ad51fc8c94941e3c8c64"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260319_aire-ghidra-extension-v3.zip",
+    "size": 335319,
+    "sha256": "8a5b5842425588bcdbf342f85e7a3ab5c0cc93690de18ffd18a88e98e933cbe3"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260319_aire-ghidra-extension.zip",
+    "size": 329347,
+    "sha256": "c359bf2e68b12ecafd11c4d1651860c7e14d946c7e5490dc14ad25f2e4fce303"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v4.zip",
+    "size": 336238,
+    "sha256": "27eef7f2186482c89fe874114f03874ae52e432fae45105b4e6c63341e57c172"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v5.zip",
+    "size": 338032,
+    "sha256": "5dc3f701b510530aa122cb6b369f7aa6c19587887fef76d44a008d28880a71bd"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v6.zip",
+    "size": 340826,
+    "sha256": "551e4ecdbba33eee4ad9f45c7fa905c21d2a0a4943f5b0518b767369fc109699"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v7.zip",
+    "size": 343234,
+    "sha256": "b3e7fe53b7237c722a3e7ff80dc6e8322ae54c5b54ea849ad83ee486098e68a5"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260412-uifix_aire-ghidra-extension.zip",
+    "size": 345514,
+    "sha256": "4c11d12076aee10d846494195dbcb935874699fa766ba07723d3b4f98f61f89e"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260412-windowfix_aire-ghidra-extension.zip",
+    "size": 346155,
+    "sha256": "88cf887b3840fd7762ee2d0e9bbaa11b2080c2ea90e5a505e017e82a9fe0dc1f"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260412_aire-ghidra-extension.zip",
+    "size": 343600,
+    "sha256": "ed1680e72318a5c8de3177f283fc0a48bfabbec243e7b1b0caa1d40bf625aefa"
+  },
+  {
+    "path": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260415_aire-ghidra-extension.zip",
+    "size": 347072,
+    "sha256": "276ee1b36b5b6f8e1a8e9298713243e9a0e04680eb7f0601029abb5a14c265a3"
+  },
+  {
+    "path": "aire-ghidra-extension/extension.properties",
+    "size": 146,
+    "sha256": "1af91acbb1005131fa3ec820232969d825e013b4dc08bf96235cade91c13a869"
+  },
+  {
+    "path": "aire-ghidra-extension/ghidra_scripts/README.txt",
+    "size": 62,
+    "sha256": "e13390d391f8d08e5472136b057a750c590ef94437a71569f1f9bbf5a6c77d38"
+  },
+  {
+    "path": "aire-ghidra-extension/lib/README.txt",
+    "size": 229,
+    "sha256": "66c54164125448dafe5f2ca19538ab45e98220b4d8d3d74bdf1b46499f65317d"
+  },
+  {
+    "path": "aire-ghidra-extension/lib/gson-2.10.1.jar",
+    "size": 283367,
+    "sha256": "4241c14a7727c34feea6507ec801318a3d4a90f070e4525681079fb94ee4c593"
+  },
+  {
+    "path": "aire-ghidra-extension/os/linux_x86_64/README.txt",
+    "size": 237,
+    "sha256": "f1d4e8694328789022f118c1c6ff66d45c2c7d9085bfad347d69d90aa64093d5"
+  },
+  {
+    "path": "aire-ghidra-extension/os/mac_x86_64/README.txt",
+    "size": 242,
+    "sha256": "e2cc85628c604505cd64ef52bab77aa8076ed6d66e0a4e76ee72361b41b03713"
+  },
+  {
+    "path": "aire-ghidra-extension/os/win_x86_64/README.txt",
+    "size": 247,
+    "sha256": "ffe95995dda3ba4a5a082cb689113648ee3cff1ac6db91f7e210afa211ac39db"
+  },
+  {
+    "path": "aire-ghidra-extension/scripts/build_extension.sh",
+    "size": 2430,
+    "sha256": "271ee10354d79e2a769cebdf9c630b00de4334f49dd94d6a49d8a957709e9db4"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/help/help/TOC_Source.xml",
+    "size": 2880,
+    "sha256": "b1e2fd2c11232164ccd7a3c23472d61cae785feed82fa5282496a4936e11144e"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/help/help/topics/skeleton/help.html",
+    "size": 981,
+    "sha256": "8bad069b4acf45f3a968e91ca4fe8493924efc706905e56a9750d4a1dcfcb853"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/AirePlugin.java",
+    "size": 2755,
+    "sha256": "e19b2a2ec48ca2d6ef3b0298bf71798b836173e0f18d83c265e3c94bc5dcca0d"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/AirePluginPackage.java",
+    "size": 451,
+    "sha256": "c23e3f51e3966d0370fd1e9768b484c3baa8254aabbd957a5329c9be5281f537"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/AireSuggestionsProvider.java",
+    "size": 36849,
+    "sha256": "3000571a03bed11b7ff588afa6126929e8f878ac3554ff61db6bbb6735093953"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/model/NameSuggestion.java",
+    "size": 239,
+    "sha256": "0158458074ea4c7c4b5fd0d875f07ed06eced047cec03870e4ea8bdfa45aaa9b"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/model/SuggestionStatus.java",
+    "size": 101,
+    "sha256": "d635ec555e92e81b458b1519279d8cfbf77afab566b842685cc3f6853ce8bd1f"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/model/SymbolContext.java",
+    "size": 2766,
+    "sha256": "852288af65567c4d38833683b98ce766255f57301184b3ef874d29715996e6d4"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/services/ContextExtractor.java",
+    "size": 20750,
+    "sha256": "0802eb5ab53de3f08ddb3e375f7324bd1553b79e2445af4623be8caa00134449"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/services/OllamaSuggestionProvider.java",
+    "size": 39393,
+    "sha256": "a5941d7a3e43c8f01dea64243bbd754feee7b1e0bf77ecacf663966f52437795"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/services/SuggestionProvider.java",
+    "size": 395,
+    "sha256": "acc1ab4d9ada49f3ac9650304e1a268f35eddaeb8e575bec2ca1bb129a127caa"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/ui/SuggestionRow.java",
+    "size": 1346,
+    "sha256": "e52a8049627e0c03e73bd71caf093feb7a12118f44715f01e2a561e48d95b6e5"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/java/aire/ui/SuggestionsTableModel.java",
+    "size": 1734,
+    "sha256": "29ae1cb59595e30fa459ca11e2d850d507b4f1e20be9042a8a3bb28f81051a83"
+  },
+  {
+    "path": "aire-ghidra-extension/src/main/resources/images/README.txt",
+    "size": 99,
+    "sha256": "19e43882bb2f0e80601508fa5435181569d39ac401450d5ec297e3d840c511da"
+  },
+  {
+    "path": "aire_test/FUNCTION_MAP.txt",
+    "size": 570,
+    "sha256": "d40ef3e893b8c5d897ad70963d2b60f2414d5cf3f4b56e99a988ab6bb1171a35"
+  },
+  {
+    "path": "aire_test/aire_test.c",
+    "size": 29896,
+    "sha256": "b92042039740a1fb8ad355c50478edd5e30851e737f267c75eeb03e2252cb264"
+  },
+  {
+    "path": "aire_test/aire_test_debug",
+    "size": 38664,
+    "sha256": "96f662fbe24056f0c5b5a3070c203883df8df013b4fe4d2400a4871b5afc9e40"
+  },
+  {
+    "path": "aire_test/aire_test_stripped",
+    "size": 22880,
+    "sha256": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de"
+  },
+  {
+    "path": "aire_test/build_aire_test.sh",
+    "size": 5320,
+    "sha256": "2aecdd379d8eef584c65efdfcc9640e5f6418b18e77c94d487adbcf841b31eb4"
+  },
+  {
+    "path": "analysis_target",
+    "size": 16072,
+    "sha256": "14c673ad5e0809ad4ec1be333ac2e4591abed9e7d0a8bf5a69ead647892b043e"
+  },
+  {
+    "path": "analysis_target.c",
+    "size": 630,
+    "sha256": "5c05517a18d88f3549550ad91df2e572355ae0ab908ce5f30b80059cbdfa3977"
+  },
+  {
+    "path": "build_raptor7_aire.sh",
+    "size": 3769,
+    "sha256": "eec02e63a59eacd6ced6db4c6609e57f0d8bd1dd2efb563dc405f22cf3c1cbf6"
+  },
+  {
+    "path": "crackme",
+    "size": 14584,
+    "sha256": "0fa5cddf17d6311f931a26ec7858973c26585c3fbd38bc2a0b01d91f4d229b45"
+  },
+  {
+    "path": "crackme.c",
+    "size": 2098,
+    "sha256": "8023a3a3473c82b9029d60307e18541e7a23e7f5f6bebfa06269e83d7529c98a"
+  },
+  {
+    "path": "crackmedemo",
+    "size": 14600,
+    "sha256": "cf913475037eabbbc761e1d6ea39059bd74b6b8fc0b473acab891cbb9c431045"
+  },
+  {
+    "path": "crackmedemo.c",
+    "size": 11260,
+    "sha256": "da363d2525d4434684838e0f65fded6e1a79705a34eaed69dab24aeb3f2f863c"
+  },
+  {
+    "path": "raptor7",
+    "size": 14624,
+    "sha256": "7136f0228fc60870aa7ce97078b337c39b4a4f72b5b3b19bdb92d7f784a00b3b"
+  },
+  {
+    "path": "raptor7.c",
+    "size": 7141,
+    "sha256": "2d88ef6be6d4e72f321cbade9cfee7d38fd307d07dd4655e78a990e318250d8b"
+  },
+  {
+    "path": "raptor7_aire",
+    "size": 39480,
+    "sha256": "9acf1dc538706fce4423f574fff311126ab9f84afe74160c5aa2d1bf1e0bc07e"
+  },
+  {
+    "path": "raptor7_aire.c",
+    "size": 56750,
+    "sha256": "5e58088efebbaa63c0a2dfba41e778d2260345e399e97445f79a834d99344cf6"
+  },
+  {
+    "path": "raptor7_aire_debug",
+    "size": 63192,
+    "sha256": "2d56fc5c7206f02a4f0dbbe1b0d2c854697c3ca0dc728729b3e4a7a29db889f9"
+  },
+  {
+    "path": "src/main/java/aire/AirePlugin.java",
+    "size": 1634,
+    "sha256": "b48399a8f5c193b50053b87e69ce95848751c9ef336c37dc10d2a2a2d92fcc53"
+  },
+  {
+    "path": "src/main/java/aire/AireSuggestionsProvider.java",
+    "size": 8417,
+    "sha256": "55892a0dd2cf2d69cb7d2b9a84a28130d9924d67fcf2f239d69b588ba5888116"
+  },
+  {
+    "path": "src/main/java/aire/model/.NameSuggestion.java.swp",
+    "size": 12288,
+    "sha256": "f70a5eca5427946d203fee4e7b3b74632c5b5da9aba954b5e8287dca642a7f16"
+  },
+  {
+    "path": "src/main/java/aire/model/NameSuggestion.java",
+    "size": 340,
+    "sha256": "a37e43198f4eb7df58e843e4f82f5d9f93e06fe695cc2c80fdd1a9e57fe4d719"
+  },
+  {
+    "path": "src/main/java/aire/model/SuggestionStatus.java",
+    "size": 115,
+    "sha256": "edf4a40e24acbc0f29bec723b76873bc81cd753bb5d25cd9fd4229d597c4679a"
+  },
+  {
+    "path": "src/main/java/aire/model/SymbolContext.java",
+    "size": 2628,
+    "sha256": "243524cd656d84ca23b4137d50711e9bf57e740f306ee65dc3ebc1378c74f4c3"
+  },
+  {
+    "path": "src/main/java/aire/services/.OllamaSuggestionProvider.java.swo",
+    "size": 24576,
+    "sha256": "8951597f0a3310c7a5f5fafb263cc34d33d34b59e400d98e488144ce5821e4e5"
+  },
+  {
+    "path": "src/main/java/aire/services/ContextExtractor.java",
+    "size": 10326,
+    "sha256": "5d397f2415668123519089d447c5f050e4b7b7b2992e5c38f73568c434269870"
+  },
+  {
+    "path": "src/main/java/aire/services/OllamaSuggestionProvider.java",
+    "size": 10977,
+    "sha256": "c694c198cf38e7172d3bd437436f75ce2e0905539c6e3805c7da99e16f616eea"
+  },
+  {
+    "path": "src/main/java/aire/services/SuggestionProvider.java",
+    "size": 287,
+    "sha256": "8ad8774bdfdf62f37e25dfae2c27b0d6e57a0fa59c478697495724c5425d2944"
+  },
+  {
+    "path": "src/main/java/aire/ui/SuggestionChoicesTableModel.java",
+    "size": 1332,
+    "sha256": "b4fba600fb1312ad16197db5c0a8e739f1e64766bc06f57d6e2b8e9e68eb5168"
+  },
+  {
+    "path": "src/main/java/aire/ui/SuggestionRow.java",
+    "size": 1483,
+    "sha256": "5167ebd1696ffbff0eac26c0292d33c2bc8509458c60df00db40cc339c0bcd9f"
+  },
+  {
+    "path": "src/main/java/aire/ui/SuggestionsTableModel.java",
+    "size": 1084,
+    "sha256": "18a505a96dfaa3f07569f19b3471abeb86c0d5e7ac1a3abc67dedb665b93e63c"
+  }
+]

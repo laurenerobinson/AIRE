@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aire-server"
+version = "0.0.1"
+description = "A.I.R.E. 2.0 read-only whole-binary program indexing"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+indexing = ["pyghidra==3.1.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,16 @@
+# AIRE Test Binary — Function Map
+# Generated: 2026-04-14T22:52:07Z
+# Format: ADDRESS  SIZE  FUNCTION_NAME
+#
+0x0000000000001000  _init
+0x0000000000001180  _start
+0x000000000000133e  aes256_cbc_encrypt_buffer
+0x0000000000001493  stub_noop_function
+0x0000000000001504  parse_tlv_record
+0x0000000000001d6b  dispatch_protocol_message
+0x0000000000001efe  init_tcp_client_connection
+0x0000000000002103  parse_tls_record_header
+0x0000000000002270  validate_tls_record_length
+0x00000000000023d1  perform_session_key_exchange
+0x000000000000271f  main
+0x00000000000029ec  _fini

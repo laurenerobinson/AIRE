@@ -1,0 +1,16 @@
+# RAPTOR-7 AIRE Demo — Function Map
+# Generated: 2026-04-14T23:01:35Z
+#
+# ADDRESS              REAL NAME
+0x0000000000001000  _init
+0x0000000000001230  _start
+0x000000000000155c  encrypt_mission_payload
+0x00000000000016c0  drone_heartbeat_alive
+0x0000000000001723  parse_telemetry_packet
+0x0000000000002169  dispatch_drone_command
+0x00000000000022fc  init_c2_uplink
+0x0000000000002501  validate_video_frame
+0x0000000000002784  validate_telemetry_frame
+0x0000000000002a07  establish_c2_session
+0x0000000000002fea  main
+0x0000000000003244  _fini

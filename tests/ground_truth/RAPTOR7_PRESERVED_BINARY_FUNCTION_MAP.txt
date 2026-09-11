@@ -1,0 +1,16 @@
+# Derived from preserved raptor7_aire_debug using nm -n --defined-only
+# SHA256: 2d56fc5c7206f02a4f0dbbe1b0d2c854697c3ca0dc728729b3e4a7a29db889f9
+# ELF symbol values; add the Ghidra load bias for rebased PIE programs.
+# ADDRESS  FUNCTION_NAME (global T symbols only)
+0x0000000000002000  _init
+0x00000000000022b0  _start
+0x00000000000025dc  encrypt_mission_payload
+0x0000000000002740  drone_heartbeat_alive
+0x00000000000027a3  parse_telemetry_packet
+0x00000000000031e9  dispatch_drone_command
+0x000000000000337c  init_c2_uplink
+0x0000000000003581  validate_video_frame
+0x0000000000003804  validate_telemetry_frame
+0x0000000000003a87  establish_c2_session
+0x00000000000052df  main
+0x0000000000005558  _fini

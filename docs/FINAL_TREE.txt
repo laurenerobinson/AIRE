@@ -1,0 +1,139 @@
+AIRE/
+├── aire-server/
+│   ├── src/
+│   │   └── aire/
+│   │       ├── ai/
+│   │       │   ├── __init__.py
+│   │       │   ├── chat.py
+│   │       │   ├── context_builder.py
+│   │       │   └── ollama_client.py
+│   │       ├── api/
+│   │       │   ├── __init__.py
+│   │       │   └── server.py
+│   │       ├── knowledge/
+│   │       │   ├── __init__.py
+│   │       │   ├── database.py
+│   │       │   ├── models.py
+│   │       │   └── retrieval.py
+│   │       ├── pyghidra/
+│   │       │   ├── __init__.py
+│   │       │   ├── extractor.py
+│   │       │   ├── graph_builder.py
+│   │       │   └── indexer.py
+│   │       ├── security/
+│   │       │   ├── rules/
+│   │       │   │   └── README.md
+│   │       │   ├── __init__.py
+│   │       │   ├── findings.py
+│   │       │   └── rule_engine.py
+│   │       ├── validation/
+│   │       │   ├── README.md
+│   │       │   └── __init__.py
+│   │       └── __init__.py
+│   ├── tests/
+│   │   └── test_models.py
+│   ├── README.md
+│   └── pyproject.toml
+├── docs/
+│   ├── recovery/
+│   │   ├── SHA256SUMS
+│   │   ├── migration.json
+│   │   ├── original-devx-manifest.json
+│   │   └── original-devx.tar.gz
+│   ├── AIRE_DEMO_SCRIPT.md
+│   ├── ARCHITECTURE.md
+│   ├── AUDIT.md
+│   ├── CURRENT_STATE.md
+│   ├── DEVELOPMENT.md
+│   ├── FINAL_TREE.txt
+│   ├── ROADMAP.md
+│   └── VERIFICATION.md
+├── ghidra-plugin/
+│   ├── data/
+│   │   ├── languages/
+│   │   │   ├── skel.cspec
+│   │   │   ├── skel.ldefs
+│   │   │   ├── skel.opinion
+│   │   │   ├── skel.pspec
+│   │   │   ├── skel.sinc
+│   │   │   └── skel.slaspec
+│   │   ├── README.txt
+│   │   ├── buildLanguage.xml
+│   │   └── sleighArgs.txt
+│   ├── ghidra_scripts/
+│   │   └── README.txt
+│   ├── lib/
+│   │   ├── README.txt
+│   │   └── gson-2.10.1.jar
+│   ├── os/
+│   │   ├── linux_x86_64/
+│   │   │   └── README.txt
+│   │   ├── mac_x86_64/
+│   │   │   └── README.txt
+│   │   └── win_x86_64/
+│   │       └── README.txt
+│   ├── scripts/
+│   │   └── build_extension.sh
+│   ├── src/
+│   │   └── main/
+│   │       ├── help/
+│   │       │   └── help/
+│   │       │       ├── topics/
+│   │       │       │   └── skeleton/
+│   │       │       │       └── help.html
+│   │       │       └── TOC_Source.xml
+│   │       ├── java/
+│   │       │   └── aire/
+│   │       │       ├── config/
+│   │       │       ├── model/
+│   │       │       │   ├── NameSuggestion.java
+│   │       │       │   ├── SuggestionStatus.java
+│   │       │       │   └── SymbolContext.java
+│   │       │       ├── services/
+│   │       │       │   ├── ContextExtractor.java
+│   │       │       │   ├── OllamaSuggestionProvider.java
+│   │       │       │   └── SuggestionProvider.java
+│   │       │       ├── ui/
+│   │       │       │   ├── SuggestionRow.java
+│   │       │       │   └── SuggestionsTableModel.java
+│   │       │       ├── AirePlugin.java
+│   │       │       ├── AirePluginPackage.java
+│   │       │       └── AireSuggestionsProvider.java
+│   │       └── resources/
+│   │           └── images/
+│   │               └── README.txt
+│   ├── Module.manifest
+│   ├── README.md
+│   ├── build.gradle
+│   ├── buildTemplate.gradle
+│   └── extension.properties
+├── scripts/
+│   ├── build_aire_test.sh
+│   └── build_raptor7_aire.sh
+├── tests/
+│   ├── binaries/
+│   │   ├── aire_test_debug
+│   │   ├── aire_test_stripped
+│   │   ├── analysis_target
+│   │   ├── crackme
+│   │   ├── crackmedemo
+│   │   ├── raptor7
+│   │   ├── raptor7_aire
+│   │   └── raptor7_aire_debug
+│   ├── ground_truth/
+│   │   ├── FUNCTION_MAP.txt
+│   │   ├── RAPTOR7_FUNCTION_MAP.txt
+│   │   └── RAPTOR7_PRESERVED_BINARY_FUNCTION_MAP.txt
+│   ├── integration/
+│   │   └── README.md
+│   ├── source/
+│   │   ├── aire_test.c
+│   │   ├── analysis_target.c
+│   │   ├── crackme.c
+│   │   ├── crackmedemo.c
+│   │   ├── raptor7.c
+│   │   └── raptor7_aire.c
+│   └── README.md
+├── .gitignore
+├── LICENSE-TODO.md
+└── README.md

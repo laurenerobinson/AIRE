@@ -1,0 +1,956 @@
+[
+  {
+    "original": ".claude/settings.local.json",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "obsolete local assistant permissions"
+  },
+  {
+    "original": "AIRE_DEMO_SCRIPT.md",
+    "destination": "docs/AIRE_DEMO_SCRIPT.md",
+    "status": "updated; original in recovery bundle"
+  },
+  {
+    "original": "RAPTOR7_FUNCTION_MAP.txt",
+    "destination": "tests/ground_truth/RAPTOR7_FUNCTION_MAP.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/HEAD",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/config",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/description",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/applypatch-msg.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/commit-msg.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/fsmonitor-watchman.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/post-update.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/pre-applypatch.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/pre-commit.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/pre-merge-commit.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/pre-push.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/pre-rebase.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/pre-receive.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/prepare-commit-msg.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/push-to-checkout.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/sendemail-validate.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/hooks/update.sample",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.git/info/exclude",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "empty nested Git metadata (archived, not active)"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/4.4.1/fileChanges/last-build.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/4.4.1/fileHashes/fileHashes.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/4.4.1/fileHashes/fileHashes.lock",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/checksums/checksums.lock",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/checksums/md5-checksums.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/checksums/sha1-checksums.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/dependencies-accessors/dependencies-accessors.lock",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/dependencies-accessors/gc.properties",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/executionHistory/executionHistory.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/executionHistory/executionHistory.lock",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/fileChanges/last-build.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/fileHashes/fileHashes.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/fileHashes/fileHashes.lock",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/fileHashes/resourceHashesCache.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/8.5/gc.properties",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/buildOutputCleanup/buildOutputCleanup.lock",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/buildOutputCleanup/cache.properties",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/buildOutputCleanup/outputFiles.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/file-system.probe",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/vcs-1/gc.properties",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/workspace-id.txt",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/.gradle/workspace-id.txt.lock",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated Gradle caches"
+  },
+  {
+    "original": "aire-ghidra-extension/Module.manifest",
+    "destination": "ghidra-plugin/Module.manifest",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/README.md",
+    "destination": "ghidra-plugin/README.md",
+    "status": "updated; original in recovery bundle"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/AirePlugin$1.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/AirePlugin.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/AirePluginPackage.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider$1.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider$2.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider$3.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/AireSuggestionsProvider.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/model/NameSuggestion.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/model/SuggestionStatus.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/model/SymbolContext.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/services/ContextExtractor$1.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/services/ContextExtractor.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/services/OllamaSuggestionProvider$ConfidenceScore.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/services/OllamaSuggestionProvider.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/services/SuggestionProvider.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/ui/SuggestionRow.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/classes/java/main/aire/ui/SuggestionsTableModel.class",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_HelpSet.hs",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/DOCS",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/DOCS.TAB",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/OFFSETS",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/POSITIONS",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/SCHEMA",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_JavaHelpSearch/TMAP",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_TOC.xml",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/help/main/help/aire-ghidra-extension_map.xml",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/helpconfig",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/libs/aire-ghidra-extension.jar",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/resources/main/help/TOC_Source.xml",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/resources/main/help/topics/skeleton/help.html",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/resources/main/images/README.txt",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AirePlugin$1.class.uniqueId0",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AirePlugin.class.uniqueId9",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider$1.class.uniqueId5",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider$2.class.uniqueId2",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider$3.class.uniqueId8",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/AireSuggestionsProvider.class.uniqueId10",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/ContextExtractor$1.class.uniqueId7",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/ContextExtractor.class.uniqueId6",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/OllamaSuggestionProvider.class.uniqueId3",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/SuggestionProvider.class.uniqueId4",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/compileTransaction/stash-dir/SymbolContext.class.uniqueId1",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/compileJava/previous-compilation-data.bin",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/jar/MANIFEST.MF",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build/tmp/src/aire-ghidra-extension-src.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "generated classes, help, jars and compiler state"
+  },
+  {
+    "original": "aire-ghidra-extension/build.gradle",
+    "destination": "ghidra-plugin/build.gradle",
+    "status": "updated; original in recovery bundle"
+  },
+  {
+    "original": "aire-ghidra-extension/build.gradle.bak",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "obsolete backup build file"
+  },
+  {
+    "original": "aire-ghidra-extension/buildTemplate.gradle",
+    "destination": "ghidra-plugin/buildTemplate.gradle",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/README.txt",
+    "destination": "ghidra-plugin/data/README.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/buildLanguage.xml",
+    "destination": "ghidra-plugin/data/buildLanguage.xml",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/languages/skel.cspec",
+    "destination": "ghidra-plugin/data/languages/skel.cspec",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/languages/skel.ldefs",
+    "destination": "ghidra-plugin/data/languages/skel.ldefs",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/languages/skel.opinion",
+    "destination": "ghidra-plugin/data/languages/skel.opinion",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/languages/skel.pspec",
+    "destination": "ghidra-plugin/data/languages/skel.pspec",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/languages/skel.sinc",
+    "destination": "ghidra-plugin/data/languages/skel.sinc",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/languages/skel.slaspec",
+    "destination": "ghidra-plugin/data/languages/skel.slaspec",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/data/sleighArgs.txt",
+    "destination": "ghidra-plugin/data/sleighArgs.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260122_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260305_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260306_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260319_aire-ghidra-extension-v2.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260319_aire-ghidra-extension-v3.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260319_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v4.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v5.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v6.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260320_aire-ghidra-extension-v7.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260412-uifix_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260412-windowfix_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260412_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/dist/ghidra_12.0.1_PUBLIC_20260415_aire-ghidra-extension.zip",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "14 generated extension zip packages"
+  },
+  {
+    "original": "aire-ghidra-extension/extension.properties",
+    "destination": "ghidra-plugin/extension.properties",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/ghidra_scripts/README.txt",
+    "destination": "ghidra-plugin/ghidra_scripts/README.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/lib/README.txt",
+    "destination": "ghidra-plugin/lib/README.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/lib/gson-2.10.1.jar",
+    "destination": "ghidra-plugin/lib/gson-2.10.1.jar",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/os/linux_x86_64/README.txt",
+    "destination": "ghidra-plugin/os/linux_x86_64/README.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/os/mac_x86_64/README.txt",
+    "destination": "ghidra-plugin/os/mac_x86_64/README.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/os/win_x86_64/README.txt",
+    "destination": "ghidra-plugin/os/win_x86_64/README.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/scripts/build_extension.sh",
+    "destination": "ghidra-plugin/scripts/build_extension.sh",
+    "status": "updated; original in recovery bundle"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/help/help/TOC_Source.xml",
+    "destination": "ghidra-plugin/src/main/help/help/TOC_Source.xml",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/help/help/topics/skeleton/help.html",
+    "destination": "ghidra-plugin/src/main/help/help/topics/skeleton/help.html",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/AirePlugin.java",
+    "destination": "ghidra-plugin/src/main/java/aire/AirePlugin.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/AirePluginPackage.java",
+    "destination": "ghidra-plugin/src/main/java/aire/AirePluginPackage.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/AireSuggestionsProvider.java",
+    "destination": "ghidra-plugin/src/main/java/aire/AireSuggestionsProvider.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/model/NameSuggestion.java",
+    "destination": "ghidra-plugin/src/main/java/aire/model/NameSuggestion.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/model/SuggestionStatus.java",
+    "destination": "ghidra-plugin/src/main/java/aire/model/SuggestionStatus.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/model/SymbolContext.java",
+    "destination": "ghidra-plugin/src/main/java/aire/model/SymbolContext.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/services/ContextExtractor.java",
+    "destination": "ghidra-plugin/src/main/java/aire/services/ContextExtractor.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/services/OllamaSuggestionProvider.java",
+    "destination": "ghidra-plugin/src/main/java/aire/services/OllamaSuggestionProvider.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/services/SuggestionProvider.java",
+    "destination": "ghidra-plugin/src/main/java/aire/services/SuggestionProvider.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/ui/SuggestionRow.java",
+    "destination": "ghidra-plugin/src/main/java/aire/ui/SuggestionRow.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/java/aire/ui/SuggestionsTableModel.java",
+    "destination": "ghidra-plugin/src/main/java/aire/ui/SuggestionsTableModel.java",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire-ghidra-extension/src/main/resources/images/README.txt",
+    "destination": "ghidra-plugin/src/main/resources/images/README.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire_test/FUNCTION_MAP.txt",
+    "destination": "tests/ground_truth/FUNCTION_MAP.txt",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire_test/aire_test.c",
+    "destination": "tests/source/aire_test.c",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire_test/aire_test_debug",
+    "destination": "tests/binaries/aire_test_debug",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire_test/aire_test_stripped",
+    "destination": "tests/binaries/aire_test_stripped",
+    "status": "byte-identical"
+  },
+  {
+    "original": "aire_test/build_aire_test.sh",
+    "destination": "scripts/build_aire_test.sh",
+    "status": "updated; original in recovery bundle"
+  },
+  {
+    "original": "analysis_target",
+    "destination": "tests/binaries/analysis_target",
+    "status": "byte-identical"
+  },
+  {
+    "original": "analysis_target.c",
+    "destination": "tests/source/analysis_target.c",
+    "status": "byte-identical"
+  },
+  {
+    "original": "build_raptor7_aire.sh",
+    "destination": "scripts/build_raptor7_aire.sh",
+    "status": "updated; original in recovery bundle"
+  },
+  {
+    "original": "crackme",
+    "destination": "tests/binaries/crackme",
+    "status": "byte-identical"
+  },
+  {
+    "original": "crackme.c",
+    "destination": "tests/source/crackme.c",
+    "status": "byte-identical"
+  },
+  {
+    "original": "crackmedemo",
+    "destination": "tests/binaries/crackmedemo",
+    "status": "byte-identical"
+  },
+  {
+    "original": "crackmedemo.c",
+    "destination": "tests/source/crackmedemo.c",
+    "status": "byte-identical"
+  },
+  {
+    "original": "raptor7",
+    "destination": "tests/binaries/raptor7",
+    "status": "byte-identical"
+  },
+  {
+    "original": "raptor7.c",
+    "destination": "tests/source/raptor7.c",
+    "status": "byte-identical"
+  },
+  {
+    "original": "raptor7_aire",
+    "destination": "tests/binaries/raptor7_aire",
+    "status": "byte-identical"
+  },
+  {
+    "original": "raptor7_aire.c",
+    "destination": "tests/source/raptor7_aire.c",
+    "status": "byte-identical"
+  },
+  {
+    "original": "raptor7_aire_debug",
+    "destination": "tests/binaries/raptor7_aire_debug",
+    "status": "byte-identical"
+  },
+  {
+    "original": "src/main/java/aire/AirePlugin.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/AireSuggestionsProvider.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/model/.NameSuggestion.java.swp",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "editor swap file"
+  },
+  {
+    "original": "src/main/java/aire/model/NameSuggestion.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/model/SuggestionStatus.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/model/SymbolContext.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/services/.OllamaSuggestionProvider.java.swo",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "editor swap file"
+  },
+  {
+    "original": "src/main/java/aire/services/ContextExtractor.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/services/OllamaSuggestionProvider.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/services/SuggestionProvider.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/ui/SuggestionChoicesTableModel.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/ui/SuggestionRow.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  },
+  {
+    "original": "src/main/java/aire/ui/SuggestionsTableModel.java",
+    "destination": "docs/recovery/original-devx.tar.gz",
+    "status": "removed from active tree",
+    "reason": "stale duplicate Java tree"
+  }
+]
