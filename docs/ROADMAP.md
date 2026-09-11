@@ -1,13 +1,14 @@
 # Roadmap
 
 M0 is established. M1 is complete with a passing real controlled-binary
-integration test. M2 and later milestones remain planned.
+integration test. M2 is complete with a passing real SQLite round trip.
+M3 and later milestones remain planned.
 
 | Milestone | Scope |
 | --- | --- |
 | M0 | Repository cleanup and architecture |
 | M1 (complete) | Read-only PyGhidra whole-binary indexer, including resolved direct CALL facts |
-| M2 | SQLite knowledge store |
+| M2 (complete) | SQLite knowledge store with atomic ProgramIndex save/reload |
 | M3 | Call graph / program relationships |
 | M4 | Retrieval/context engine |
 | M5 | Whole-binary chatbot |
@@ -28,14 +29,24 @@ SHA-256. Unit tests run without a JVM. Temporary programs are never saved;
 resources close and repeat calls preserve fact IDs. See CURRENT_STATE.md for
 counts and known limitations. No target execution or analyst-program edits occur.
 
+## M2 acceptance
+
+A real M1 ProgramIndex was saved, the store closed/reopened, and every field was
+compared after loading. Exact current-run counts, decompiled text, assembly,
+metrics, artifacts, edges, ordered warnings and metadata survived. Schema v1,
+foreign keys, duplicate saves, complete reanalysis replacement, cascade deletion,
+rollback on late failure, and explicit error handling have passing unit tests.
+Both Ghidra integration tests pass; input SHA-256 remains unchanged. Databases
+are temporary/ignored. M2 does not change M1 or implement semantic retrieval.
+
 ## Next milestone
 
-**M2 — SQLite-backed Binary Knowledge Store for persisting ProgramIndex data.**
+**M3 — Richer program relationships and graph queries over the persisted store.**
 
-Persist BinaryRecord, FunctionRecord, ArtifactRecord, FunctionEdge, provenance,
-options/timings and warnings with schema versioning, foreign keys, transactions,
-and deterministic-ID upserts. Define reindex/replacement semantics and test
-round-trip retrieval, rollback, duplicate imports and referential integrity.
-Keep Ghidra-independent database tests and a controlled index→store→load test.
-Do not add LLM reasoning, embeddings, security claims, or target execution.
-M2 has not started. M3 extends relationships beyond M1's direct call edges.
+Add deterministic caller/callee queries and bounded graph traversals with cycle
+handling, callsite provenance, and clear unresolved/thunk/external semantics.
+Define and test any new relationship types and schema changes explicitly;
+preserve stable IDs, atomic storage, and read-only extraction. Test exact graph
+queries on small fixtures and the controlled persisted index. Defer AI/chat,
+embeddings, semantic retrieval, security claims, and target execution. M3 has
+not started.

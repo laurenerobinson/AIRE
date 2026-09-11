@@ -22,3 +22,20 @@ including externals, known import names, defined strings, exports, direct call
 edges, assembly bounds, stable IDs, and unchanged input hashes. FUNCTION_MAP.txt
 is used only for entry addresses with the 0x100000 PIE load bias; stripped local
 names are not compared with debug names. No fixture or map is modified/executed.
+
+## M2 SQLite round trip
+
+`aire-server/tests/test_database_integration.py` indexes the same controlled
+fixture, saves to a temporary SQLite file, closes/reopens the store and compares
+all ProgramIndex fields. It verifies approximate discovery coverage plus exact
+current-run equality, ordered warnings/metadata, foreign-key integrity, and an
+unchanged target hash. The database is removed after the test. No fixture is run.
+
+```bash
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_DATABASE_REPORT=/tmp/aire-m2-report.json PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_database_integration.py -v
+```
+
+The optional JSON report contains counts, save/load seconds (excluding indexing
+and schema initialization), closed database size, and before/after hashes.
+With no filename pattern, discovery runs both M1 and M2 integration tests plus
+all pure-Python tests. Integration tests remain opt-in.

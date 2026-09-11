@@ -2,7 +2,8 @@
 
 M0 restores the archived Java v1 implementation and establishes a Python package
 layout. M1 now implements a read-only whole-binary PyGhidra indexer, validated
-against the controlled stripped fixture. The v1 description below remains based
+against the controlled stripped fixture. M2 now persists and reloads complete
+ProgramIndex snapshots in SQLite. The v1 description below remains based
 on source inspection, not a new live Ghidra/Ollama session.
 
 ## Working v1 behavior
@@ -100,16 +101,51 @@ SHA-256 remained
 `157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de`.
 The integration checks all 12 map entry addresses with PIE load bias and stable
 function/artifact IDs across two calls in one JVM. The second call disables
-assembly/decompilation. The final suite passed all 14 tests (13 pure-Python and one integration test).
+assembly/decompilation. The M1 acceptance suite passed all 14 tests (13 pure-Python and one integration test).
 Pure-Python tests cover records, IDs, options, bounds,
 serialization, warning/failure recovery, and JVM-free imports. See the
 [backend README](../aire-server/README.md) for commands.
 
+## Implemented M2
+
+`aire.knowledge.database.BinaryKnowledgeStore` provides initialize, save/load,
+has/list/delete, close, and context-manager operations. Initialization is automatic;
+explicit initialize is idempotent. Schema **version 1** uses standard-library
+sqlite3 and seven tables for binary metadata, functions, artifacts, direct edges,
+warnings, analysis metadata, and schema version. Foreign keys are enabled;
+complete replacements are atomic, and deletes cascade only through database rows.
+Missing analyses raise BinaryNotFoundError. Invalid persisted JSON raises
+PersistedDataError. No M1 extraction or Java plugin code changed for M2.
+
+The real round trip indexes aire_test_stripped, saves to a temporary database,
+closes, reopens, and compares the entire ProgramIndex and JSON-safe data.
+Original and reloaded counts matched exactly: 106 functions, 81 decompiled bodies,
+132 strings, 25 imports, 8 exports, 134 direct CALL edges, and 26 ordered warnings.
+Full text, metrics, IDs, nullable fields, booleans, timestamps, and metadata matched.
+Save took **0.534512 seconds**, load **0.001609 seconds**, excluding Ghidra and
+schema initialization. The closed database occupied **425,984 bytes (416 KiB)**.
+These are one development run, not production benchmarks. Input SHA-256 before
+and after was `157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de`.
+
+All **40 tests passed**: 25 new database unit tests, 13 existing unit tests, and
+both real M1/M2 integrations. A forced failure at the final metadata insertion
+proved rollback preserves the previous analysis and leaves no partial new one.
+Duplicate/replacement saves, same-binary edge constraints, cascade deletion,
+unsupported schemas, malformed JSON, SQL parameterization, and clean close were
+also tested. Syntax compilation and git diff --check passed. No SQLite databases
+were staged; tests use temporary directories. No target execution occurred.
+
+M2 limitations: latest snapshot per binary only, schema v1 without migrations,
+single-thread-owned connections intended for a single writer, no cross-binary
+edges, no semantic retrieval or graph-query API, and no arbitrary Python object
+restoration from metadata. SQLite retains freed pages until separately compacted;
+M2 does not run VACUUM automatically. See DEVELOPMENT.md for API examples.
+
 ## Not implemented
 
-Persistence/ORM, SQLite knowledge store, broader program relationships,
-retrieval engine, whole-binary chat, program-level renaming, CWE rules, CVE
-matching, vulnerability checks, evidence calibration, dynamic validation,
-exploitation, API service, benchmark harness, and reporting pipeline remain
-unimplemented. The Java v1 plugin remains unchanged. M2 is the SQLite-backed
-Binary Knowledge Store; it has not started.
+Broader program relationships and graph queries, semantic retrieval, whole-binary
+chat, program-level renaming, CWE rules, CVE matching, vulnerability checks,
+evidence calibration, dynamic validation, exploitation, API service, benchmark
+harness, and reporting pipeline remain unimplemented. The Java v1 plugin remains
+unchanged. M3 will focus on persisted program relationships and graph queries;
+it has not started.

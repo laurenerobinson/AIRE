@@ -1,7 +1,8 @@
 # A.I.R.E. 2.0 architecture
 
 M0 provides the repository foundation; M1 implements read-only whole-binary
-indexing. The broader pipeline below remains planned beyond the indexer.
+indexing. M2 implements SQLite persistence of ProgramIndex. The broader
+pipeline below remains planned beyond the knowledge store.
 Existing v1 remains a separate per-function Ghidra Java workflow.
 
 ```mermaid
@@ -38,13 +39,13 @@ supporting and contradicting evidence visible.
 | --- | --- | --- |
 | ghidra-plugin | Interactive v1 evidence and local model naming | Preserved Java implementation |
 | aire.pyghidra | Read-only fact extraction and direct call edges | Implemented M1 |
-| aire.knowledge | Records, persistence, retrieval | Records and JSON serialization; no persistence/retrieval |
+| aire.knowledge | Records, persistence, retrieval | Records, JSON serialization and SQLite persistence; no semantic retrieval |
 | aire.ai | Local Ollama, evidence context, chat | Planned |
 | aire.security | Findings and deterministic rules | Finding dataclass only |
 | aire.validation | Optional approved isolated validation | Documentation only |
 | aire.api | Local service boundary | Planned; no listener |
 
-## Implemented M1 path
+## Implemented M1 → M2 path
 
 ```text
 Binary
@@ -54,6 +55,8 @@ Binary
    ├── FunctionRecord[]
    ├── ArtifactRecord[]
    └── FunctionEdge[]
+→ SQLite Binary Knowledge Store
+   (binary, functions, artifacts, direct call edges, warnings, analysis metadata)
 ```
 
 `index_binary(path: Path, options: IndexOptions | None = None) -> ProgramIndex`
@@ -110,6 +113,55 @@ cross-binary analysis. Decompilation text has a timeout but no text-size cap;
 assembly is bounded. This development indexer has no cancellation API or total
 binary time limit. Discovery is Ghidra coverage, not proof of all real functions.
 
-Not yet implemented: persistence/SQLite, retrieval, Python chatbot, CWE engine,
-CVE matching, or dynamic validation. M2 adds SQLite persistence of ProgramIndex;
-M3 can extend relationships beyond the direct CALL facts already present in M1.
+## M2 persistence
+
+`aire.knowledge.database.BinaryKnowledgeStore` uses standard-library sqlite3,
+without an ORM, global connections, Ghidra imports, or executable-file access.
+Construction opens/creates the database and initializes schema version **1**.
+`initialize()` is also explicitly callable and idempotent. Unknown/unversioned
+existing schemas are rejected, not migrated or overwritten. Store schema version
+is independent of the M1 JSON schema version in analysis metadata.
+
+Tables: `schema_metadata`, `binaries`, `functions`, `artifacts`, `function_edges`,
+`warnings`, and `analysis_metadata`. All M1 record fields have normal columns,
+including `program_name` and `assembly_truncated`. Only metadata values use JSON.
+Addresses remain TEXT with their address-space notation. Binary timestamps are
+ISO 8601 and reload as datetime; booleans use constrained SQLite integers and
+reload as bool (nullable `is_library` remains None). Metadata uses M1 JSON-safe
+normalization: Path/datetime/Enum become strings or enum values and tuples become
+lists; arbitrary Python object types are not reconstructed. Malformed metadata
+JSON raises PersistedDataError rather than returning partial data.
+
+Binary/function/artifact primary keys preserve M1 IDs. Ordinals preserve every
+list's order, including repeated warnings and any repeated input edges. Child
+rows cascade on binary deletion. Composite edge foreign keys require caller and
+callee functions to belong to the same binary; cross-binary relationships are
+not supported in M2. PRAGMA foreign_keys is enabled on every store connection.
+
+Explicit indexes cover function address/name, artifact type/value, and edge
+caller/callee. Composite UNIQUE/PRIMARY KEY indexes beginning with binary_id
+cover per-binary lookups without redundant standalone indexes. Functions also
+have a `(binary_id, function_id)` unique key for composite foreign keys.
+
+Each save uses BEGIN IMMEDIATE, deletes the prior snapshot for that binary, bulk
+inserts its replacement, and commits once. Any failure rolls back the deletion
+and all insertions. No INSERT OR REPLACE is used to steal IDs from another binary.
+Repeated saves do not multiply rows, and reanalysis removes stale facts rather
+than merging them. Loads use a read transaction for a consistent snapshot.
+
+Public API: `initialize`, `save_program_index`, `load_program_index`, `has_binary`,
+`list_binaries`, `delete_binary`, and `close`, plus context manager support.
+A missing load raises BinaryNotFoundError. Listing reads BinaryRecord metadata
+only. Delete returns bool and never removes the original executable. Context exit
+closes the connection; individual save/delete calls have already committed, so
+an unrelated later exception in the caller does not undo a completed save.
+
+Use each instance on its creating thread in a single-process/single-writer
+workflow. There is no migration framework, concurrent-writer coordination,
+analysis history, semantic retrieval, graph-query API, or automatic compaction.
+SQLite's default journaling and lock timeout are retained. Generated databases
+belong at temporary/ignored paths, never in version control.
+
+Not yet implemented: semantic retrieval, Python chatbot, CWE engine, CVE matching,
+or dynamic validation. M3 will extend deterministic program relationships and
+graph queries over persisted facts; it has not started.

@@ -16,8 +16,8 @@ to the unpacked installation. The directory must contain
 
 The archived README specifies JDK 21. Confirm the requirements in the chosen
 Ghidra release's documentation, set JAVA_HOME, and put its bin directory on PATH.
-Check both `java -version` and `javac -version`. This workspace currently has
-Java 17 and no javac; this is not a verified build toolchain.
+Check both `java -version` and `javac -version`. M1/M2 static integration uses
+the configured JDK 21; this does not claim a new Java plugin build validation.
 
 ## Gradle
 
@@ -60,6 +60,53 @@ AIRE_RUN_GHIDRA_TESTS=1 PYTHONPATH=aire-server/src aire-server/.venv/bin/python 
 See the [backend README](../aire-server/README.md) for JSON output, options and
 JVM ownership. Ghidra static analysis modifies an unsaved temporary program,
 never the original binary or an existing project. No target code is executed.
+
+## SQLite Binary Knowledge Store (M2)
+
+Use the existing venv and standard-library sqlite3; no ORM or extra installation
+is required. Run Python with `PYTHONPATH=aire-server/src` from the root. Store
+construction creates missing parent directories and initializes schema v1.
+
+```python
+from pathlib import Path
+from aire.pyghidra.indexer import index_binary
+from aire.knowledge.database import BinaryKnowledgeStore
+
+index = index_binary(Path("tests/binaries/aire_test_stripped"))
+with BinaryKnowledgeStore(Path("/tmp/aire-analysis.sqlite")) as store:
+    store.save_program_index(index)
+    print(index.binary.binary_id)
+
+# Loading does not require Ghidra, a JVM, or the executable file.
+with BinaryKnowledgeStore(Path("/tmp/aire-analysis.sqlite")) as store:
+    loaded = store.load_program_index(index.binary.binary_id)
+    assert loaded == index
+    print(store.list_binaries())  # BinaryRecord metadata only
+    assert store.has_binary(index.binary.binary_id)
+    # store.delete_binary(index.binary.binary_id) deletes DB rows, not the binary.
+```
+
+`load_program_index` raises BinaryNotFoundError for a missing ID; unsupported
+schemas raise UnsupportedSchemaError, malformed stored data PersistedDataError,
+failed writes TransactionError, and file-opening failures DatabaseOpenError.
+All inherit KnowledgeStoreError. `close()` is idempotent; context exit closes.
+Each save/delete commits atomically and is independent of the outer Python
+context. Treat instances as single-thread-owned, single-process/single-writer.
+Metadata round trips as JSON-safe data; binary timestamps restore as datetime.
+
+Run database tests alone or the complete suite (including both real integrations):
+
+```bash
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_database.py -v
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_DATABASE_REPORT=/tmp/aire-m2-report.json PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
+```
+
+The M2 integration measures save/load separately from Ghidra and initialization,
+reports exact round-trip counts and DB size, and deletes its temporary database.
+The optional report is JSON, not a persisted runtime database. `.gitignore`
+includes `*.db`, `*.sqlite`, and `*.sqlite3`; do not stage generated databases.
+M2 adds no CLI switches or web service; the Python persistence API is the entry
+point. Semantic retrieval in retrieval.py remains unimplemented.
 
 ## Ollama
 
