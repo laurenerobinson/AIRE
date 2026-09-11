@@ -3,7 +3,9 @@
 M0 restores the archived Java v1 implementation and establishes a Python package
 layout. M1 now implements a read-only whole-binary PyGhidra indexer, validated
 against the controlled stripped fixture. M2 now persists and reloads complete
-ProgramIndex snapshots in SQLite. The v1 description below remains based
+ProgramIndex snapshots in SQLite. M3 adds deterministic persisted relationship
+queries and bounded graph traversal. M4 now constructs deterministic bounded
+evidence bundles without an LLM. The v1 description below remains based
 on source inspection, not a new live Ghidra/Ollama session.
 
 ## Working v1 behavior
@@ -127,7 +129,7 @@ schema initialization. The closed database occupied **425,984 bytes (416 KiB)**.
 These are one development run, not production benchmarks. Input SHA-256 before
 and after was `157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de`.
 
-All **40 tests passed**: 25 new database unit tests, 13 existing unit tests, and
+At M2 acceptance, **40 tests passed**: 25 new database unit tests, 13 existing unit tests, and
 both real M1/M2 integrations. A forced failure at the final metadata insertion
 proved rollback preserves the previous analysis and leaves no partial new one.
 Duplicate/replacement saves, same-binary edge constraints, cascade deletion,
@@ -137,15 +139,100 @@ were staged; tests use temporary directories. No target execution occurred.
 
 M2 limitations: latest snapshot per binary only, schema v1 without migrations,
 single-thread-owned connections intended for a single writer, no cross-binary
-edges, no semantic retrieval or graph-query API, and no arbitrary Python object
-restoration from metadata. SQLite retains freed pages until separately compacted;
+edges, no semantic retrieval, and no arbitrary Python object restoration from
+metadata. Graph queries are now implemented separately in M3. SQLite retains freed pages until separately compacted;
 M2 does not run VACUUM automatically. See DEVELOPMENT.md for API examples.
+
+## Implemented M3
+
+ProgramQueryService provides exact function resolution, callers, callees,
+connecting callsites, bounded forward/reverse BFS, shortest bounded call paths,
+relationship summaries and four connectivity rankings. Query results preserve
+stored function facts and exact callsite provenance. Ambiguous names, unknown
+identifiers, invalid depth, and cross-binary selectors produce explicit errors.
+Queries read SQLite snapshots without loading ProgramIndex or changing rows.
+M1 extraction and M2 persistence/schema remain unchanged.
+
+The real integration indexes the fixture, saves and reopens a temporary database,
+then verifies queries against persisted edges, repeated determinism, and unchanged
+binary SHA-256. At M3 acceptance, the suite passed **69 tests**: 66 pure-Python tests (28 new M3
+query tests) and the real M1, M2 and M3 integrations. Existing M1/M2 counts remain
+106 functions, 81 decompiled bodies, 132 strings, 25 imports, 8 exports, 134 CALL
+edges and 26 warnings.
+
+Observed example: FUN_00101efe (`00101efe`) calls the socket thunk (`00101060`)
+at `00101f39`. That caller has 14 outgoing relationships and reaches 10 other
+functions within depth 3. Reverse depth 3 from the socket thunk finds 2 nodes.
+Socket and write each have 1 stored caller callsite at their primary thunks;
+memset (`00101090`) has 10 callsites from 4 distinct callers. Each name also
+matches another thunk and an EXTERNAL entry with no stored direct callers;
+name-only resolution is deliberately ambiguous.
+
+Highest unique caller count: FUN_00101269 has 14 callers / 48 incoming callsites,
+followed by FUN_0010129a with 7 / 9. These are connectivity facts, not security
+or behavioral interpretations.
+
+Mean query times over 20 warm repetitions, excluding indexing/persistence:
+callers **0.078 ms**, callees **0.162 ms**, depth-3 traversal **0.706 ms**, and
+top-five unique-caller ranking **0.688 ms**. These are development observations,
+not production benchmarks. Target SHA-256 before/after remains
+`157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de`.
+
+M3 limits: stored resolved CALL graph only, no inferred indirect/thunk links,
+no cross-binary graph, one shortest-route predecessor per node, depth 0–64
+(default 3), and no separate node/time budget or pagination. Exact addresses
+are preserved; numeric parsing affects sorting only. API use and error semantics
+are documented in the backend README and ARCHITECTURE.md.
+
+## Implemented M4
+
+ContextBuilder builds structured EvidenceBundle snapshots from validated
+EvidenceRequest values, using M3 exact resolution and graph selection inside a
+single SQLite read transaction. Bundles include binary metadata, selected function
+facts/text, exact edge endpoints/callsites, explicitly scoped artifacts, bounded
+global diagnostics, provenance and truncations. Text is bounded incrementally,
+including formatting/escaping overhead, rather than cutting a final huge string.
+Repeated builds produce identical text and JSON-safe content excluding timings.
+No M1–M3 source/schema or chat.py changes were needed.
+
+The real test indexes and persists aire_test_stripped, builds contexts for
+`00101efe`, `00101060`, `00101090`, and `00101269`, verifies stored text prefixes
+and callsites, and checks small-budget truncation. The example target
+FUN_00101efe includes 12 functions, 16 edges, 8 binary-level artifacts, and one
+global warning; 25 unassociated warnings are omitted. It preserves the socket
+thunk call at `00101f39` → `00101060`. Artifact and warning omissions are explicit.
+The example renders to **37,624 characters** under its 60,000-character budget;
+a constrained example retains **1,970 characters** under a 2,000-character budget.
+Warm means over 10 builds: target-only **0.831 ms**, direct neighbors **3.485 ms**,
+depth-3 context **5.200 ms**. The first reported example took 9.660 ms in total,
+including 0.210 ms target resolution, 2.070 ms graph selection, 2.995 ms artifact
+selection and 3.979 ms rendering. These are development observations, excluding
+Ghidra indexing and persistence, not production benchmarks.
+
+The suite passes 99 tests: 95 pure-Python tests (29 new M4 tests) and real M1,
+M2, M3, M4 integrations. Tests cover exact/ambiguous/unknown resolution, forward
+and reverse context, cycles/deduplication, priorities, count and text bounds,
+Unicode and embedded NULs, zero budgets, artifact scope, warning filtering,
+JSON serialization, deterministic rendering and zero database-row writes.
+The target SHA-256 before/after is
+`157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de`.
+
+M4 limits: no function-string xrefs, no warning-function association, no semantic
+relevance, no token estimator, and no separate candidate-scan/time budget.
+The rendered-character limit does not bound all structured identity/metadata
+fields; omitted render blocks are recorded while those fields remain usable.
+Global artifacts are not claimed to be used by selected functions. The renderer
+is a finalized snapshot; re-build to change it.
+
+Git baseline note for this implementation: M3 was present but still uncommitted
+on top of aire-m2 at task start. Its source/test files were preserved; a pre-M4
+archive was saved under /tmp. Neither milestone was automatically committed.
 
 ## Not implemented
 
-Broader program relationships and graph queries, semantic retrieval, whole-binary
-chat, program-level renaming, CWE rules, CVE matching, vulnerability checks,
-evidence calibration, dynamic validation, exploitation, API service, benchmark
-harness, and reporting pipeline remain unimplemented. The Java v1 plugin remains
-unchanged. M3 will focus on persisted program relationships and graph queries;
-it has not started.
+Natural-language request parsing, local LLM/chat reasoning, semantic retrieval,
+program-level renaming, CWE engine, CVE matching, taint analysis, vulnerability
+claims, dynamic validation, exploitation, HTTP API, benchmark harness and
+reporting pipeline remain unimplemented. M5 should add the first local chat/model
+layer over EvidenceBundle while separating program facts from interpretation.
+M5 has not started. The Java v1 plugin remains unchanged.

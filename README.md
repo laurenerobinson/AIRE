@@ -2,15 +2,18 @@
 
 A.I.R.E. helps analysts understand binary programs using Ghidra evidence and
 local language models. This repository restores the working Java v1 extension
-and implements **A.I.R.E. 2.0 M1/M2: read-only whole-binary Python indexing
-and SQLite persistence**. Richer relationships and later analysis services
-remain planned.
+and implements **A.I.R.E. 2.0 M1–M4: read-only whole-binary indexing, SQLite
+persistence, relationship queries, and deterministic bounded evidence bundles**.
+Local LLM/chat and later analysis services remain planned.
 
 ## Current capabilities
 
 The Python backend statically analyzes a binary into ProgramIndex: binary metadata,
 functions, decompilation, bounded assembly, strings/imports/exports, and direct
 call edges. M2 saves and reloads complete ProgramIndex snapshots in SQLite.
+M3 queries callers/callees, callsites, bounded reachability/paths, and connectivity
+rankings over persisted facts without an LLM. M4 selects, bounds, orders and
+labels evidence with provenance and explicit truncations for future model input.
 It does not execute or modify the target. See the
 [backend README](aire-server/README.md) for API, CLI, and test commands.
 
@@ -40,7 +43,7 @@ See [architecture](docs/ARCHITECTURE.md) for the trust boundaries.
 ```text
 AIRE/
 ├── ghidra-plugin/   Canonical v1 Ghidra extension and bundled Gson
-├── aire-server/     Read-only indexer, SQLite knowledge store, planned services
+├── aire-server/     Read-only indexer, SQLite store, deterministic graph queries
 ├── tests/           Sources, preserved binaries, ground truth, integration instructions
 ├── docs/            Current state, architecture, roadmap, setup, demo and recovery archive
 ├── scripts/         Repository-relative fixture rebuild scripts
@@ -71,7 +74,7 @@ M0 cleanup and architecture → M1 read-only indexing → M2 SQLite → M3 relat
 M8 initial checks → M9 evidence/confidence → M10 optional dynamic validation →
 M11 evaluation → M12 reporting/integration. See [roadmap](docs/ROADMAP.md).
 
-**Next: M3 — Richer program relationships and graph queries over the persisted store.**
+**Next: M5 — First local LLM/chat layer over M4 EvidenceBundle, keeping facts separate from interpretation.**
 
 ## Safety and licensing
 

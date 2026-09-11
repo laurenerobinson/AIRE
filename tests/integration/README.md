@@ -37,5 +37,41 @@ AIRE_RUN_GHIDRA_TESTS=1 AIRE_DATABASE_REPORT=/tmp/aire-m2-report.json PYTHONPATH
 
 The optional JSON report contains counts, save/load seconds (excluding indexing
 and schema initialization), closed database size, and before/after hashes.
-With no filename pattern, discovery runs both M1 and M2 integration tests plus
+With no filename pattern, discovery runs M1, M2, M3 and M4 integration tests plus
 all pure-Python tests. Integration tests remain opt-in.
+
+## M3 persisted relationship queries
+
+`aire-server/tests/test_retrieval_integration.py` indexes the controlled fixture,
+saves/reopens a temporary database, resolves socket/write/memset candidates, and
+checks callers, callees, bounded forward/reverse walks, a shortest path, and
+ranking. Every returned relationship must match an M1 edge that was persisted;
+repeated results must be equal, query row writes must be zero, and target hashes
+must remain identical. No indirect or thunk-to-external link is inferred.
+
+```bash
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_QUERY_REPORT=/tmp/aire-m3-report.json PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_retrieval_integration.py -v
+```
+
+The optional JSON report includes actual candidates, callsite examples, top
+connectivity counts and mean milliseconds over 20 repeated queries. Known names
+can match multiple thunks and EXTERNAL functions; only some have stored callers.
+Assertions use those observed edges without requiring each external entry to
+have a caller. Temporary databases are removed after the test.
+
+## M4 evidence/context bundles
+
+`aire-server/tests/test_context_builder_integration.py` indexes and persists the
+controlled fixture, then builds bundles using exact addresses 00101efe, 00101060,
+00101090 and 00101269. It checks stored text prefixes, callsite/source provenance,
+explicit global artifact scope, warning filtering, count/text limits, deterministic
+repeat output and unchanged target SHA-256. No model or target execution occurs.
+
+```bash
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_CONTEXT_REPORT=/tmp/aire-m4-report.json AIRE_CONTEXT_EXAMPLE=/tmp/aire-m4-context.txt PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_context_builder_integration.py -v
+```
+
+The optional report includes example counts, truncation categories, rendered
+character size, per-stage timings and warm means over 10 builds for target-only,
+direct-neighbor and depth-3 requests. The optional example contains rendered text;
+it is not a model response. Temporary database files are removed after the test.

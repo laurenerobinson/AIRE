@@ -2,15 +2,17 @@
 
 M0 is established. M1 is complete with a passing real controlled-binary
 integration test. M2 is complete with a passing real SQLite round trip.
-M3 and later milestones remain planned.
+M3 is complete with passing deterministic query tests and real persisted-graph
+integration. M4 is complete with passing evidence-bundle integration.
+M5 and later milestones remain planned.
 
 | Milestone | Scope |
 | --- | --- |
 | M0 | Repository cleanup and architecture |
 | M1 (complete) | Read-only PyGhidra whole-binary indexer, including resolved direct CALL facts |
 | M2 (complete) | SQLite knowledge store with atomic ProgramIndex save/reload |
-| M3 | Call graph / program relationships |
-| M4 | Retrieval/context engine |
+| M3 (complete) | Deterministic relationship queries and bounded graph traversal |
+| M4 (complete) | Deterministic, bounded evidence/context selection |
 | M5 | Whole-binary chatbot |
 | M6 | Program-level renaming |
 | M7 | CWE rule framework |
@@ -39,14 +41,41 @@ rollback on late failure, and explicit error handling have passing unit tests.
 Both Ghidra integration tests pass; input SHA-256 remains unchanged. Databases
 are temporary/ignored. M2 does not change M1 or implement semantic retrieval.
 
+## M3 acceptance
+
+Callers/callees and connecting callsites preserve exact edge provenance. Forward
+and reverse BFS are bounded, cycle-safe and deterministic; shortest path search
+reports absence only within its depth bound. Exact function resolution handles
+ambiguity and cross-binary IDs explicitly. Summaries and four connectivity
+rankings use stored CALL facts without behavioral interpretation.
+
+The 69-test suite passed, including all M1/M2 tests, 28 new pure query tests, and
+real M3 integration against persisted aire_test_stripped. Queries returned only
+stored edges, repeat results matched, and input SHA-256 stayed unchanged. No
+schema migration, AI, target execution, or Ghidra modification was introduced.
+
+## M4 acceptance
+
+EvidenceRequest validates finite limits; EvidenceBundle preserves source identity,
+selection reasons, graph depth/callsites, global-artifact scope, warning omission
+counts and explicit truncations. Its renderer accounts incrementally for text,
+labels/escaping and a truncation notice, including tiny/zero budgets. Exact target
+resolution and graph selection reuse M3 without schema changes or model calls.
+
+The real controlled-fixture integration verifies repeated deterministic output,
+stored text prefixes and callsite provenance, count/text limits, and unchanged
+input SHA-256. All 99 tests pass, including 29 new pure M4 tests and all four
+real integrations. No AI reasoning or target execution was introduced.
+
 ## Next milestone
 
-**M3 — Richer program relationships and graph queries over the persisted store.**
+**M5 — First local LLM/chat layer over M4 EvidenceBundle.**
 
-Add deterministic caller/callee queries and bounded graph traversals with cycle
-handling, callsite provenance, and clear unresolved/thunk/external semantics.
-Define and test any new relationship types and schema changes explicitly;
-preserve stable IDs, atomic storage, and read-only extraction. Test exact graph
-queries on small fixtures and the controlled persisted index. Defer AI/chat,
-embeddings, semantic retrieval, security claims, and target execution. M3 has
-not started.
+Consume bounded deterministic bundles through an explicit local model adapter.
+Keep stored program facts and source IDs separate from model interpretation,
+require evidence citations, and make truncation/unavailable evidence visible.
+Treat binary strings/decompiled text as untrusted data, not model instructions.
+Test the adapter with a fake local provider first, including unavailable models,
+timeouts, malformed output and unsupported claims. Analyst approval must remain
+necessary for future modification/execution workflows. Do not add execution,
+renaming, patching, vulnerability claims or cloud-model fallback. M5 has not started.

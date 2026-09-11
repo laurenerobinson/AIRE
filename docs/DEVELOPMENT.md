@@ -94,7 +94,7 @@ Each save/delete commits atomically and is independent of the outer Python
 context. Treat instances as single-thread-owned, single-process/single-writer.
 Metadata round trips as JSON-safe data; binary timestamps restore as datetime.
 
-Run database tests alone or the complete suite (including both real integrations):
+Run database tests alone or the complete suite (including all four real integrations):
 
 ```bash
 PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_database.py -v
@@ -106,7 +106,62 @@ reports exact round-trip counts and DB size, and deletes its temporary database.
 The optional report is JSON, not a persisted runtime database. `.gitignore`
 includes `*.db`, `*.sqlite`, and `*.sqlite3`; do not stage generated databases.
 M2 adds no CLI switches or web service; the Python persistence API is the entry
-point. Semantic retrieval in retrieval.py remains unimplemented.
+point. M3 deterministic relationship queries are now implemented in retrieval.py;
+semantic retrieval remains unimplemented.
+
+## Deterministic graph queries (M3)
+
+ProgramQueryService reads stored CALL edges without a JVM or target access.
+See the [backend examples](../aire-server/README.md#query-persisted-relationships-m3)
+for exact resolution, callers/callees, bounded walks, paths, summaries and rankings.
+Use exact addresses or IDs when import/thunk names are ambiguous. Keep the store
+open and use it only from its owning thread.
+
+```bash
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_retrieval.py -v
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_QUERY_REPORT=/tmp/aire-m3-report.json PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
+```
+
+The query report records observed thunk/external matches, edge provenance and
+mean timings over 20 repeated queries, excluding indexing and persistence.
+Integration databases are temporary and removed. No query CLI or HTTP service
+was added. M4 evidence-context selection is now implemented; AI work remains planned.
+
+## Bounded evidence context (M4)
+
+Use ContextBuilder over an existing open store. From the root with
+PYTHONPATH=aire-server/src and the configured venv:
+
+```python
+from pathlib import Path
+from aire.knowledge.database import BinaryKnowledgeStore
+from aire.ai.context_builder import ContextBuilder, EvidenceRequest
+
+with BinaryKnowledgeStore(Path("/tmp/aire-analysis.sqlite")) as store:
+    # Use the binary_id printed when the analysis was persisted.
+    request = EvidenceRequest(binary_id=binary_id, target="00101efe",
+                              max_depth=2, traversal_direction="forward",
+                              max_functions=12, max_artifacts=8)
+    bundle = ContextBuilder(store).build(request)
+    print(bundle.render_text())
+    assert len(bundle.render_text()) <= request.max_total_chars
+```
+
+No JVM or target-file access is needed for context selection alone. Exact names
+can be ambiguous; use addresses/IDs or explicit target_by. Strings are global
+artifacts, not claimed function references. Text and count omissions have
+structured truncations; keep those available to future consumers. ContextBuilder
+uses one read snapshot on the store's owning thread and leaves stored facts intact.
+
+```bash
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_context_builder.py -v
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_CONTEXT_REPORT=/tmp/aire-m4-report.json AIRE_CONTEXT_EXAMPLE=/tmp/aire-m4-context.txt PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
+```
+
+The report includes selected counts, rendered sizes, truncation categories,
+per-stage timings and warm means for target-only/direct/depth-3 bundles. The
+example file contains deterministic rendered evidence. SQLite files are temporary
+and removed by integration tests. No tools/models are installed or called.
 
 ## Ollama
 
