@@ -5,7 +5,8 @@ layout. M1 now implements a read-only whole-binary PyGhidra indexer, validated
 against the controlled stripped fixture. M2 now persists and reloads complete
 ProgramIndex snapshots in SQLite. M3 adds deterministic persisted relationship
 queries and bounded graph traversal. M4 now constructs deterministic bounded
-evidence bundles without an LLM. The v1 description below remains based
+evidence bundles without an LLM. M5 implements local grounded chat; both targeted live pipelines passed with
+explicit low-memory context allocation. Binary-summary validation remains pending. The v1 description below remains based
 on source inspection, not a new live Ghidra/Ollama session.
 
 ## Working v1 behavior
@@ -228,11 +229,55 @@ Git baseline note for this implementation: M3 was present but still uncommitted
 on top of aire-m2 at task start. Its source/test files were preserved; a pre-M4
 archive was saved under /tmp. Neither milestone was automatically committed.
 
+## Implemented M5; targeted live validation passed
+
+M5 adds a standard-library Ollama client, transient ChatRequest/ChatResponse,
+AireChatService, deterministic prompt/citation catalog, strict response parser,
+bounded overview selector and development CLI. Explicit targets consume M4
+unchanged; no target selects roots/connectivity evidence with no semantic search.
+The model selects deterministic fact IDs; its summary and interpretation remain
+advisory prose. Existing citation IDs are validated, malformed responses retry
+once, and context omissions are disclosed independently of model output.
+
+The endpoint defaults to 127.0.0.1:11434 and requires an explicit model. Remote
+hosts require opt-in; proxies and redirects are disabled. The minimal M5 change
+adds `AIRE_OLLAMA_NUM_CTX`: positive integer only, explicit constructor argument
+first, environment second, compatible default 32768. Invalid values fail clearly.
+Context allocation controls KV-cache memory independently of evidence characters.
+
+Local `qwen2.5-coder:1.5b` passed both targeted live pipelines at **4096** context
+with 6000/5000-character evidence caps. Ollama allocated 112 MiB KV rather than
+896 MiB at the previously failing 32768 setting. Both accepted responses cited
+actual evidence, selected only deterministic facts and kept interpretation
+separate. Exact process_input / FUN_004012f8 calls to entries 004011bc and
+00401269 at callsites 00401316 and 00401334 match GROUND_TRUTH.md. Truncation was
+disclosed and both fixture hashes remained unchanged. No target was executed,
+no Ghidra program was modified, and no remote evidence transport occurred.
+
+An earlier stripped response had valid citations but an incorrect interpretation;
+it was not counted as a grounded success. The accepted smaller request retained
+target decompilation and both edges and explicitly omitted assembly. Citation
+existence is not semantic entailment. Binary-summary requests timed out and
+remain unvalidated; the 32768 default is not claimed to work on this VM.
+
+Seven new configuration tests bring the pure suite to 149 passes, with eight
+opt-in integration skips. Final full regression: 157 run, 155 passed, two live
+timeout errors, zero skips. All pure and static integrations passed. Standalone
+targeted success does not establish a clean full live regression; overall live
+validation remains pending. Results and resource-isolation details are recorded
+in [the validation report](M5_VALIDATION.md). No packages/models,
+swap settings or service configuration were changed. See [M5 contracts](M5_CHAT.md)
+for configuration and response guarantees.
+
+Git baseline: M4 was committed at 0c36ffb (tag aire-m4), with a clean working tree
+before M5. No history was rewritten and M5 was not committed automatically.
+M1–M4 source/schema, Java plugin and binary fixtures are unchanged.
+
 ## Not implemented
 
-Natural-language request parsing, local LLM/chat reasoning, semantic retrieval,
-program-level renaming, CWE engine, CVE matching, taint analysis, vulnerability
-claims, dynamic validation, exploitation, HTTP API, benchmark harness and
-reporting pipeline remain unimplemented. M5 should add the first local chat/model
-layer over EvidenceBundle while separating program facts from interpretation.
-M5 has not started. The Java v1 plugin remains unchanged.
+Semantic/vector retrieval, embeddings, CWE engine, vulnerability detection or
+confirmation, CVE matching, taint analysis, dynamic validation, exploit generation,
+autonomous actions, automatic renaming/comments/signatures, HTTP API, and GUI
+remain unimplemented. M6 should add analyst-controlled naming suggestions across
+the whole binary using the M5 evidence/chat pipeline, never automatic renames.
+M6 has not started. The Java v1 plugin remains unchanged.

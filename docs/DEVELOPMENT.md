@@ -94,7 +94,7 @@ Each save/delete commits atomically and is independent of the outer Python
 context. Treat instances as single-thread-owned, single-process/single-writer.
 Metadata round trips as JSON-safe data; binary timestamps restore as datetime.
 
-Run database tests alone or the complete suite (including all four real integrations):
+Run database tests alone or the complete suite (including static integrations):
 
 ```bash
 PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_database.py -v
@@ -125,7 +125,7 @@ AIRE_RUN_GHIDRA_TESTS=1 AIRE_QUERY_REPORT=/tmp/aire-m3-report.json PYTHONPATH=ai
 The query report records observed thunk/external matches, edge provenance and
 mean timings over 20 repeated queries, excluding indexing and persistence.
 Integration databases are temporary and removed. No query CLI or HTTP service
-was added. M4 evidence-context selection is now implemented; AI work remains planned.
+was added in M3. M4 evidence selection and M5 local chat are now implemented.
 
 ## Bounded evidence context (M4)
 
@@ -177,7 +177,8 @@ export AIRE_OLLAMA_MODEL=gemma3:4b
 
 Launch Ghidra with those environment variables. JVM properties
 `aire.ollama.url` and `aire.ollama.model` take precedence. Keep the endpoint local.
-The Python Ollama client is not implemented.
+Python M5 uses AIRE_OLLAMA_HOST (not the Java URL variable), with no assumed model.
+See the M5 development workflow below.
 
 ## Controlled fixtures
 
@@ -186,3 +187,30 @@ and write to ignored `build/test-corpus/`, or AIRE_TEST_OUTPUT_DIR if set.
 They compile and strip only; they never launch the target. OpenSSL development
 headers/libraries enable the crypto paths. Without them, the scripts compile
 fallback variants; these are not equivalent to the historical crypto corpus.
+
+## M5 development workflow
+
+Use the small unstripped fixture as primary; its GROUND_TRUTH.md is authoritative.
+Do not execute or rebuild it during chat validation. Persist an M1 index into
+an ignored SQLite file, then ask questions without accessing the target again:
+
+```bash
+export AIRE_OLLAMA_HOST=http://127.0.0.1:11434
+export AIRE_OLLAMA_MODEL=your-installed-model
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m aire.ai.chat \
+  analysis.sqlite '<binary_id>' 'What does process_input interact with?' --target process_input
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_RUN_OLLAMA_TESTS=1 \
+  AIRE_CHAT_REPORT=/tmp/aire-m5-report.json PYTHONPATH=aire-server/src \
+  aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
+```
+
+Without either integration flag, pure tests require no Ghidra or Ollama. The real
+M5 tests statically index both simple fixtures, check exact graph ground truth,
+build/parse chat responses with a fake provider, and separately try live local
+Ollama if enabled. Missing services/models skip only live tests with a reason.
+Never install/start/pull automatically. The report distinguishes fake-model
+pipeline results from live inference and includes citations, timing, sizes and
+before/after hashes. See [M5 contracts](M5_CHAT.md) for configuration and limits.
+
+M6 has not started. Its next scope is analyst-controlled whole-binary naming
+suggestions using M5 evidence, with explicit review and no automatic renaming.

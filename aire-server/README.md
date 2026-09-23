@@ -4,8 +4,10 @@ M1 implements a read-only, in-memory whole-binary indexer. Importing the package
 starts no services or JVM. M2 adds SQLite persistence and reload of ProgramIndex.
 M3 adds deterministic relationship queries and bounded call-graph traversal.
 M4 constructs bounded, provenance-rich evidence bundles without AI reasoning.
-Semantic retrieval, Python chatbot, security rules, and an API service remain
-unimplemented. The Java v1 plugin is unchanged.
+M5 adds local Ollama chat with deterministic fact selection, cited interpretation,
+strict JSON validation and a CLI. Implementation is complete; live model integration
+is pending local Ollama availability. Semantic retrieval, security rules and an
+API service remain unimplemented. The Java v1 plugin is unchanged.
 
 Validated environment: Python 3.11, PyGhidra 3.1.0, Ghidra 12.1.3, JDK 21.
 PyGhidra is an optional `indexing` dependency; pure record/unit-test imports do
@@ -73,7 +75,7 @@ semantic retrieval or AI calls are included in M2; M3 queries are separate.
 
 Use temporary database paths during development; `*.db`, `*.sqlite`, `*.sqlite3`
 are ignored and must not be committed. No extra package is required for SQLite.
-Run all four integration tests and all unit tests with:
+Run all static integration tests and all unit tests with:
 
 ```bash
 AIRE_RUN_GHIDRA_TESTS=1 PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
@@ -137,8 +139,8 @@ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s 
 AIRE_RUN_GHIDRA_TESTS=1 AIRE_QUERY_REPORT=/tmp/aire-m3-report.json PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_retrieval_integration.py -v
 ```
 
-Semantic search, chatbot/LLM reasoning, CWE analysis, taint/data-flow analysis,
-and dynamic validation are not implemented. M4 context selection is described below.
+Semantic search, CWE analysis, taint/data-flow analysis and dynamic validation
+are not implemented. M4 context selection and M5 local chat are described below.
 
 ## Select bounded evidence (M4)
 
@@ -198,5 +200,45 @@ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s 
 AIRE_RUN_GHIDRA_TESTS=1 AIRE_CONTEXT_REPORT=/tmp/aire-m4-report.json AIRE_CONTEXT_EXAMPLE=/tmp/aire-m4-context.txt PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_context_builder_integration.py -v
 ```
 
-No natural-language parsing, model/chat calls, semantic retrieval, CWE engine,
-taint analysis, dynamic validation, or HTTP API is included. M5 has not started.
+M4 itself performs no model calls. M5 consumes its evidence through the API below.
+
+## Grounded local chat (M5)
+
+```python
+from aire.ai.chat import AireChatService, ChatRequest, render_response
+from aire.ai.ollama_client import OllamaClient
+from aire.knowledge.database import BinaryKnowledgeStore
+
+client = OllamaClient()  # default loopback host; set AIRE_OLLAMA_MODEL explicitly
+# client.list_models() discovers already installed names, without pulling models.
+with BinaryKnowledgeStore("analysis.sqlite") as store:
+    response = AireChatService(store, client).ask(
+        binary_id=binary_id, question="What does this function appear to do?",
+        target="process_input")
+    print(render_response(response))
+```
+
+```bash
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m aire.ai.chat \
+  analysis.sqlite '<binary_id>' 'What does process_input interact with?' \
+  --target process_input --model your-installed-model
+```
+
+Omit `--target` for a bounded root/connectivity overview. No semantic relevance is
+guessed from question prose. `ChatRequest` exposes depth/function/artifact/edge/
+character limits and assembly/decompilation flags. `ChatResponse` includes cited
+summary, deterministic stored facts, separate interpretations/confidence,
+uncertainties, evidence bundle/provenance, truncations, model, timing and sizes.
+
+Default endpoint: http://127.0.0.1:11434. Set AIRE_OLLAMA_HOST/AIRE_OLLAMA_MODEL or
+explicit constructor/CLI values. There is no default model, automatic pull or
+service startup. Non-loopback hosts require `allow_remote_host=True` or
+`--allow-remote-host`; proxies and redirects are disabled. No internet is needed
+for local inference. Raw responses are debug-only. Model prose cannot invoke
+tools or write facts. Invalid citations/structures permit one format retry.
+
+Primary fixture: tests/fixtures/simple_elf/aire_test_binary; use its stripped
+partner for address-based validation. See [M5 specification](../docs/M5_CHAT.md)
+for all public fields, prompt-injection defenses, exact policies and limitations.
+Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
+CVE matching, dynamic validation, exploit generation, or autonomous actions.

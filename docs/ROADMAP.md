@@ -4,7 +4,10 @@ M0 is established. M1 is complete with a passing real controlled-binary
 integration test. M2 is complete with a passing real SQLite round trip.
 M3 is complete with passing deterministic query tests and real persisted-graph
 integration. M4 is complete with passing evidence-bundle integration.
-M5 and later milestones remain planned.
+M5 implementation and targeted low-memory live validation are complete;
+binary-summary and a clean full live regression remain pending after
+runtime/resource timeouts.
+M6 and later milestones remain planned.
 
 | Milestone | Scope |
 | --- | --- |
@@ -13,8 +16,8 @@ M5 and later milestones remain planned.
 | M2 (complete) | SQLite knowledge store with atomic ProgramIndex save/reload |
 | M3 (complete) | Deterministic relationship queries and bounded graph traversal |
 | M4 (complete) | Deterministic, bounded evidence/context selection |
-| M5 | Whole-binary chatbot |
-| M6 | Program-level renaming |
+| M5 (targeted live validation passed) | Local evidence-grounded chat, strict citations and separate interpretation |
+| M6 | Analyst-controlled whole-binary naming suggestions; no automatic renaming |
 | M7 | CWE rule framework |
 | M8 | Initial vulnerability checks |
 | M9 | Evidence/confidence model |
@@ -67,15 +70,30 @@ stored text prefixes and callsite provenance, count/text limits, and unchanged
 input SHA-256. All 99 tests pass, including 29 new pure M4 tests and all four
 real integrations. No AI reasoning or target execution was introduced.
 
+## M5 implementation
+
+Local-only-default Ollama adapter, explicit model configuration, bounded target/
+binary-level evidence, deterministic prompts, injection-aware data boundaries,
+validated citations, reconstructed facts, separate model interpretation, one
+format retry, timing/size metrics and a development CLI are implemented.
+See [M5 contracts](M5_CHAT.md). Explicit `AIRE_OLLAMA_NUM_CTX` now configures
+positive integer context allocation, preserving default 32768. Both targeted
+simple-ELF pipelines passed with local `qwen2.5-coder:1.5b`, context **4096** and
+6000/5000-character evidence caps. Allocation shrank the KV cache to 112 MiB;
+reducing evidence alone had not fixed the prior 32768 OOM failures. Citations,
+separate deterministic facts, truncation and unchanged hashes were verified.
+Binary-summary validation remains pending after timeouts. An earlier stripped
+interpretation was wrong despite valid citations; grounded success is limited
+to the accepted requests, not general reasoning accuracy. The unchanged 32768
+default is not validated on this VM. Final regression ran 157 tests: 155 passed,
+two live timeout errors, zero skips. Overall M5 live validation remains pending;
+see [the validation report](M5_VALIDATION.md).
+
 ## Next milestone
 
-**M5 — First local LLM/chat layer over M4 EvidenceBundle.**
-
-Consume bounded deterministic bundles through an explicit local model adapter.
-Keep stored program facts and source IDs separate from model interpretation,
-require evidence citations, and make truncation/unavailable evidence visible.
-Treat binary strings/decompiled text as untrusted data, not model instructions.
-Test the adapter with a fake local provider first, including unavailable models,
-timeouts, malformed output and unsupported claims. Analyst approval must remain
-necessary for future modification/execution workflows. Do not add execution,
-renaming, patching, vulnerability claims or cloud-model fallback. M5 has not started.
+The remaining M5 summary validation is documented separately. Future **M6 should focus
+on analyst-controlled naming suggestions across the whole binary using the M5
+evidence/chat pipeline**. Preserve exact function IDs, citations, uncertainty
+and analyst review. **M6 must not automatically rename functions.**
+M6 has not started. No execution, vulnerability confirmation, semantic/vector
+retrieval, CWE/CVE engine, exploit generation or autonomous actions are added.

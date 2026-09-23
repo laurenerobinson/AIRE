@@ -75,3 +75,32 @@ The optional report includes example counts, truncation categories, rendered
 character size, per-stage timings and warm means over 10 builds for target-only,
 direct-neighbor and depth-3 requests. The optional example contains rendered text;
 it is not a model response. Temporary database files are removed after the test.
+
+## M5 simple-ELF chat
+
+`aire-server/tests/test_chat_integration.py` uses the small unstripped fixture
+`tests/fixtures/simple_elf/aire_test_binary` as primary and its stripped partner
+for address-based comparison. It statically indexes both, persists/reopens SQLite,
+queries M3, builds M4 evidence, and checks the M5 pipeline with a fake model.
+Two separate live tests use local Ollama only with AIRE_RUN_OLLAMA_TESTS=1.
+
+```bash
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_RUN_OLLAMA_TESTS=1 \
+  AIRE_CHAT_REPORT=/tmp/aire-m5-report.json PYTHONPATH=aire-server/src \
+  aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_chat_integration.py -v
+```
+
+The model comes from AIRE_OLLAMA_MODEL or the first sorted installed name for
+these opt-in integration tests only. Missing Ollama or models cause explicit
+live-test skips; nothing is pulled/installed/started. The production service
+requires explicit model configuration. An available model returning invalid
+structures, nonexistent citations, or missing requested direct-callee facts
+fails integration, rather than being labeled unavailable.
+
+The test verifies exact targets, citations/provenance, confidence, truncations,
+zero query writes, unchanged SHA-256 and the two process_input direct callees
+from GROUND_TRUTH.md. Stripped targets are resolved using the debug partner's
+address; no names are transferred into the model evidence. The JSON report
+separates fake-provider pipeline checks from live answers and records context/
+prompt/response sizes plus stage timings. No binary is executed or rebuilt.
+See [M5 contracts](../../docs/M5_CHAT.md) for limitations and response semantics.

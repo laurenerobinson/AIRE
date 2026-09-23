@@ -2,8 +2,9 @@
 
 M0 provides the repository foundation; M1 implements read-only whole-binary
 indexing. M2 implements SQLite persistence of ProgramIndex. The broader
-pipeline below remains planned beyond M4: M3 queries stored CALL relationships,
-and M4 selects bounded evidence for future model input without calling a model.
+pipeline includes M3 stored CALL queries, M4 bounded evidence, and M5 local chat.
+M5 implementation is complete; live model integration is pending Ollama availability.
+Security findings and dynamic validation in the broader diagram remain planned.
 Existing v1 remains a separate per-function Ghidra Java workflow.
 
 ```mermaid
@@ -41,12 +42,12 @@ supporting and contradicting evidence visible.
 | ghidra-plugin | Interactive v1 evidence and local model naming | Preserved Java implementation |
 | aire.pyghidra | Read-only fact extraction and direct call edges | Implemented M1 |
 | aire.knowledge | Records, persistence, retrieval | M2 SQLite persistence and M3 deterministic relationship queries; no semantic retrieval |
-| aire.ai | Evidence context and future local model/chat | M4 deterministic context builder; models/chat planned |
+| aire.ai | Deterministic evidence plus advisory local chat | M4 context builder and M5 Ollama/chat implemented; live model validation pending |
 | aire.security | Findings and deterministic rules | Finding dataclass only |
 | aire.validation | Optional approved isolated validation | Documentation only |
 | aire.api | Local service boundary | Planned; no listener |
 
-## Implemented M1 → M2 → M3 → M4 path
+## Implemented M1 → M2 → M3 → M4 → M5 path
 
 ```text
 Binary
@@ -61,7 +62,8 @@ Binary
 → Deterministic Relationship Query Layer (M3)
 → Deterministic Evidence / Context Builder (M4)
 
-Future: → Local LLM / Chat (M5, not implemented)
+→ Local Ollama Chat Layer (M5)
+→ Validated citations, deterministic stored facts, separate model interpretation
 ```
 
 `index_binary(path: Path, options: IndexOptions | None = None) -> ProgramIndex`
@@ -237,7 +239,7 @@ Python API only; no new CLI/server is added.
 `aire.ai.context_builder.ContextBuilder(store).build(EvidenceRequest(...))`
 returns an EvidenceBundle. `knowledge/evidence.py` contains request/result records
 and the budgeted renderer. No model, network API, natural-language interpretation,
-or Ghidra operation occurs. `chat.py` remains a placeholder. M1–M3 source and the
+or Ghidra operation occurs in M4. M5 consumes these bundles separately. M1–M3 source and the
 SQLite schema remain unchanged. The builder uses M3's existing internal snapshot,
 exact resolver, relationship and BFS helpers so the whole build sees one read
 transaction; it does not nest public query transactions.
@@ -316,7 +318,33 @@ can inspect more functions than the final selection cap; no separate scan/time
 budget is provided. Artifact ordering inspects matching binary-level identifiers
 before fetching selected values. No token-budget estimator or CLI is included.
 
-Not implemented: natural-language query parsing, LLM/chat reasoning, semantic
-retrieval, CWE engine, CVE matching, taint/data-flow analysis, or dynamic
-validation. M5 is planned; selected facts must remain separate from future model
-interpretation.
+Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
+CVE matching, taint/data-flow analysis, dynamic validation, exploit generation,
+or autonomous actions. M5 local chat is described below.
+
+## M5 local evidence-to-answer layer
+
+`AireChatService` orchestrates `ChatRequest` → M4 `EvidenceBundle` → deterministic
+`build_prompt` → `OllamaClient` → strict `parse_response` → `ChatResponse`.
+`evidence_selector.py` adds a separate bounded binary-overview policy; explicit
+targets use M4 unchanged. `chat_models.py` contains transient request/result
+records, `prompt_builder.py` owns citations/schema, and `chat.py` exposes the
+service, renderer and development CLI. No schema or M1–M4 behavior changed.
+
+Evidence selection remains deterministic. The model chooses IDs of prewritten
+evidence facts; the application renders their exact statements. Model summary
+and interpretation prose never become Ghidra facts. Citation aliases bind output
+to actual bundle sources, including function addresses and exact callsites.
+Invalid IDs or malformed structures fail after at most one format correction.
+Semantic entailment of model prose remains an analyst review task.
+
+Binary content, names, comments and embedded prompts are explicitly untrusted
+analyzed data, JSON-escaped below a separate fixed system instruction. There
+are no model tools, shell execution, file retrieval, target execution, patches,
+renames, comments, signature changes or Ghidra modifications. Default Ollama
+access is loopback-only; redirects and environment proxies are disabled. Remote
+access needs explicit opt-in. Context/prompt omissions are recorded, disclosed
+to the model, and rendered independently of model cooperation.
+
+See [M5 chat contracts and limits](M5_CHAT.md) for the selection policy, request
+bounds, response schema, local configuration, privacy, timings and tests.

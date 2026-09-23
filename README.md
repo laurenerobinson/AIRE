@@ -2,9 +2,9 @@
 
 A.I.R.E. helps analysts understand binary programs using Ghidra evidence and
 local language models. This repository restores the working Java v1 extension
-and implements **A.I.R.E. 2.0 M1–M4: read-only whole-binary indexing, SQLite
-persistence, relationship queries, and deterministic bounded evidence bundles**.
-Local LLM/chat and later analysis services remain planned.
+and implements **A.I.R.E. 2.0 M1–M5: read-only whole-binary indexing, SQLite
+persistence, relationship queries, bounded evidence and local grounded chat**.
+M5 implementation is complete; live model integration is pending local Ollama availability.
 
 ## Current capabilities
 
@@ -13,7 +13,9 @@ functions, decompilation, bounded assembly, strings/imports/exports, and direct
 call edges. M2 saves and reloads complete ProgramIndex snapshots in SQLite.
 M3 queries callers/callees, callsites, bounded reachability/paths, and connectivity
 rankings over persisted facts without an LLM. M4 selects, bounds, orders and
-labels evidence with provenance and explicit truncations for future model input.
+labels evidence with provenance and explicit truncations. M5 sends bounded evidence
+to configured local Ollama, validates citations, and separates stored facts from
+model interpretation. See [M5 chat](docs/M5_CHAT.md) for API and privacy details.
 It does not execute or modify the target. See the
 [backend README](aire-server/README.md) for API, CLI, and test commands.
 
@@ -28,11 +30,13 @@ The original Java implementation, six C fixtures, eight intentional test binarie
 ground-truth maps and demo are preserved. See [current state](docs/CURRENT_STATE.md)
 for exact behavior and limitations, and [audit](docs/AUDIT.md) for provenance.
 
-## Planned 2.0 architecture
+## Implemented and planned 2.0 architecture
 
-Binary → PyGhidra Whole-Binary Indexer → Binary Knowledge Store →
-Call/Relationship Graph → Retrieval Engine → Chat / LLM or CWE Rule Engine →
-Findings / Evidence → Optional Dynamic Validation → Analyst.
+Implemented: Binary → PyGhidra → ProgramIndex → SQLite Knowledge Store →
+Relationship Queries → Evidence Context Builder → Local Ollama Chat → Analyst.
+
+Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
+CVE matching, dynamic validation, exploit generation, and autonomous actions.
 
 Ghidra supplies facts, rules identify deterministic findings where possible,
 and local models explain evidence. Analysts approve changes and execution.
@@ -70,11 +74,12 @@ No packages or models are installed automatically.
 ## Roadmap
 
 M0 cleanup and architecture → M1 read-only indexing → M2 SQLite → M3 relationships
-→ M4 retrieval → M5 chat → M6 program-level renaming → M7 CWE framework →
+→ M4 retrieval → M5 chat → M6 analyst-controlled naming suggestions → M7 CWE framework →
 M8 initial checks → M9 evidence/confidence → M10 optional dynamic validation →
 M11 evaluation → M12 reporting/integration. See [roadmap](docs/ROADMAP.md).
 
-**Next: M5 — First local LLM/chat layer over M4 EvidenceBundle, keeping facts separate from interpretation.**
+**Next: complete live M5 validation when Ollama is available, then M6 — analyst-controlled
+naming suggestions across the whole binary. No automatic renaming. M6 has not started.**
 
 ## Safety and licensing
 
