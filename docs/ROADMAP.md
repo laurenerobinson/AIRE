@@ -7,7 +7,7 @@ integration. M4 is complete with passing evidence-bundle integration.
 M5 implementation and targeted low-memory live validation are complete;
 binary-summary and a clean full live regression remain pending after
 runtime/resource timeouts.
-M6 and later milestones remain planned.
+M6 advisory function naming is implemented. M7 and later milestones remain planned.
 
 | Milestone | Scope |
 | --- | --- |
@@ -17,7 +17,7 @@ M6 and later milestones remain planned.
 | M3 (complete) | Deterministic relationship queries and bounded graph traversal |
 | M4 (complete) | Deterministic, bounded evidence/context selection |
 | M5 (targeted live validation passed) | Local evidence-grounded chat, strict citations and separate interpretation |
-| M6 | Analyst-controlled whole-binary naming suggestions; no automatic renaming |
+| M6 (implemented) | Analyst-controlled whole-binary naming suggestions; no automatic renaming |
 | M7 | CWE rule framework |
 | M8 | Initial vulnerability checks |
 | M9 | Evidence/confidence model |
@@ -89,11 +89,24 @@ default is not validated on this VM. Final regression ran 157 tests: 155 passed,
 two live timeout errors, zero skips. Overall M5 live validation remains pending;
 see [the validation report](M5_VALIDATION.md).
 
-## Next milestone
+## M6 acceptance
 
-The remaining M5 summary validation is documented separately. Future **M6 should focus
-on analyst-controlled naming suggestions across the whole binary using the M5
-evidence/chat pipeline**. Preserve exact function IDs, citations, uncertainty
-and analyst review. **M6 must not automatically rename functions.**
-M6 has not started. No execution, vulnerability confirmation, semantic/vector
-retrieval, CWE/CVE engine, exploit generation or autonomous actions are added.
+Deterministic high-connectivity generic-name candidates feed separate bounded
+M4/M5 evidence requests. Strict naming JSON, safe snake_case, generic-name filters,
+confidence and real citation checks produce transient analyst review results.
+Exact duplicates retain the highest confidence. Completed batch results survive
+errors; provider failure stops further calls. Current names are never updated.
+Static stripped-fixture evaluation uses the unstripped address map without leaking
+meaningful names into prompts. The optional 1.5B live naming request completed
+but its invalid names/citations were rejected; no live suggestion was accepted.
+All 190 enabled pure/static tests pass; three live cases skip in that run.
+See [M6 validation and limits](M6_NAMING.md).
+
+## Next milestone — M7, not started
+
+Begin the deterministic CWE/security rule framework over stored static facts.
+Define versioned rule contracts, applicability and insufficient-evidence states,
+provenance-bearing findings/candidates, CWE references, and positive/negative
+synthetic tests. Separate rule candidates from confirmed vulnerabilities and
+model interpretations. Preserve read-only analysis; add no automatic changes,
+execution, cloud APIs or autonomous actions. No M7 implementation is included.

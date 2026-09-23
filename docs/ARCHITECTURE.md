@@ -2,24 +2,21 @@
 
 M0 provides the repository foundation; M1 implements read-only whole-binary
 indexing. M2 implements SQLite persistence of ProgramIndex. The broader
-pipeline includes M3 stored CALL queries, M4 bounded evidence, and M5 local chat.
-M5 implementation is complete; live model integration is pending Ollama availability.
+pipeline includes M3 stored CALL queries, M4 bounded evidence, M5 local chat and
+M6 advisory function naming. M5 is committed; targeted local inference passed.
 Security findings and dynamic validation in the broader diagram remain planned.
 Existing v1 remains a separate per-function Ghidra Java workflow.
 
 ```mermaid
 flowchart TD
-    B[Binary] --> I[PyGhidra Whole-Binary Indexer]
-    I --> K[Binary Knowledge Store]
-    K --> G[Call/Relationship Graph]
-    G --> R[Retrieval Engine]
-    R --> L[Chat / LLM]
-    R --> C[CWE Rule Engine]
-    L --> F[Findings / Evidence]
-    C --> F
-    F --> V[Optional Dynamic Validation]
-    V --> A[Analyst]
-    F --> A
+    B[Binary] --> I[Read-only PyGhidra]
+    I --> P[ProgramIndex]
+    P --> K[Knowledge Store]
+    K --> G[Relationship Query]
+    G --> E[Evidence Builder]
+    E --> L[Local Grounded Model]
+    L --> N[Naming Suggestion Service — M6]
+    N --> A[Analyst Review — no write-back]
 ```
 
 ## Trust model
@@ -42,12 +39,12 @@ supporting and contradicting evidence visible.
 | ghidra-plugin | Interactive v1 evidence and local model naming | Preserved Java implementation |
 | aire.pyghidra | Read-only fact extraction and direct call edges | Implemented M1 |
 | aire.knowledge | Records, persistence, retrieval | M2 SQLite persistence and M3 deterministic relationship queries; no semantic retrieval |
-| aire.ai | Deterministic evidence plus advisory local chat | M4 context builder and M5 Ollama/chat implemented; live model validation pending |
+| aire.ai | Deterministic evidence, grounded chat, advisory naming | M4/M5/M6 implemented; no rename/write-back |
 | aire.security | Findings and deterministic rules | Finding dataclass only |
 | aire.validation | Optional approved isolated validation | Documentation only |
 | aire.api | Local service boundary | Planned; no listener |
 
-## Implemented M1 → M2 → M3 → M4 → M5 path
+## Implemented M1 → M2 → M3 → M4 → M5 → M6 path
 
 ```text
 Binary
@@ -64,6 +61,8 @@ Binary
 
 → Local Ollama Chat Layer (M5)
 → Validated citations, deterministic stored facts, separate model interpretation
+→ Naming Suggestion Service (M6)
+→ Analyst Review — NO WRITE-BACK
 ```
 
 `index_binary(path: Path, options: IndexOptions | None = None) -> ProgramIndex`
@@ -348,3 +347,30 @@ to the model, and rendered independently of model cooperation.
 
 See [M5 chat contracts and limits](M5_CHAT.md) for the selection policy, request
 bounds, response schema, local configuration, privacy, timings and tests.
+
+
+## M6 advisory naming boundary
+
+`NamingService(store, chat_service)` consumes the existing M4 builder, M5 admitted
+citation catalog and local transport. `naming_prompt.py` supplies a dedicated
+naming instruction/schema/parser without changing M5 chat. `naming_models.py`
+contains transient options, suggestions and review results. `naming.py` contains
+deterministic candidate discovery, serial bounded orchestration, rendering and
+an existing-database read-only CLI.
+
+The LLM does not select which functions are generic. Candidate filtering and
+caller/callsite ranking are deterministic. Each candidate has its own evidence
+budget. Code, direct call relationships and callsite provenance are facts;
+proposed names and rationale are interpretations. Unassociated strings/import
+artifacts are excluded rather than treated as function-local evidence.
+
+Strict JSON, snake_case, generic/address filters, confidence and admitted citation
+checks precede results. A suggestion must cite the target or its stored relationship.
+Exact duplicates retain the highest confidence. Provider failure stops a batch
+while preserving earlier results. Nothing updates FunctionRecord.current_name,
+SQLite names, Ghidra programs or binaries. Future application requires a separate
+analyst-controlled design; M6 has no application mechanism.
+
+See [M6 naming](M6_NAMING.md) for exact limits, security boundaries, API and evaluation.
+The next planned milestone is the deterministic CWE/security rule framework (M7),
+not execution, dynamic validation or model-driven vulnerability detection.

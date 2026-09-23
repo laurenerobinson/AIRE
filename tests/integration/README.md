@@ -104,3 +104,27 @@ address; no names are transferred into the model evidence. The JSON report
 separates fake-provider pipeline checks from live answers and records context/
 prompt/response sizes plus stage timings. No binary is executed or rebuilt.
 See [M5 contracts](../../docs/M5_CHAT.md) for limitations and response semantics.
+
+
+## M6 stripped function naming
+
+`aire-server/tests/test_naming_integration.py` freshly indexes both simple-ELF
+fixtures in an indexing child process, persists analysis and resolves the stripped
+target by the debug partner's address. Only stripped evidence enters naming;
+ground-truth target/callee labels are asserted absent from prompts. The fake
+provider checks contracts, not model accuracy. ProgramIndex/database and fixture
+hash comparisons enforce no mutation on both accepted and rejected responses;
+naming never receives a Ghidra object.
+
+```bash
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_RUN_NAMING_LIVE_TESTS=0 \
+ AIRE_NAMING_REPORT=/tmp/aire-m6-report.json PYTHONPATH=aire-server/src \
+ aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -p test_naming_integration.py -v
+```
+
+The optional single-function live case uses `AIRE_RUN_NAMING_LIVE_TESTS=1`, local
+`qwen2.5-coder:1.5b`, `AIRE_OLLAMA_NUM_CTX=4096` and a 5000-character evidence
+cap with assembly explicitly omitted. Normal regression never requires Ollama.
+An opted-in model/transport failure is an error, not silently counted as a skip.
+No whole-binary live batch is tested. See [M6 naming](../../docs/M6_NAMING.md)
+for the exact single-test command, current results and manual semantic review.

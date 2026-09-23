@@ -212,5 +212,33 @@ Never install/start/pull automatically. The report distinguishes fake-model
 pipeline results from live inference and includes citations, timing, sizes and
 before/after hashes. See [M5 contracts](M5_CHAT.md) for configuration and limits.
 
-M6 has not started. Its next scope is analyst-controlled whole-binary naming
-suggestions using M5 evidence, with explicit review and no automatic renaming.
+M6 implements analyst-controlled whole-binary naming suggestions using M4/M5
+evidence, with explicit review and no automatic renaming.
+
+
+## M6 naming development
+
+Use the stripped simple-ELF fixture for naming; use the debug partner and
+GROUND_TRUTH.md only for evaluation after addressing the stripped function.
+Do not feed a known meaningful target name to the model to demonstrate recovery.
+The static integration verifies this separation and unchanged hashes/database.
+
+```bash
+# Pure M1–M6 tests: no JVM or Ollama.
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
+# All static integrations, including M6, without live inference.
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_RUN_OLLAMA_TESTS=0 AIRE_RUN_NAMING_LIVE_TESTS=0 \
+ AIRE_NAMING_REPORT=/tmp/aire-m6-report.json PYTHONPATH=aire-server/src \
+ aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
+```
+
+Naming tests use fake providers for batch orchestration. Optional
+`AIRE_RUN_NAMING_LIVE_TESTS=1` exercises only one stripped function with explicit
+`AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b` and `AIRE_OLLAMA_NUM_CTX=4096`.
+The indexing child exits before inference to release the JVM. Full commands,
+options and measured results are in [M6 naming](M6_NAMING.md).
+
+The naming CLI exposes candidate listing, one function and explicit bounded batch
+modes; no apply/rename/write flags exist. Suggestions are transient and advisory.
+Do not add persistence or application as an incidental naming change. M7's
+future scope is a deterministic CWE/security rule framework; M7 has not started.

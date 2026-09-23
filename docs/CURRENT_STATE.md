@@ -5,9 +5,11 @@ layout. M1 now implements a read-only whole-binary PyGhidra indexer, validated
 against the controlled stripped fixture. M2 now persists and reloads complete
 ProgramIndex snapshots in SQLite. M3 adds deterministic persisted relationship
 queries and bounded graph traversal. M4 now constructs deterministic bounded
-evidence bundles without an LLM. M5 implements local grounded chat; both targeted live pipelines passed with
-explicit low-memory context allocation. Binary-summary validation remains pending. The v1 description below remains based
-on source inspection, not a new live Ghidra/Ollama session.
+evidence bundles without an LLM. M5 implements local grounded chat; both targeted
+live pipelines passed with explicit low-memory context allocation. Binary-summary
+validation remains pending. M6 adds advisory, bounded function naming with
+deterministic candidate discovery. The v1 description below remains based on
+source inspection, not a new live Ghidra/Ollama session.
 
 ## Working v1 behavior
 
@@ -273,11 +275,37 @@ Git baseline: M4 was committed at 0c36ffb (tag aire-m4), with a clean working tr
 before M5. No history was rewritten and M5 was not committed automatically.
 M1–M4 source/schema, Java plugin and binary fixtures are unchanged.
 
+## Implemented M6 advisory naming
+
+M5 is committed at `7aa5e22` / `aire-m5`. M6 adds `NamingService`, validated
+`NamingOptions`, transient `NameSuggestion`/`NamingResult`, strict naming JSON,
+a deterministic renderer and read-only development CLI. Generic-name discovery
+uses metadata and graph counts without a model. Meaningful names, external/import,
+thunk and known-runtime/library functions are skipped by default. Overrides are
+explicit. Batch inference is bounded and serial; completed results survive errors.
+
+Suggestions must cite admitted target evidence and pass snake_case, address,
+generic-name and confidence validation. They remain interpretations; stored
+current names are unchanged. M6 has no write-back, application, persistence,
+Ghidra mutation, target execution or security scanning path. M1–M5 source is unchanged.
+
+Static evaluation maps stripped `FUN_004012f8` by address to unstripped
+`process_input`; meaningful target/callee names are checked absent from model
+prompts. The fake-provider result `validate_then_transform` is a close descriptive
+test example, not evidence of real model accuracy. See [M6 naming](M6_NAMING.md)
+for exact validation totals, hashes and limitations. The optional local 1.5B
+naming request completed both calls but failed strict validation: address-bearing
+names and invented citation IDs were rejected. No live naming suggestion was
+accepted. This output-quality limitation does not replace the passing static
+naming contracts or weaken M5 validation. Final pure suite: 182 passed, eleven
+integration skips. Final full static suite: 190 passed, three live skips, zero
+failures/errors. Both M6 success and rejection paths preserve analysis unchanged.
+The separate live naming test reports one validation error, not a pass or skip.
+
 ## Not implemented
 
 Semantic/vector retrieval, embeddings, CWE engine, vulnerability detection or
 confirmation, CVE matching, taint analysis, dynamic validation, exploit generation,
 autonomous actions, automatic renaming/comments/signatures, HTTP API, and GUI
-remain unimplemented. M6 should add analyst-controlled naming suggestions across
-the whole binary using the M5 evidence/chat pipeline, never automatic renames.
-M6 has not started. The Java v1 plugin remains unchanged.
+remain unimplemented. M7 should begin the deterministic CWE/security rule
+framework; it has not started. The Java v1 plugin remains unchanged.

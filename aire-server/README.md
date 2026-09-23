@@ -5,9 +5,9 @@ starts no services or JVM. M2 adds SQLite persistence and reload of ProgramIndex
 M3 adds deterministic relationship queries and bounded call-graph traversal.
 M4 constructs bounded, provenance-rich evidence bundles without AI reasoning.
 M5 adds local Ollama chat with deterministic fact selection, cited interpretation,
-strict JSON validation and a CLI. Implementation is complete; live model integration
-is pending local Ollama availability. Semantic retrieval, security rules and an
-API service remain unimplemented. The Java v1 plugin is unchanged.
+strict JSON validation and a CLI. M5 is committed; targeted local inference passed.
+M6 adds bounded advisory naming suggestions with strict evidence/name validation.
+Semantic retrieval, security rules and an API service remain unimplemented. The Java v1 plugin is unchanged.
 
 Validated environment: Python 3.11, PyGhidra 3.1.0, Ghidra 12.1.3, JDK 21.
 PyGhidra is an optional `indexing` dependency; pure record/unit-test imports do
@@ -242,3 +242,35 @@ partner for address-based validation. See [M5 specification](../docs/M5_CHAT.md)
 for all public fields, prompt-injection defenses, exact policies and limitations.
 Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
 CVE matching, dynamic validation, exploit generation, or autonomous actions.
+
+
+## Advisory function naming (M6)
+
+```python
+from aire.ai.naming import NamingService, NamingOptions, render_naming_result
+
+service = NamingService(store, chat_service)  # existing AireChatService, same store
+candidates = service.find_naming_candidates(binary_id, NamingOptions(max_candidates=5))
+result = service.suggest_names(binary_id, "004012f8")
+print(render_naming_result(result))
+# Explicit serial inference only when requested:
+results = service.suggest_for_binary(binary_id, NamingOptions(max_candidates=2))
+```
+
+Current names remain stored facts; suggested names are transient interpretations.
+No rename, comments, schema migration, execution or Ghidra write-back exists.
+Candidate discovery is deterministic and makes no model calls. Per-function
+prompts are bounded; whole-binary batching is serial and capped. The CLI opens
+an existing database read-only and provides no apply/rename/write flags:
+
+```bash
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m aire.ai.naming \
+  analysis.sqlite '<binary_id>' --candidates --limit 5
+AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b AIRE_OLLAMA_NUM_CTX=4096 \
+ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m aire.ai.naming \
+  analysis.sqlite '<stripped_binary_id>' --function 004012f8 --no-assembly
+```
+
+See [M6 contracts, testing and stripped evaluation](../docs/M6_NAMING.md).
+The unstripped partner supplies evaluation truth only; its meaningful names are
+not included in the stripped naming prompt. M7 remains unimplemented.

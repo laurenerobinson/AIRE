@@ -2,9 +2,11 @@
 
 A.I.R.E. helps analysts understand binary programs using Ghidra evidence and
 local language models. This repository restores the working Java v1 extension
-and implements **A.I.R.E. 2.0 M1–M5: read-only whole-binary indexing, SQLite
-persistence, relationship queries, bounded evidence and local grounded chat**.
-M5 implementation is complete; live model integration is pending local Ollama availability.
+and implements **A.I.R.E. 2.0 M1–M6: read-only whole-binary indexing, SQLite
+persistence, relationship queries, bounded evidence, local grounded chat and
+advisory function naming**.
+M5 is committed/tagged; targeted local inference passed. M6 adds bounded naming
+suggestions for analyst review, with no automatic rename or write-back.
 
 ## Current capabilities
 
@@ -15,7 +17,9 @@ M3 queries callers/callees, callsites, bounded reachability/paths, and connectiv
 rankings over persisted facts without an LLM. M4 selects, bounds, orders and
 labels evidence with provenance and explicit truncations. M5 sends bounded evidence
 to configured local Ollama, validates citations, and separates stored facts from
-model interpretation. See [M5 chat](docs/M5_CHAT.md) for API and privacy details.
+model interpretation. M6 discovers high-connectivity generic-name candidates and
+returns validated, cited naming interpretations separately from current names.
+See [M6 naming](docs/M6_NAMING.md) and [M5 chat](docs/M5_CHAT.md).
 It does not execute or modify the target. See the
 [backend README](aire-server/README.md) for API, CLI, and test commands.
 
@@ -33,7 +37,8 @@ for exact behavior and limitations, and [audit](docs/AUDIT.md) for provenance.
 ## Implemented and planned 2.0 architecture
 
 Implemented: Binary → PyGhidra → ProgramIndex → SQLite Knowledge Store →
-Relationship Queries → Evidence Context Builder → Local Ollama Chat → Analyst.
+Relationship Queries → Evidence Context Builder → Local Grounded Model →
+Naming Suggestion Service (M6) → Analyst Review. **No write-back.**
 
 Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
 CVE matching, dynamic validation, exploit generation, and autonomous actions.
@@ -78,8 +83,8 @@ M0 cleanup and architecture → M1 read-only indexing → M2 SQLite → M3 relat
 M8 initial checks → M9 evidence/confidence → M10 optional dynamic validation →
 M11 evaluation → M12 reporting/integration. See [roadmap](docs/ROADMAP.md).
 
-**Next: complete live M5 validation when Ollama is available, then M6 — analyst-controlled
-naming suggestions across the whole binary. No automatic renaming. M6 has not started.**
+**Next: M7 — a deterministic CWE/security rule framework over stored static
+evidence. M7 has not started. M6 suggestions remain advisory; no automatic renaming.**
 
 ## Safety and licensing
 
