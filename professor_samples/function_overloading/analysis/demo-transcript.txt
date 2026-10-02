@@ -1,0 +1,82 @@
+A.I.R.E. professor demo: static analysis; target never executed
+SHA-256 BEFORE: cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07
+Original + preserved copy + recorded baseline: PASS
+Indexing and collecting string xrefs in disposable projects...
+
+Portable Executable (PE); x86:LE:32:default; compiler spec: windows
+Compiler identification: visualstudio:unknown; image base: 00400000
+385 functions; 302 decompiled; 138 strings; 86 imports; 287 direct CALL records
+1 EXPORT artifact (entry point, not a PE exported function)
+
+square of integer: FUN_00412620 @ 00412620
+Ghidra signature: int __cdecl FUN_00412620(int param_1)
+  String 00419b38 <- 00412653 (DATA): PUSH 0x419b38
+Decompiler excerpts (inferred types, not original source):
+  "square of integer ");
+  return param_1 * param_1;
+  Direct CALLs to body: none. Incoming thunk JMPs:
+  00411028: JMP 0x00412620
+  FUN_00412790 @ 00412790 -- CALL @ 004127ba --> 00411028
+
+square of double: FUN_004126c0 @ 004126c0
+Ghidra signature: float10 __cdecl FUN_004126c0(undefined4 param_1, undefined4 param_2)
+  String 00419b50 <- 004126fc (DATA): PUSH 0x419b50
+Decompiler excerpts (inferred types, not original source):
+  "square of double ");
+  return (float10)((double)CONCAT44(param_2,param_1) * (double)CONCAT44(param_2,param_1));
+  Direct CALLs to body: none. Incoming thunk JMPs:
+  004110cd: JMP 0x004126c0
+  FUN_00412790 @ 00412790 -- CALL @ 00412802 --> 004110cd
+
+Integer arithmetic (32-bit stack argument, result in EAX):
+  0041267f: MOV EAX,dword ptr [EBP + 0x8]
+  00412682: IMUL EAX,dword ptr [EBP + 0x8]
+Double arithmetic (64-bit double, SSE2 multiply, x87 return):
+  00412727: MOVSD XMM0,qword ptr [EBP + 0x8]
+  0041272c: MULSD XMM0,qword ptr [EBP + 0x8]
+  00412731: MOVSD qword ptr [EBP + 0xffffff38],XMM0
+  00412739: FLD double ptr [EBP + 0xffffff38]
+
+Common caller: FUN_00412790 @ 00412790
+  004127b8: PUSH 0x7
+  004127ba: CALL 0x00411028
+  004127f5: MOVSD XMM0,qword ptr [0x00419b70]
+  00412802: CALL 0x004110cd
+  0041280f: FSTP double ptr [ESP]
+  00412857: PUSH 0x419b68
+  0041285c: CALL dword ptr [0x0041d1d4]
+  0041286c: XOR EAX,EAX
+  00419b70: 00 00 00 00 00 00 1e 40 = IEEE-754 double 7.5
+  Decompiler: system("PAUSE"); return 0;
+Startup path (actual instructions; library names are Ghidra matches):
+  entry @ 004113ca
+  004113ca: JMP 0x004130d0
+  FUN_004130d0 @ 004130d0
+  004130d3: CALL 0x00412d50
+  __scrt_common_main @ 00412d50
+  00412d58: CALL 0x00412d70
+  __scrt_common_main_seh @ 00412d70
+  00412ec2: CALL 0x00413040
+  invoke_main @ 00413040
+  00413059: CALL 0x00411325
+  thunk_FUN_00412790 @ 00411325
+  00411325: JMP 0x00412790
+Main identification: strong behavioral + CRT-path evidence; inferred, not a recovered symbol.
+
+Imported DLLs: KERNEL32.DLL, MSVCP140D.DLL, UCRTBASED.DLL, VCRUNTIME140D.DLL
+PDB: FunctionOverloading.pdb; GUID 1f455851-c5cb-47d1-a766-70db77143190; age 1
+PDB status: matching file unavailable
+Warnings: 127 records; 125 indirect callsites omitted
+Execution: Windows x86 support + compatible x86 MSVC debug runtimes required; not native Kali.
+Use an isolated Windows test VM with official Visual Studio C++/SDK debug libraries.
+A normal release VC++ Redistributable alone does not supply these debug DLLs.
+Analysis: four DLL implementations unavailable; imports still named. PDB/types incomplete.
+Ghidra's float10/undefined4/CONCAT44 and ostream artifacts are not exact C++ signatures.
+A.I.R.E.: direct CALL graph only; no indirect edges or thunk-JMP edges; xrefs supplemented here.
+No renames, saved Ghidra programs, database access, LLM calls, or target execution.
+Index: 35.3s; total with xrefs: 42.2s
+
+SHA-256 AFTER: cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07
+Original SHA-256 AFTER: cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07
+Original and preserved copy integrity: PASS
+DEMO: PASS

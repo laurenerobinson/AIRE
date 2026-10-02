@@ -7,7 +7,8 @@ M4 constructs bounded, provenance-rich evidence bundles without AI reasoning.
 M5 adds local Ollama chat with deterministic fact selection, cited interpretation,
 strict JSON validation and a CLI. M5 is committed; targeted local inference passed.
 M6 adds bounded advisory naming suggestions with strict evidence/name validation.
-Semantic retrieval, security rules and an API service remain unimplemented. The Java v1 plugin is unchanged.
+M7 adds two deterministic, evidence-backed CWE signals without LLM dependencies.
+Semantic retrieval and an API service remain unimplemented. The Java v1 plugin is unchanged.
 
 Validated environment: Python 3.11, PyGhidra 3.1.0, Ghidra 12.1.3, JDK 21.
 PyGhidra is an optional `indexing` dependency; pure record/unit-test imports do
@@ -240,7 +241,7 @@ tools or write facts. Invalid citations/structures permit one format retry.
 Primary fixture: tests/fixtures/simple_elf/aire_test_binary; use its stripped
 partner for address-based validation. See [M5 specification](../docs/M5_CHAT.md)
 for all public fields, prompt-injection defenses, exact policies and limitations.
-Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
+Not implemented: semantic/vector retrieval, vulnerability confirmation,
 CVE matching, dynamic validation, exploit generation, or autonomous actions.
 
 
@@ -273,4 +274,37 @@ AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b AIRE_OLLAMA_NUM_CTX=4096 \
 
 See [M6 contracts, testing and stripped evaluation](../docs/M6_NAMING.md).
 The unstripped partner supplies evaluation truth only; its meaningful names are
-not included in the stripped naming prompt. M7 remains unimplemented.
+not included in the stripped naming prompt. M7 runs separately over stored facts.
+
+
+## Deterministic security rules (M7)
+
+```python
+from aire.security.rule_engine import RuleEngine, render_scan
+
+result = RuleEngine(store).scan_binary(binary_id)
+print(render_scan(result))
+json_safe = result.to_dict()
+# Exact optional selection; unknown or duplicate IDs are errors.
+selected = RuleEngine(store).scan_binary(binary_id, ["AIRE-CWE-120-UNBOUNDED-COPY"])
+```
+
+`RuleRegistry.register(SecurityRule)` rejects duplicate IDs, retains versioned
+metadata and lists/executes rules in sorted rule-ID order. Rules consume immutable
+`RuleFacts` snapshots, return `RuleEvaluation`, and never receive a model or store
+write handle. `SecurityScanResult` contains evaluations, transient findings,
+explicit per-rule errors, counts, warnings and per-rule/total timings.
+
+```bash
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m aire.security.rule_engine \
+  analysis.sqlite '<binary_id>' --json
+```
+
+The CLI opens an existing database read-only; optional `--rule ID` is repeatable.
+`--list-rules` lists metadata (with the same positional arguments). There are no
+fix/patch/execute flags. Both initial rules emit SIGNAL at most: `strcpy` maps to
+CWE-120 and `gets` to CWE-242. A direct external CALL uses MEDIUM evidence strength;
+a call to an exactly matching import-named thunk uses LOW and discloses that its
+external binding is not persisted. Missing corroboration remains insufficient.
+No schema migration, finding persistence, target execution or Ghidra edits occur.
+See [M7 contracts and validation](../docs/M7_SECURITY_RULES.md).

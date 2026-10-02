@@ -1,0 +1,35 @@
+{
+  "checked_at_utc": "2026-09-28T18:30:06.077586+00:00",
+  "files": [
+    {
+      "path": "FunctionOverloading.exe",
+      "known_original_sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07",
+      "before_sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07",
+      "after_sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07",
+      "size": 49664
+    },
+    {
+      "path": "professor_samples/function_overloading/original/FunctionOverloading.exe",
+      "known_original_sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07",
+      "before_sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07",
+      "after_sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07",
+      "size": 49664
+    }
+  ],
+  "byte_identity": true,
+  "preexisting_files_checked": 141,
+  "preexisting_files_changed": [],
+  "preexisting_git_diff_unchanged": true,
+  "git_staging_empty": true,
+  "demo_exit_codes": {
+    "concise": 0,
+    "full": 0
+  },
+  "target_executed": false,
+  "database_accessed": false,
+  "llm_invoked": false,
+  "ghidra_program_saved": false,
+  "production_code_changed": false,
+  "m8_started": false,
+  "commit_created": false
+}

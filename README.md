@@ -2,9 +2,9 @@
 
 A.I.R.E. helps analysts understand binary programs using Ghidra evidence and
 local language models. This repository restores the working Java v1 extension
-and implements **A.I.R.E. 2.0 M1–M6: read-only whole-binary indexing, SQLite
+and implements **A.I.R.E. 2.0 M1–M7: read-only whole-binary indexing, SQLite
 persistence, relationship queries, bounded evidence, local grounded chat and
-advisory function naming**.
+advisory function naming and deterministic security rules**.
 M5 is committed/tagged; targeted local inference passed. M6 adds bounded naming
 suggestions for analyst review, with no automatic rename or write-back.
 
@@ -19,7 +19,10 @@ labels evidence with provenance and explicit truncations. M5 sends bounded evide
 to configured local Ollama, validates citations, and separates stored facts from
 model interpretation. M6 discovers high-connectivity generic-name candidates and
 returns validated, cited naming interpretations separately from current names.
-See [M6 naming](docs/M6_NAMING.md) and [M5 chat](docs/M5_CHAT.md).
+M7 evaluates versioned, deterministic CWE rules over stored facts, without a model.
+Its `strcpy` and `gets` signals preserve callsite/import provenance and require
+analyst review; they do not establish a vulnerability.
+See [M7 security rules](docs/M7_SECURITY_RULES.md), [M6 naming](docs/M6_NAMING.md) and [M5 chat](docs/M5_CHAT.md).
 It does not execute or modify the target. See the
 [backend README](aire-server/README.md) for API, CLI, and test commands.
 
@@ -40,7 +43,10 @@ Implemented: Binary → PyGhidra → ProgramIndex → SQLite Knowledge Store →
 Relationship Queries → Evidence Context Builder → Local Grounded Model →
 Naming Suggestion Service (M6) → Analyst Review. **No write-back.**
 
-Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
+A separate M7 branch runs Relationship Queries → Deterministic CWE Rule Engine
+→ Evidence-backed security signals → Analyst Review. It needs no Ollama.
+
+Not implemented: semantic/vector retrieval, vulnerability confirmation,
 CVE matching, dynamic validation, exploit generation, and autonomous actions.
 
 Ghidra supplies facts, rules identify deterministic findings where possible,
@@ -83,8 +89,8 @@ M0 cleanup and architecture → M1 read-only indexing → M2 SQLite → M3 relat
 M8 initial checks → M9 evidence/confidence → M10 optional dynamic validation →
 M11 evaluation → M12 reporting/integration. See [roadmap](docs/ROADMAP.md).
 
-**Next: M7 — a deterministic CWE/security rule framework over stored static
-evidence. M7 has not started. M6 suggestions remain advisory; no automatic renaming.**
+**Next: M8 — expand deterministic checks and source/sink/context facts while
+preserving incomplete-evidence states. M8 has not started. No automatic renaming.**
 
 ## Safety and licensing
 

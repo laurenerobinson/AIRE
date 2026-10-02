@@ -7,7 +7,8 @@ integration. M4 is complete with passing evidence-bundle integration.
 M5 implementation and targeted low-memory live validation are complete;
 binary-summary and a clean full live regression remain pending after
 runtime/resource timeouts.
-M6 advisory function naming is implemented. M7 and later milestones remain planned.
+M6 advisory function naming is implemented and committed (`ed8881e`, `aire-m6`).
+M7 deterministic security rules are implemented; M8 and later remain planned.
 
 | Milestone | Scope |
 | --- | --- |
@@ -18,8 +19,8 @@ M6 advisory function naming is implemented. M7 and later milestones remain plann
 | M4 (complete) | Deterministic, bounded evidence/context selection |
 | M5 (targeted live validation passed) | Local evidence-grounded chat, strict citations and separate interpretation |
 | M6 (implemented) | Analyst-controlled whole-binary naming suggestions; no automatic renaming |
-| M7 | CWE rule framework |
-| M8 | Initial vulnerability checks |
+| M7 (implemented) | Versioned deterministic CWE rule framework; two API signals |
+| M8 | Expanded deterministic checks and source/sink/context facts |
 | M9 | Evidence/confidence model |
 | M10 | Dynamic validation prototype |
 | M11 | Benchmark/evaluation |
@@ -102,11 +103,22 @@ but its invalid names/citations were rejected; no live suggestion was accepted.
 All 190 enabled pure/static tests pass; three live cases skip in that run.
 See [M6 validation and limits](M6_NAMING.md).
 
-## Next milestone — M7, not started
+## M7 acceptance
 
-Begin the deterministic CWE/security rule framework over stored static facts.
-Define versioned rule contracts, applicability and insufficient-evidence states,
-provenance-bearing findings/candidates, CWE references, and positive/negative
-synthetic tests. Separate rule candidates from confirmed vulnerabilities and
-model interpretations. Preserve read-only analysis; add no automatic changes,
-execution, cloud APIs or autonomous actions. No M7 implementation is included.
+Versioned stateless rule contracts, sorted explicit registration, immutable
+single-binary fact snapshots, provenance-validated evidence and stable findings
+operate without Ollama/Ghidra at scan time. Both initial API rules emit SIGNAL
+only: strcpy/CWE-120 and gets/CWE-242. Missing coverage or API corroboration is
+INSUFFICIENT_EVIDENCE. A bounded memcpy control emits neither signal. Signals do
+not establish overflow, input control or exploitability. No persistence/schema
+change or write-back is added. See [M7 validation](M7_SECURITY_RULES.md).
+
+## Next milestone — M8, not started
+
+Expand the small deterministic security checks and begin richer source/sink/
+context analysis with explicit provenance and positive/negative controls. First
+address persisted thunk binding and bounded argument/source/destination facts,
+then design rules that can use those facts without guessing missing flows.
+Preserve SIGNAL/CANDIDATE versus confirmed-vulnerability distinctions. Do not
+introduce model-created findings, target execution or automatic changes as part
+of static rule work. M8 has not been implemented.

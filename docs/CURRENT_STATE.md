@@ -8,7 +8,8 @@ queries and bounded graph traversal. M4 now constructs deterministic bounded
 evidence bundles without an LLM. M5 implements local grounded chat; both targeted
 live pipelines passed with explicit low-memory context allocation. Binary-summary
 validation remains pending. M6 adds advisory, bounded function naming with
-deterministic candidate discovery. The v1 description below remains based on
+deterministic candidate discovery. M7 adds deterministic CWE rule evaluation
+and transient evidence-backed security signals without an LLM. The v1 description below remains based on
 source inspection, not a new live Ghidra/Ollama session.
 
 ## Working v1 behavior
@@ -302,10 +303,40 @@ integration skips. Final full static suite: 190 passed, three live skips, zero
 failures/errors. Both M6 success and rejection paths preserve analysis unchanged.
 The separate live naming test reports one validation error, not a pass or skip.
 
+## Implemented M7 deterministic security rules
+
+M6 is committed at `ed8881e` / `aire-m6`. M7 adds immutable stored-fact snapshots,
+versioned stateless rule contracts, a deterministic registry/engine, typed
+provenance evidence, stable finding IDs, transient scan results and a read-only
+CLI. No model or Ghidra runtime is needed to scan an existing knowledge store.
+M1–M6 implementation and schema v1 are unchanged; the original unused finding
+scaffold and its container-isolation test now use the M7 typed representation.
+
+Initial rules are `AIRE-CWE-120-UNBOUNDED-COPY` (strcpy only) and
+`AIRE-CWE-242-DANGEROUS-API` (gets only), both version 1.0.0. Their maximum state
+is SIGNAL; CANDIDATE is a reserved contract state and CONFIRMED does not exist.
+Missing coverage or unresolved API context remains INSUFFICIENT_EVIDENCE. Exact
+API imports and resolved callsites are required; import-named thunk association
+is LOW strength with an explicit missing-binding limitation. No inferred edge,
+argument/size proof, taint flow or exploitability claim is added.
+
+Three newly compiled, never-executed controls passed real indexing → persistence
+→ rule scans. strcpy and gets each produce one SIGNAL; the bounded memcpy
+control produces none. All 39 new pure M7 tests pass. Full pure suite: 221 passed,
+14 integration/live skips. Full static M1–M7 regression: 232 passed, three live
+Ollama skips, zero failures/errors. Syntax compilation and diff whitespace checks
+pass. Total security scans measured 0.628–3.906 ms in the recorded run, excluding
+indexing/persistence. Both simple-ELF and all new control hashes are unchanged.
+
+Evidence forgery/cross-binary rejection, failure isolation, deterministic repeat
+results, blocked model/Ghidra imports, zero row writes, unchanged database bytes
+and unchanged ProgramIndex are tested. No persistence/schema migration, target
+execution, Ghidra edits or binary writes occur during scanning. See
+[M7 contracts, exact hashes/IDs and measurements](M7_SECURITY_RULES.md).
+
 ## Not implemented
 
-Semantic/vector retrieval, embeddings, CWE engine, vulnerability detection or
-confirmation, CVE matching, taint analysis, dynamic validation, exploit generation,
+Semantic/vector retrieval, embeddings, vulnerability confirmation, CVE matching, taint analysis, dynamic validation, exploit generation,
 autonomous actions, automatic renaming/comments/signatures, HTTP API, and GUI
-remain unimplemented. M7 should begin the deterministic CWE/security rule
-framework; it has not started. The Java v1 plugin remains unchanged.
+remain unimplemented. M8 should expand deterministic security checks and richer
+source/sink/context facts; it has not started. The Java v1 plugin remains unchanged.

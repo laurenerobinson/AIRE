@@ -128,3 +128,32 @@ cap with assembly explicitly omitted. Normal regression never requires Ollama.
 An opted-in model/transport failure is an error, not silently counted as a skip.
 No whole-binary live batch is tested. See [M6 naming](../../docs/M6_NAMING.md)
 for the exact single-test command, current results and manual semantic review.
+
+
+## M7 deterministic security rules
+
+`aire-server/tests/test_security_integration.py` compiles three tiny dedicated
+sources from `tests/fixtures/security_rules/` into a temporary directory and
+statically indexes them with normal M1 (decompiler/assembly disabled). It never
+executes these outputs or rebuilds the simple-ELF fixtures.
+
+```bash
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_SECURITY_REPORT=/tmp/aire-m7-report.json \
+ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover \
+ -s aire-server/tests -p test_security_integration.py -v
+```
+
+Positive controls are strcpy/CWE-120 and gets/CWE-242, each expecting SIGNAL with
+exact import, function and CALL/callsite provenance. The bounded memcpy control
+expects NOT_APPLICABLE for both rules, not a general safety conclusion. Named
+PLT thunk association is LOW evidence strength with an explicit missing-binding
+limitation. Synthetic pure tests additionally exercise direct external calls,
+unresolved context and failure isolation. No AI result is used as evidence.
+
+The JSON report records per-rule/total scan times separately from indexing,
+stable IDs, full findings and fixture hashes. Scans block process creation and
+networking, enable SQLite query_only, compare stored ProgramIndex and database
+hashes, and check unchanged fixture SHA-256. Repeat results must match excluding
+timing. The expected gets linker warning is from compile-only fixture creation.
+Missing GCC explicitly skips this integration; opted-in compilation/indexing
+failures are errors. See [M7 rule contracts](../../docs/M7_SECURITY_RULES.md).

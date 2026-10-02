@@ -4,7 +4,8 @@ M0 provides the repository foundation; M1 implements read-only whole-binary
 indexing. M2 implements SQLite persistence of ProgramIndex. The broader
 pipeline includes M3 stored CALL queries, M4 bounded evidence, M5 local chat and
 M6 advisory function naming. M5 is committed; targeted local inference passed.
-Security findings and dynamic validation in the broader diagram remain planned.
+M7 adds deterministic security signals on a separate stored-fact branch.
+AI explanation of findings and dynamic validation remain future work.
 Existing v1 remains a separate per-function Ghidra Java workflow.
 
 ```mermaid
@@ -17,6 +18,11 @@ flowchart TD
     E --> L[Local Grounded Model]
     L --> N[Naming Suggestion Service — M6]
     N --> A[Analyst Review — no write-back]
+    G --> R[Deterministic CWE Rule Engine — M7]
+    R --> S[Evidence-backed security signals]
+    S --> A
+    S -. future .-> X[AI explanation]
+    X -. future .-> V[Dynamic validation]
 ```
 
 ## Trust model
@@ -40,7 +46,7 @@ supporting and contradicting evidence visible.
 | aire.pyghidra | Read-only fact extraction and direct call edges | Implemented M1 |
 | aire.knowledge | Records, persistence, retrieval | M2 SQLite persistence and M3 deterministic relationship queries; no semantic retrieval |
 | aire.ai | Deterministic evidence, grounded chat, advisory naming | M4/M5/M6 implemented; no rename/write-back |
-| aire.security | Findings and deterministic rules | Finding dataclass only |
+| aire.security | Findings and deterministic rules | M7 versioned rules, immutable fact snapshots, transient signals |
 | aire.validation | Optional approved isolated validation | Documentation only |
 | aire.api | Local service boundary | Planned; no listener |
 
@@ -317,7 +323,7 @@ can inspect more functions than the final selection cap; no separate scan/time
 budget is provided. Artifact ordering inspects matching binary-level identifiers
 before fetching selected values. No token-budget estimator or CLI is included.
 
-Not implemented: semantic/vector retrieval, CWE engine, vulnerability detection,
+Not implemented: semantic/vector retrieval, vulnerability confirmation,
 CVE matching, taint/data-flow analysis, dynamic validation, exploit generation,
 or autonomous actions. M5 local chat is described below.
 
@@ -372,5 +378,35 @@ SQLite names, Ghidra programs or binaries. Future application requires a separat
 analyst-controlled design; M6 has no application mechanism.
 
 See [M6 naming](M6_NAMING.md) for exact limits, security boundaries, API and evaluation.
-The next planned milestone is the deterministic CWE/security rule framework (M7),
-not execution, dynamic validation or model-driven vulnerability detection.
+
+## M7 deterministic security boundary
+
+Binary → PyGhidra → ProgramIndex → Knowledge Store → Program Relationships →
+Deterministic CWE Rule Engine → Evidence-backed security signals. Future AI
+explanation and future dynamic validation are separate, unimplemented stages.
+M7 does not consume M5 responses or M6 suggested names.
+
+`facts.py` projects one binary-scoped M3 SQLite read snapshot into frozen
+function/import/resolved-CALL records plus coverage metadata. It exposes no
+Ghidra object, database connection, executable path, decompilation or model text.
+The engine builds a source evidence catalog and validates every returned evidence
+record against it. Exact source IDs, callsites and binary ownership survive;
+forged descriptions or foreign evidence reject the rule result. Registered
+Python rules remain trusted application code, not sandboxed plugins.
+
+The explicit registry orders rules by ID, tracks versions and rejects duplicate
+IDs. Rule failures are separate errors, never disguised as NOT_APPLICABLE.
+Findings are transient SIGNAL/CANDIDATE records; there is no CONFIRMED state or
+exploitability score. The two initial rules emit only SIGNAL. Missing extraction
+coverage or unresolved API context produces INSUFFICIENT_EVIDENCE.
+
+API identity requires an exact external function/import match at the same
+address. The weaker named-thunk path additionally matches name/namespace and
+retains the actual CALL to that thunk. It never fabricates a thunk-to-external
+edge. This limitation is explicit in LOW-strength findings; direct external
+calls use MEDIUM. No data flow or bounds proof is implied by either strength.
+
+Security IDs hash canonical source identity and rule version; timing is separate
+from deterministic content. No database schema changes or result persistence,
+network access, shell/model tools, target execution or program write-back exist.
+See [M7 rule contracts](M7_SECURITY_RULES.md). M8 remains unimplemented.

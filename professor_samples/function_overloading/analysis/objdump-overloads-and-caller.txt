@@ -1,0 +1,255 @@
+
+professor_samples/function_overloading/original/FunctionOverloading.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+00412620 <.text+0x1620>:
+  412620:	55                   	push   ebp
+  412621:	8b ec                	mov    ebp,esp
+  412623:	81 ec c0 00 00 00    	sub    esp,0xc0
+  412629:	53                   	push   ebx
+  41262a:	56                   	push   esi
+  41262b:	57                   	push   edi
+  41262c:	8d bd 40 ff ff ff    	lea    edi,[ebp-0xc0]
+  412632:	b9 30 00 00 00       	mov    ecx,0x30
+  412637:	b8 cc cc cc cc       	mov    eax,0xcccccccc
+  41263c:	f3 ab                	rep stos DWORD PTR es:[edi],eax
+  41263e:	b9 27 f0 41 00       	mov    ecx,0x41f027
+  412643:	e8 42 ec ff ff       	call   0x41128a
+  412648:	68 30 9b 41 00       	push   0x419b30
+  41264d:	8b f4                	mov    esi,esp
+  41264f:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+  412652:	50                   	push   eax
+  412653:	68 38 9b 41 00       	push   0x419b38
+  412658:	8b 0d dc d0 41 00    	mov    ecx,DWORD PTR ds:0x41d0dc
+  41265e:	51                   	push   ecx
+  41265f:	e8 b8 eb ff ff       	call   0x41121c
+  412664:	83 c4 08             	add    esp,0x8
+  412667:	8b c8                	mov    ecx,eax
+  412669:	ff 15 a4 d0 41 00    	call   DWORD PTR ds:0x41d0a4
+  41266f:	3b f4                	cmp    esi,esp
+  412671:	e8 1e ec ff ff       	call   0x411294
+  412676:	50                   	push   eax
+  412677:	e8 a0 eb ff ff       	call   0x41121c
+  41267c:	83 c4 08             	add    esp,0x8
+  41267f:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+  412682:	0f af 45 08          	imul   eax,DWORD PTR [ebp+0x8]
+  412686:	5f                   	pop    edi
+  412687:	5e                   	pop    esi
+  412688:	5b                   	pop    ebx
+  412689:	81 c4 c0 00 00 00    	add    esp,0xc0
+  41268f:	3b ec                	cmp    ebp,esp
+  412691:	e8 fe eb ff ff       	call   0x411294
+  412696:	8b e5                	mov    esp,ebp
+  412698:	5d                   	pop    ebp
+  412699:	c3                   	ret
+  41269a:	cc                   	int3
+  41269b:	cc                   	int3
+  41269c:	cc                   	int3
+  41269d:	cc                   	int3
+  41269e:	cc                   	int3
+  41269f:	cc                   	int3
+  4126a0:	cc                   	int3
+  4126a1:	cc                   	int3
+  4126a2:	cc                   	int3
+  4126a3:	cc                   	int3
+  4126a4:	cc                   	int3
+  4126a5:	cc                   	int3
+  4126a6:	cc                   	int3
+  4126a7:	cc                   	int3
+  4126a8:	cc                   	int3
+  4126a9:	cc                   	int3
+  4126aa:	cc                   	int3
+  4126ab:	cc                   	int3
+  4126ac:	cc                   	int3
+  4126ad:	cc                   	int3
+  4126ae:	cc                   	int3
+  4126af:	cc                   	int3
+  4126b0:	cc                   	int3
+  4126b1:	cc                   	int3
+  4126b2:	cc                   	int3
+  4126b3:	cc                   	int3
+  4126b4:	cc                   	int3
+  4126b5:	cc                   	int3
+  4126b6:	cc                   	int3
+  4126b7:	cc                   	int3
+  4126b8:	cc                   	int3
+  4126b9:	cc                   	int3
+  4126ba:	cc                   	int3
+  4126bb:	cc                   	int3
+  4126bc:	cc                   	int3
+  4126bd:	cc                   	int3
+  4126be:	cc                   	int3
+  4126bf:	cc                   	int3
+  4126c0:	55                   	push   ebp
+  4126c1:	8b ec                	mov    ebp,esp
+  4126c3:	81 ec c8 00 00 00    	sub    esp,0xc8
+  4126c9:	53                   	push   ebx
+  4126ca:	56                   	push   esi
+  4126cb:	57                   	push   edi
+  4126cc:	8d bd 38 ff ff ff    	lea    edi,[ebp-0xc8]
+  4126d2:	b9 32 00 00 00       	mov    ecx,0x32
+  4126d7:	b8 cc cc cc cc       	mov    eax,0xcccccccc
+  4126dc:	f3 ab                	rep stos DWORD PTR es:[edi],eax
+  4126de:	b9 27 f0 41 00       	mov    ecx,0x41f027
+  4126e3:	e8 a2 eb ff ff       	call   0x41128a
+  4126e8:	68 30 9b 41 00       	push   0x419b30
+  4126ed:	8b f4                	mov    esi,esp
+  4126ef:	83 ec 08             	sub    esp,0x8
+  4126f2:	f2 0f 10 45 08       	movsd  xmm0,QWORD PTR [ebp+0x8]
+  4126f7:	f2 0f 11 04 24       	movsd  QWORD PTR [esp],xmm0
+  4126fc:	68 50 9b 41 00       	push   0x419b50
+  412701:	a1 dc d0 41 00       	mov    eax,ds:0x41d0dc
+  412706:	50                   	push   eax
+  412707:	e8 10 eb ff ff       	call   0x41121c
+  41270c:	83 c4 08             	add    esp,0x8
+  41270f:	8b c8                	mov    ecx,eax
+  412711:	ff 15 a0 d0 41 00    	call   DWORD PTR ds:0x41d0a0
+  412717:	3b f4                	cmp    esi,esp
+  412719:	e8 76 eb ff ff       	call   0x411294
+  41271e:	50                   	push   eax
+  41271f:	e8 f8 ea ff ff       	call   0x41121c
+  412724:	83 c4 08             	add    esp,0x8
+  412727:	f2 0f 10 45 08       	movsd  xmm0,QWORD PTR [ebp+0x8]
+  41272c:	f2 0f 59 45 08       	mulsd  xmm0,QWORD PTR [ebp+0x8]
+  412731:	f2 0f 11 85 38 ff ff 	movsd  QWORD PTR [ebp-0xc8],xmm0
+  412738:	ff 
+  412739:	dd 85 38 ff ff ff    	fld    QWORD PTR [ebp-0xc8]
+  41273f:	5f                   	pop    edi
+  412740:	5e                   	pop    esi
+  412741:	5b                   	pop    ebx
+  412742:	81 c4 c8 00 00 00    	add    esp,0xc8
+  412748:	3b ec                	cmp    ebp,esp
+  41274a:	e8 45 eb ff ff       	call   0x411294
+  41274f:	8b e5                	mov    esp,ebp
+  412751:	5d                   	pop    ebp
+  412752:	c3                   	ret
+  412753:	cc                   	int3
+  412754:	cc                   	int3
+  412755:	cc                   	int3
+  412756:	cc                   	int3
+  412757:	cc                   	int3
+  412758:	cc                   	int3
+  412759:	cc                   	int3
+  41275a:	cc                   	int3
+  41275b:	cc                   	int3
+  41275c:	cc                   	int3
+  41275d:	cc                   	int3
+  41275e:	cc                   	int3
+  41275f:	cc                   	int3
+  412760:	cc                   	int3
+  412761:	cc                   	int3
+  412762:	cc                   	int3
+  412763:	cc                   	int3
+  412764:	cc                   	int3
+  412765:	cc                   	int3
+  412766:	cc                   	int3
+  412767:	cc                   	int3
+  412768:	cc                   	int3
+  412769:	cc                   	int3
+  41276a:	cc                   	int3
+  41276b:	cc                   	int3
+  41276c:	cc                   	int3
+  41276d:	cc                   	int3
+  41276e:	cc                   	int3
+  41276f:	cc                   	int3
+  412770:	cc                   	int3
+  412771:	cc                   	int3
+  412772:	cc                   	int3
+  412773:	cc                   	int3
+  412774:	cc                   	int3
+  412775:	cc                   	int3
+  412776:	cc                   	int3
+  412777:	cc                   	int3
+  412778:	cc                   	int3
+  412779:	cc                   	int3
+  41277a:	cc                   	int3
+  41277b:	cc                   	int3
+  41277c:	cc                   	int3
+  41277d:	cc                   	int3
+  41277e:	cc                   	int3
+  41277f:	cc                   	int3
+  412780:	55                   	push   ebp
+  412781:	8b ec                	mov    ebp,esp
+  412783:	5d                   	pop    ebp
+  412784:	c3                   	ret
+  412785:	cc                   	int3
+  412786:	cc                   	int3
+  412787:	cc                   	int3
+  412788:	cc                   	int3
+  412789:	cc                   	int3
+  41278a:	cc                   	int3
+  41278b:	cc                   	int3
+  41278c:	cc                   	int3
+  41278d:	cc                   	int3
+  41278e:	cc                   	int3
+  41278f:	cc                   	int3
+  412790:	55                   	push   ebp
+  412791:	8b ec                	mov    ebp,esp
+  412793:	81 ec c0 00 00 00    	sub    esp,0xc0
+  412799:	53                   	push   ebx
+  41279a:	56                   	push   esi
+  41279b:	57                   	push   edi
+  41279c:	8d bd 40 ff ff ff    	lea    edi,[ebp-0xc0]
+  4127a2:	b9 30 00 00 00       	mov    ecx,0x30
+  4127a7:	b8 cc cc cc cc       	mov    eax,0xcccccccc
+  4127ac:	f3 ab                	rep stos DWORD PTR es:[edi],eax
+  4127ae:	b9 27 f0 41 00       	mov    ecx,0x41f027
+  4127b3:	e8 d2 ea ff ff       	call   0x41128a
+  4127b8:	6a 07                	push   0x7
+  4127ba:	e8 69 e8 ff ff       	call   0x411028
+  4127bf:	83 c4 04             	add    esp,0x4
+  4127c2:	8b f4                	mov    esi,esp
+  4127c4:	50                   	push   eax
+  4127c5:	8b 0d dc d0 41 00    	mov    ecx,DWORD PTR ds:0x41d0dc
+  4127cb:	ff 15 a4 d0 41 00    	call   DWORD PTR ds:0x41d0a4
+  4127d1:	3b f4                	cmp    esi,esp
+  4127d3:	e8 bc ea ff ff       	call   0x411294
+  4127d8:	8b f4                	mov    esi,esp
+  4127da:	68 b7 12 41 00       	push   0x4112b7
+  4127df:	8b 0d dc d0 41 00    	mov    ecx,DWORD PTR ds:0x41d0dc
+  4127e5:	ff 15 a8 d0 41 00    	call   DWORD PTR ds:0x41d0a8
+  4127eb:	3b f4                	cmp    esi,esp
+  4127ed:	e8 a2 ea ff ff       	call   0x411294
+  4127f2:	83 ec 08             	sub    esp,0x8
+  4127f5:	f2 0f 10 05 70 9b 41 	movsd  xmm0,QWORD PTR ds:0x419b70
+  4127fc:	00 
+  4127fd:	f2 0f 11 04 24       	movsd  QWORD PTR [esp],xmm0
+  412802:	e8 c6 e8 ff ff       	call   0x4110cd
+  412807:	83 c4 08             	add    esp,0x8
+  41280a:	8b f4                	mov    esi,esp
+  41280c:	83 ec 08             	sub    esp,0x8
+  41280f:	dd 1c 24             	fstp   QWORD PTR [esp]
+  412812:	8b 0d dc d0 41 00    	mov    ecx,DWORD PTR ds:0x41d0dc
+  412818:	ff 15 a0 d0 41 00    	call   DWORD PTR ds:0x41d0a0
+  41281e:	3b f4                	cmp    esi,esp
+  412820:	e8 6f ea ff ff       	call   0x411294
+  412825:	8b f4                	mov    esi,esp
+  412827:	68 b7 12 41 00       	push   0x4112b7
+  41282c:	8b fc                	mov    edi,esp
+  41282e:	68 b7 12 41 00       	push   0x4112b7
+  412833:	8b 0d dc d0 41 00    	mov    ecx,DWORD PTR ds:0x41d0dc
+  412839:	ff 15 a8 d0 41 00    	call   DWORD PTR ds:0x41d0a8
+  41283f:	3b fc                	cmp    edi,esp
+  412841:	e8 4e ea ff ff       	call   0x411294
+  412846:	8b c8                	mov    ecx,eax
+  412848:	ff 15 a8 d0 41 00    	call   DWORD PTR ds:0x41d0a8
+  41284e:	3b f4                	cmp    esi,esp
+  412850:	e8 3f ea ff ff       	call   0x411294
+  412855:	8b f4                	mov    esi,esp
+  412857:	68 68 9b 41 00       	push   0x419b68
+  41285c:	ff 15 d4 d1 41 00    	call   DWORD PTR ds:0x41d1d4
+  412862:	83 c4 04             	add    esp,0x4
+  412865:	3b f4                	cmp    esi,esp
+  412867:	e8 28 ea ff ff       	call   0x411294
+  41286c:	33 c0                	xor    eax,eax
+  41286e:	5f                   	pop    edi
+  41286f:	5e                   	pop    esi
+  412870:	5b                   	pop    ebx
+  412871:	81 c4 c0 00 00 00    	add    esp,0xc0
+  412877:	3b ec                	cmp    ebp,esp
+  412879:	e8 16 ea ff ff       	call   0x411294
+  41287e:	8b e5                	mov    esp,ebp
+  412880:	5d                   	pop    ebp
+  412881:	c3                   	ret

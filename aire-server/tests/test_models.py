@@ -1,7 +1,7 @@
 """Verify evidence containers cannot leak between independent records."""
 import unittest
 from aire.knowledge.models import BehaviorTag
-from aire.security.findings import SecurityFinding
+from aire.security.findings import SecurityFinding, EvaluationState, EvidenceStrength, stable_id
 
 
 class EvidenceIsolationTests(unittest.TestCase):
@@ -11,8 +11,11 @@ class EvidenceIsolationTests(unittest.TestCase):
         self.assertEqual(second.evidence, [])
 
     def test_finding_evidence_is_independent(self):
-        first = SecurityFinding("a", "r", None, "0x1", "candidate", 0.0)
-        second = SecurityFinding("b", "r", None, "0x2", "candidate", 0.0)
+        def finding(address):
+            return SecurityFinding(stable_id('FINDING', 'b', 'r', '1.0.0', 'f', address, 'test'),
+                'b', 'r', '1.0.0', 'CWE-120', 'Test signal', EvaluationState.SIGNAL,
+                EvidenceStrength.LOW, 'f', address, 'Static test only', 'test')
+        first, second = finding('0x1'), finding('0x2')
         first.supporting_evidence.append("observed fact")
         self.assertEqual(first.contradicting_evidence, [])
         self.assertEqual(second.supporting_evidence, [])

@@ -224,9 +224,9 @@ Do not feed a known meaningful target name to the model to demonstrate recovery.
 The static integration verifies this separation and unchanged hashes/database.
 
 ```bash
-# Pure M1–M6 tests: no JVM or Ollama.
+# Pure M1–M7 tests: no JVM or Ollama.
 PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
-# All static integrations, including M6, without live inference.
+# All static integrations, including M6/M7, without live inference.
 AIRE_RUN_GHIDRA_TESTS=1 AIRE_RUN_OLLAMA_TESTS=0 AIRE_RUN_NAMING_LIVE_TESTS=0 \
  AIRE_NAMING_REPORT=/tmp/aire-m6-report.json PYTHONPATH=aire-server/src \
  aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v
@@ -240,5 +240,36 @@ options and measured results are in [M6 naming](M6_NAMING.md).
 
 The naming CLI exposes candidate listing, one function and explicit bounded batch
 modes; no apply/rename/write flags exist. Suggestions are transient and advisory.
-Do not add persistence or application as an incidental naming change. M7's
-future scope is a deterministic CWE/security rule framework; M7 has not started.
+Do not add persistence or application as an incidental naming change. M7 security
+rules run independently of naming/model output; M8 has not started.
+
+
+## M7 security rule development
+
+Subclass `SecurityRule`, supply immutable `RuleMetadata`, and implement
+`evaluate(facts: RuleFacts) -> RuleEvaluation`. Explicitly register the rule in
+`RuleRegistry`; IDs are unique and sorted. Declare prerequisites, return
+INSUFFICIENT_EVIDENCE for missing facts, and attach exact catalog evidence to
+transient findings. Do not infer API behavior from ordinary internal names or
+model naming suggestions. Registered rule implementations are trusted code.
+
+```bash
+# Compile dedicated controls only; never launch the outputs.
+bash tests/fixtures/security_rules/build.sh
+# Static positive strcpy/gets and negative bounded-copy integrations.
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_SECURITY_REPORT=/tmp/aire-m7-report.json \
+ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover \
+ -s aire-server/tests -p test_security_integration.py -v
+# Full pure/static regression; Ollama is not required.
+AIRE_RUN_GHIDRA_TESTS=1 AIRE_RUN_OLLAMA_TESTS=0 AIRE_RUN_NAMING_LIVE_TESTS=0 \
+ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover \
+ -s aire-server/tests -v
+```
+
+The integration compiles its own temporary controls using existing GCC, indexes
+without decompilation/assembly, persists facts, then prevents scan-time SQLite
+writes/network/process creation. It compares full ProgramIndex/database content
+and fixture hashes. The legacy gets linker warning is expected. No tool is
+installed; missing compiler is an explicit integration skip, while opted-in
+indexing/compilation failures are errors. Pure tests require neither toolchain
+nor JVM. Full contracts and measurements: [M7](M7_SECURITY_RULES.md).

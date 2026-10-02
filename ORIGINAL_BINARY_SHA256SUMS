@@ -1,0 +1,14 @@
+# Original SHA-256 baselines for the Windows and Linux function-overloading demos.
+# Paths are relative to ~/aire. Verify without executing either binary:
+#   cd ~/aire
+#   sha256sum --check ORIGINAL_BINARY_SHA256SUMS
+#
+# Windows PE32: professor-supplied original hash, also recorded in
+# professor_samples/function_overloading/original/SHA256SUMS.
+cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07  FunctionOverloading.exe
+cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07  professor_samples/function_overloading/original/FunctionOverloading.exe
+#
+# Linux ELF64: existing recorded demo baseline from
+# demo_artifacts/FunctionOverloading.sha256; not the professor's Windows binary.
+be3d58ba6ba922f2e8499025dc28a65d9cc97fe5ca6332310ced1622b7e115e3  FunctionOverloading
+be3d58ba6ba922f2e8499025dc28a65d9cc97fe5ca6332310ced1622b7e115e3  demo_artifacts/FunctionOverloading.original
