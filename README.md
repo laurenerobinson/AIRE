@@ -26,6 +26,8 @@ See [M7 security rules](docs/M7_SECURITY_RULES.md), [M6 naming](docs/M6_NAMING.m
 M8 adds 12 read-only tools, immediate operational activity, bounded model actions,
 binary-scoped follow-up sessions and `aire chat <binary>` over an existing database.
 See [agent architecture, CLI and validation](docs/M8_AGENT.md).
+The optional `aire gui` browser workspace uses the same agent and read-only tools.
+See [GUI launch and usage](docs/GUI.md).
 It does not execute or modify the target. See the
 [backend README](aire-server/README.md) for API, CLI, and test commands.
 
@@ -81,7 +83,7 @@ Suggest → select candidate → Apply. Keep endpoint overrides local.
 
 M1 is validated with Python 3.11, PyGhidra 3.1.0, Ghidra 12.1.3 and JDK 21.
 Use the existing aire-server/.venv; pure Python checks need no Ghidra runtime.
-There is no running Python API server.
+The optional local GUI/API server is launched with `aire gui`; see [GUI.md](docs/GUI.md).
 See [development](docs/DEVELOPMENT.md) and [test corpus](tests/README.md) for commands.
 No packages or models are installed automatically.
 

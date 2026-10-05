@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070b11">
+  <title>A.I.R.E. — Reverse Engineering Assistant</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <button class="brand" data-nav="home" aria-label="A.I.R.E. home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40"><path d="M20 4c-3.2 0-5.9 2-6.8 4.8A6.3 6.3 0 0 0 5 14.7c0 1.7.7 3.2 1.7 4.3A7 7 0 0 0 10 31.3c.9 3 3.7 4.7 6.5 4.7 1.3 0 2.5-.4 3.5-1.1 1 .7 2.2 1.1 3.5 1.1 2.8 0 5.6-1.7 6.5-4.7A7 7 0 0 0 33.3 19a6.1 6.1 0 0 0 1.7-4.3 6.3 6.3 0 0 0-8.2-5.9A7.2 7.2 0 0 0 20 4Z"/><path d="M20 7v26M13 10.5c3.7 1.2 4.2 4.1 4.2 6.4M27 10.5c-3.7 1.2-4.2 4.1-4.2 6.4M9.5 19c3.8-.8 6.1.7 7.2 3.3M30.5 19c-3.8-.8-6.1.7-7.2 3.3M12.4 30c2.1-2.8 4.2-3.5 5.8-3.1M27.6 30c-2.1-2.8-4.2-3.5-5.8-3.1"/></svg>
+        </span>
+        <span>A.I.R.E.</span>
+      </button>
+
+      <button id="newChatBtn" class="new-chat"><span class="plus">+</span> New Chat</button>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-nav="home"><span class="nav-icon">⌂</span><span>Home</span></button>
+        <button class="nav-item" data-nav="recent"><span class="nav-icon">◷</span><span>Recent Chats</span></button>
+        <button class="nav-item" data-nav="about"><span class="nav-icon">ⓘ</span><span>About</span></button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="local-badge"><span class="status-dot"></span><span>Local analysis</span></div>
+        <div id="modelName" class="model-name">Model not selected</div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="binary-context">
+          <div class="binary-label">Analyzing</div>
+          <select id="binarySelect" aria-label="Select indexed binary"></select>
+        </div>
+        <div id="binaryStats" class="binary-stats" aria-live="polite"></div>
+        <button id="collapseToolsTop" class="icon-button hidden" aria-label="Toggle analysis tools">☷</button>
+      </header>
+
+      <section id="homeView" class="view home-view">
+        <div class="hero">
+          <div class="hero-brand">
+            <span class="hero-mark" aria-hidden="true">
+              <svg viewBox="0 0 40 40"><path d="M20 4c-3.2 0-5.9 2-6.8 4.8A6.3 6.3 0 0 0 5 14.7c0 1.7.7 3.2 1.7 4.3A7 7 0 0 0 10 31.3c.9 3 3.7 4.7 6.5 4.7 1.3 0 2.5-.4 3.5-1.1 1 .7 2.2 1.1 3.5 1.1 2.8 0 5.6-1.7 6.5-4.7A7 7 0 0 0 33.3 19a6.1 6.1 0 0 0 1.7-4.3 6.3 6.3 0 0 0-8.2-5.9A7.2 7.2 0 0 0 20 4Z"/><path d="M20 7v26M13 10.5c3.7 1.2 4.2 4.1 4.2 6.4M27 10.5c-3.7 1.2-4.2 4.1-4.2 6.4M9.5 19c3.8-.8 6.1.7 7.2 3.3M30.5 19c-3.8-.8-6.1.7-7.2 3.3M12.4 30c2.1-2.8 4.2-3.5 5.8-3.1M27.6 30c-2.1-2.8-4.2-3.5-5.8-3.1"/></svg>
+            </span>
+            <div>
+              <div class="hero-name">A.I.R.E.</div>
+              <div class="hero-expanded">Artificial Intelligence Reverse Engineering Assistant</div>
+            </div>
+          </div>
+          <h1>How can I help you today?</h1>
+          <p>Your AI assistant for binary analysis and reverse engineering.</p>
+        </div>
+
+        <div class="prompt-grid" aria-label="Suggested binary analysis prompts">
+          <button class="prompt-card" data-prompt="What does this binary do?">
+            <span class="card-icon">⌕</span><strong>What does this binary do?</strong>
+            <span>Get a high-level overview of the binary's purpose and behavior.</span>
+          </button>
+          <button class="prompt-card" data-prompt="Summarize this function">
+            <span class="card-icon">&lt;/&gt;</span><strong>Summarize this function</strong>
+            <span>Explain what a selected function does in simple terms.</span>
+          </button>
+          <button class="prompt-card" data-prompt="Explain this assembly">
+            <span class="card-icon">≣</span><strong>Explain this assembly</strong>
+            <span>Give a step-by-step explanation of assembly instructions.</span>
+          </button>
+          <button class="prompt-card" data-prompt="Find suspicious behavior in this binary">
+            <span class="card-icon">△</span><strong>Find suspicious behavior</strong>
+            <span>Identify potential malware, anti-analysis, or suspicious patterns.</span>
+          </button>
+          <button class="prompt-card" data-prompt="Show call relationships for the current function">
+            <span class="card-icon">⌘</span><strong>Show call relationships</strong>
+            <span>Analyze function calls and show relevant call relationships.</span>
+          </button>
+          <button class="prompt-card" data-prompt="Identify crypto or hashing routines in this binary">
+            <span class="card-icon">▣</span><strong>Identify crypto or hashing</strong>
+            <span>Find and explain cryptographic routines, hashes, and related behavior.</span>
+          </button>
+        </div>
+
+        <form id="homeComposer" class="composer home-composer">
+          <textarea id="homeInput" rows="1" maxlength="12000" placeholder="Ask A.I.R.E. about a binary..." aria-label="Ask A.I.R.E. about a binary"></textarea>
+          <button class="send-button" type="submit" aria-label="Send question">➤</button>
+        </form>
+      </section>
+
+      <section id="chatView" class="view chat-view hidden">
+        <div class="chat-layout">
+          <div class="chat-column">
+            <div id="chatHeader" class="chat-header">
+              <div>
+                <span class="eyebrow">Active analysis</span>
+                <h2 id="chatTitle">A.I.R.E. analysis</h2>
+              </div>
+              <div id="selectedFunctionChip" class="selected-function hidden"></div>
+            </div>
+            <div id="messages" class="messages" aria-live="polite"></div>
+            <form id="chatComposer" class="composer chat-composer">
+              <textarea id="chatInput" rows="1" maxlength="12000" placeholder="Ask A.I.R.E. a follow-up question..." aria-label="Ask A.I.R.E. a follow-up"></textarea>
+              <button class="send-button" type="submit" aria-label="Send follow-up">➤</button>
+            </form>
+          </div>
+
+          <aside id="toolsPanel" class="tools-panel">
+            <div class="tools-heading">
+              <div><span class="eyebrow">Contextual</span><h3>Analysis Tools</h3></div>
+              <button id="collapseTools" class="icon-button" aria-label="Collapse analysis tools">›</button>
+            </div>
+            <p class="tools-note">Read-only views backed by stored A.I.R.E. evidence.</p>
+            <div class="tool-buttons">
+              <button class="tool-card" data-tool-view="functions"><span>&lt;/&gt;</span><div><strong>Functions</strong><small>Browse and select functions</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="strings"><span>≡</span><div><strong>Strings</strong><small>Stored binary strings</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="imports"><span>◇</span><div><strong>Imports</strong><small>Imported APIs and libraries</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="callgraph"><span>⌘</span><div><strong>Call Graph</strong><small>Caller and callee relationships</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="findings"><span>△</span><div><strong>Findings</strong><small>Deterministic security signals</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="decompiled"><span>▤</span><div><strong>Decompiled View</strong><small>Stored decompiled source</small></div><b>›</b></button>
+            </div>
+            <div id="toolResult" class="tool-result hidden"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="recentView" class="view secondary-view hidden">
+        <div class="secondary-header"><span class="eyebrow">History</span><h1>Recent Chats</h1><p>Conversation state is stored separately from the analysis database.</p></div>
+        <div id="recentList" class="recent-list"></div>
+      </section>
+
+      <section id="aboutView" class="view secondary-view hidden">
+        <div class="secondary-header"><span class="eyebrow">About</span><h1>A.I.R.E.</h1><p>Artificial Intelligence Reverse Engineering Assistant</p></div>
+        <div class="about-grid">
+          <article><h3>Grounded analysis</h3><p>A.I.R.E. explains persisted PyGhidra/Ghidra evidence and preserves provenance instead of treating model output as program fact.</p></article>
+          <article><h3>Read-only by design</h3><p>This interface reads the existing knowledge store and uses registered application tools. It does not execute the target binary or write analysis facts.</p></article>
+          <article><h3>Local AI</h3><p>The agent uses your configured local Ollama model. Binary evidence stays on the machine unless you explicitly change the underlying A.I.R.E. model configuration.</p></article>
+          <article><h3>Analyst workspace</h3><p>Chat, functions, artifacts, call relationships, code evidence, security findings, and public agent activity are brought into one workspace.</p></article>
+        </div>
+        <div id="healthCard" class="health-card"><span class="status-dot"></span><span>Checking local model...</span></div>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

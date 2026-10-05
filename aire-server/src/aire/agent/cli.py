@@ -1,33 +1,14 @@
 """Standard-library interactive CLI over an existing read-only analysis DB."""
 import argparse
-import hashlib
 import os
 from pathlib import Path
 
+from aire.agent.binary_scope import resolve_binary
 from aire.agent.runner import AgentLimits, AgentRunner
 from aire.agent.session import AgentSession
 from aire.ai.chat import _display
 from aire.ai.ollama_client import OllamaClient
 from aire.security.rule_engine import _ReadOnlyRuleStore
-
-
-def resolve_binary(store, value):
-    binaries = store.list_binaries()
-    exact = [b for b in binaries if b.binary_id == value]
-    if exact:
-        return exact[0]
-    path = Path(value).expanduser()
-    if path.is_file():
-        digest = hashlib.sha256()
-        with path.open('rb') as stream:
-            for chunk in iter(lambda: stream.read(1024 * 1024), b''):
-                digest.update(chunk)
-        matches = [b for b in binaries if b.sha256 == digest.hexdigest()]
-    else:
-        matches = [b for b in binaries if b.program_name == value or Path(b.path).name == value]
-    if len(matches) != 1:
-        raise ValueError('Binary must identify one stored analysis by ID, matching file hash, or unique name; index it first')
-    return matches[0]
 
 
 def render_event(event):
@@ -57,12 +38,35 @@ def main(argv=None, *, input_fn=None, output=None, client=None):
     chat.add_argument('--max-tool-calls', type=int, default=8)
     chat.add_argument('--timeout', type=float, default=180)
     chat.add_argument('--evidence-chars', type=int, default=8000)
+
+    gui = subparsers.add_parser('gui', help='Launch the local A.I.R.E. analysis workspace')
+    gui.add_argument('binary', nargs='?', help='Stored binary ID, matching file path, or unique stored name')
+    gui.add_argument('--database', type=Path, default=Path(os.environ.get('AIRE_DATABASE', 'analysis.sqlite')))
+    gui.add_argument('--session-dir', type=Path, help='GUI conversation directory (default: ~/.aire/gui-sessions)')
+    gui.add_argument('--bind', default='127.0.0.1', help='Loopback bind address (default: 127.0.0.1)')
+    gui.add_argument('--port', type=int, default=8765)
+    gui.add_argument('--no-browser', action='store_true', help='Do not open the default browser automatically')
+    gui.add_argument('--model')
+    gui.add_argument('--ollama-host')
+    gui.add_argument('--num-ctx', type=int)
+    gui.add_argument('--max-iterations', type=int, default=6)
+    gui.add_argument('--max-tool-calls', type=int, default=8)
+    gui.add_argument('--timeout', type=float, default=180)
+    gui.add_argument('--evidence-chars', type=int, default=8000)
     args = parser.parse_args(argv)
     read = input_fn or input
     write = output or (lambda value: print(value, flush=True))
     try:
         limits = AgentLimits(args.max_iterations, args.max_tool_calls, args.timeout,
                              evidence_chars=args.evidence_chars)
+        if args.command == 'gui':
+            from aire.api.server import GuiApplication, GuiModelConfig, serve
+            application = GuiApplication(args.database, initial_binary=args.binary,
+                session_dir=args.session_dir,
+                model_config=GuiModelConfig(args.ollama_host, args.model, args.num_ctx),
+                limits=limits)
+            return serve(application, host=args.bind, port=args.port,
+                         open_browser=not args.no_browser, output=write)
         model = client or OllamaClient(host=args.host, model=args.model, num_ctx=args.num_ctx)
         with _ReadOnlyRuleStore(args.database) as store:
             binary = resolve_binary(store, args.binary)

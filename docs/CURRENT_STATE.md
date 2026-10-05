@@ -19,6 +19,14 @@ deterministic candidate discovery. M7 adds deterministic CWE rule evaluation
 and transient evidence-backed security signals without an LLM. The v1 description below remains based on
 source inspection, not a new live Ghidra/Ollama session.
 
+## Local GUI workspace (Oct. 2026)
+
+The optional `aire gui` workspace adds binary-scoped chat, recent conversations,
+public agent activity, stored binary metadata, and a collapsible Analysis Tools
+panel over the existing M8 agent. It uses standard-library HTTP, reads analysis
+facts through the existing read-only store, and saves GUI sessions separately.
+See [GUI.md](GUI.md).
+
 ## Working v1 behavior
 
 `AirePlugin` registers the extension, a Tools → A.I.R.E → Hello action, and the
@@ -344,6 +352,8 @@ execution, Ghidra edits or binary writes occur during scanning. See
 ## Not implemented
 
 Semantic/vector retrieval, embeddings, vulnerability confirmation, CVE matching, taint analysis, dynamic validation, exploit generation,
-autonomous actions, automatic renaming/comments/signatures, HTTP API, and GUI
-remain unimplemented. Richer deterministic security checks and source/sink/context
+autonomous actions, and automatic renaming/comments/signatures remain
+unimplemented. The GUI/API exposes existing read-only functionality on loopback;
+browser indexing and interactive node-graph visualization remain unimplemented.
+Richer deterministic security checks and source/sink/context
 facts remain future work after the M8 read-only agent. The Java v1 plugin remains unchanged.

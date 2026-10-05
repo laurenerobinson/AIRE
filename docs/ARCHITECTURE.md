@@ -56,7 +56,14 @@ supporting and contradicting evidence visible.
 | aire.ai | Deterministic evidence, grounded chat, advisory naming | M4/M5/M6 implemented; no rename/write-back |
 | aire.security | Findings and deterministic rules | M7 versioned rules, immutable fact snapshots, transient signals |
 | aire.validation | Optional approved isolated validation | Documentation only |
-| aire.api | Local service boundary | Planned; no listener |
+| aire.api | Local loopback GUI/service boundary | Standard-library HTTP; read-only analysis access |
+
+## Local GUI boundary
+
+The optional `aire gui` command serves static HTML/CSS/JavaScript from
+`aire.api.server`. Chat uses `AgentRunner`; analysis panels use `AgentTools`.
+Public `AgentEvent` activity streams as newline-delimited JSON. GUI session and
+transcript files are separate from analysis facts. See [GUI.md](GUI.md).
 
 ## Implemented M1 → M2 → M3 → M4 → M5 → M6 path
 
