@@ -16,6 +16,10 @@ class OverviewContextBuilder(ContextBuilder):
     Lightweight graph rows are inspected for ordering, but only bounded seed
     records/bodies are loaded. Roots describe stored CALLs, not executable entry.
     """
+    def __init__(self, store, *, seed_functions=()):
+        super().__init__(store)
+        self.seed_functions = tuple(dict.fromkeys(seed_functions))[:2]
+
     def _graph(self, db, request, target):
         if target is not None:
             return super()._graph(db, request, target)
@@ -32,7 +36,9 @@ class OverviewContextBuilder(ContextBuilder):
         ranked = sorted(rows, key=lambda r: (-(r['incoming'] + r['outgoing']),
                                                _address_key(r['address']), r['function_id']))
         roots = [r for r in ranked if r['incoming'] == 0][:2]
-        ordered = roots + [r for r in ranked if r not in roots]
+        preferred = [r for identity in self.seed_functions for r in rows
+                     if r['function_id'] == identity]
+        ordered = preferred + [r for r in roots + ranked if r not in preferred]
         # At most half the function budget is reserved for seeds, leaving neighbors room.
         seeds = ordered[:max(1, request.max_functions // 2)]
         functions, edges = {}, {}
@@ -45,12 +51,18 @@ class OverviewContextBuilder(ContextBuilder):
                 old = functions.get(function.function_id)
                 if old is None or (candidate[0], depth) < (old[0], old[1]):
                     functions[function.function_id] = candidate
-            functions[record.function_id] = (0, 0, record, f'overview seed {rank + 1}: stored root/connectivity policy')
+            reason = ('agent-selected stored entry/connectivity' if row in preferred
+                      else 'stored root/connectivity policy')
+            functions[record.function_id] = (0, 0, record, f'overview seed {rank + 1}: {reason}')
             for priority, depth, edge, reason in es:
                 edges.setdefault(_edge_key(edge), (priority, depth, edge, 'overview: ' + reason))
         self._overview_counts = (len(rows), len(seeds))
+        primary = self.seed_functions[0] if self.seed_functions else None
         return (sorted(functions.values(), key=lambda x: (x[0], x[1], _function_key(x[2]))),
-                sorted(edges.values(), key=lambda x: (x[0], x[1], _function_key(x[2].caller),
+                sorted(edges.values(), key=lambda x: (
+                                                     0 if primary and x[2].caller.function_id == primary else 1,
+                                                     bool(x[2].callee.is_external or x[2].callee.is_thunk) if primary else False,
+                                                     x[0], x[1], _function_key(x[2].caller),
                                                      _address_key(x[2].callsite_address), _function_key(x[2].callee))))
 
     def _artifacts(self, db, request, bundle):
@@ -68,3 +80,6 @@ class OverviewContextBuilder(ContextBuilder):
                 'bounded root/connectivity selection; not complete binary coverage',
                 request.max_functions, total, selected))
         bundle.metadata.update(selection_policy=OVERVIEW_POLICY, overview_seed_count=seeds)
+        if self.seed_functions:
+            bundle.metadata['priority_function_ids'] = [f.function.function_id for f in bundle.functions
+                if f.function.function_id == self.seed_functions[0]]

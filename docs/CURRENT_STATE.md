@@ -1,5 +1,12 @@
 # Current state
 
+M8 implements the initial A.I.R.E. conversational agent: twelve validated
+read-only tools, immediate activity callbacks, a bounded model action loop,
+binary-scoped persistent follow-up sessions and `aire chat <binary>`. Existing
+M1–M7 modules remain the sources of facts and grounded synthesis. The default
+regression suite passes; live small-model success is qualified by per-question
+results in [M8 validation and limitations](M8_AGENT.md).
+
 M0 restores the archived Java v1 implementation and establishes a Python package
 layout. M1 now implements a read-only whole-binary PyGhidra indexer, validated
 against the controlled stripped fixture. M2 now persists and reloads complete
@@ -338,5 +345,5 @@ execution, Ghidra edits or binary writes occur during scanning. See
 
 Semantic/vector retrieval, embeddings, vulnerability confirmation, CVE matching, taint analysis, dynamic validation, exploit generation,
 autonomous actions, automatic renaming/comments/signatures, HTTP API, and GUI
-remain unimplemented. M8 should expand deterministic security checks and richer
-source/sink/context facts; it has not started. The Java v1 plugin remains unchanged.
+remain unimplemented. Richer deterministic security checks and source/sink/context
+facts remain future work after the M8 read-only agent. The Java v1 plugin remains unchanged.

@@ -1,5 +1,6 @@
 """M5 single-question evidence -> local model -> validated advisory response."""
 import json
+from copy import deepcopy
 from pathlib import Path
 import time
 
@@ -18,7 +19,8 @@ class AireChatService:
         self.context_builder = ContextBuilder(store)
         self.overview_builder = OverviewContextBuilder(store)
 
-    def ask(self, binary_id=None, question=None, target=None, *, request=None, debug=False, **options):
+    def ask(self, binary_id=None, question=None, target=None, *, request=None, debug=False,
+            evidence_bundle=None, require_behavior_grounding=False, **options):
         """Explicit target selects exact M4 evidence; no target means overview.
 
         No implicit question parsing or model retrieval. ChatError carries a code
@@ -36,10 +38,55 @@ class AireChatService:
         tick = time.perf_counter()
         builder = self.context_builder if request.target is not None else self.overview_builder
         policy = TARGET_POLICY if request.target is not None else OVERVIEW_POLICY
-        bundle = builder.build(request.evidence_request())
+        if evidence_bundle is None:
+            bundle = builder.build(request.evidence_request())
+        else:
+            from aire.knowledge.evidence import EvidenceBundle
+            if not isinstance(evidence_bundle, EvidenceBundle):
+                raise ValueError('evidence_bundle must be EvidenceBundle')
+            if (evidence_bundle.binary.binary_id != request.binary_id or
+                    evidence_bundle.request_summary.get('target') != request.target):
+                raise ValueError('Evidence bundle binary/target does not match request')
+            if any(p.binary_id != request.binary_id for p in evidence_bundle.provenance):
+                raise ValueError('Evidence provenance belongs to a different binary')
+            bundle = evidence_bundle
+            policy = bundle.metadata.get('selection_policy', policy)
         timings = {'context_build_seconds': time.perf_counter() - tick}
         tick = time.perf_counter()
         prompt = build_prompt(request.question, bundle, policy=policy)
+        code_ids = {f.function.function_id for f in bundle.functions
+                    if f.function.decompiled_text or f.function.assembly}
+        behavior_ids = [identity for identity, citation in prompt.citations.items()
+                        if citation.kind == 'EDGE' or
+                        (citation.kind == 'FUNC' and citation.provenance.source_id in code_ids)]
+        if require_behavior_grounding and not behavior_ids:
+            raise ChatError('Behavior explanation needs visible code or call evidence',
+                            code='insufficient_evidence')
+        response_schema = RESPONSE_SCHEMA
+        if evidence_bundle is not None:
+            # Agent synthesis can constrain the provider grammar to the exact
+            # retrieved catalog. Parsing remains the authority, including for
+            # providers that ignore schema constraints.
+            response_schema = deepcopy(RESPONSE_SCHEMA)
+            properties = response_schema['properties']
+            citation_ids = list(prompt.citations)
+            for ids_schema in (properties['fact_ids'],
+                    properties['summary']['properties']['evidence_ids'],
+                    properties['interpretations']['items']['properties']['evidence_ids']):
+                ids_schema['items']['enum'] = citation_ids
+                ids_schema['uniqueItems'] = True
+                # A single exact reference per claim avoids duplicate-ID
+                # generation in small local models. Multiple interpretations
+                # can still cite different catalog entries.
+                ids_schema['maxItems'] = 1
+            if require_behavior_grounding:
+                for ids_schema in (properties['summary']['properties']['evidence_ids'],
+                        properties['interpretations']['items']['properties']['evidence_ids']):
+                    ids_schema['items']['enum'] = behavior_ids
+            properties['summary']['properties']['evidence_ids']['minItems'] = 1
+            properties['interpretations']['items']['properties']['evidence_ids']['minItems'] = 1
+            properties['interpretations']['maxItems'] = 3
+            properties['uncertainties']['maxItems'] = 3
         timings['prompt_build_seconds'] = time.perf_counter() - tick
         raw_responses, sizes = [], {'context_characters': prompt.context_characters,
                                     'm4_rendered_characters': len(bundle.render_text()),
@@ -47,16 +94,25 @@ class AireChatService:
         timings.update(inference_seconds=0.0, parsing_seconds=0.0)
         for attempt in range(2):
             message = prompt.text
+            if require_behavior_grounding:
+                message += ('\nBEHAVIOR GROUNDING: Cite code-bearing FUNC or stored CALL EDGE IDs for '
+                            'summary and interpretations. Name concrete stored functions and relationships; '
+                            'use metadata and artifacts only for stored facts. Eligible IDs: ' +
+                            json.dumps(behavior_ids) + '.')
             if attempt:
                 # Do not echo adversarial/malformed model text into the next request.
                 message += '\nFORMAT CORRECTION: Return only valid JSON matching RESPONSE FORMAT. Use only listed evidence IDs and allowed confidence values.'
             tick = time.perf_counter()
-            result = self.ollama_client.generate(message, system=prompt.system, response_schema=RESPONSE_SCHEMA)
+            result = self.ollama_client.generate(message, system=prompt.system, response_schema=response_schema)
             timings['inference_seconds'] += time.perf_counter() - tick
             raw_responses.append(result.text)
             tick = time.perf_counter()
             try:
                 summary, facts, interpretations, uncertainties = parse_response(result.text, prompt.citations)
+                if require_behavior_grounding and any(not set(claim.evidence_ids) & set(behavior_ids)
+                        for claim in [summary] + interpretations):
+                    raise ChatError('Behavior explanation lacks code or call-relationship references',
+                                    code='unsupported_grounding')
             except ChatError as exc:
                 if attempt:
                     raise ChatError('Invalid structured model response after two attempts: ' + str(exc),

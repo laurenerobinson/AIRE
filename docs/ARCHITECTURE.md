@@ -1,5 +1,13 @@
 # A.I.R.E. 2.0 architecture
 
+M8 now layers a read-only tool registry, serializable public activity, bounded
+model action runner, separate conversational sessions and `aire chat <binary>`
+over M2–M7. Tools reuse existing retrieval, evidence, graph and rule modules.
+Final synthesis reuses M5 validation and accepts the already retrieved evidence
+bundle; existing M5 calls retain their original behavior. CLI database access is
+read-only and conversation persistence is separate. No private model reasoning
+is exposed. See [M8 architecture and flow](M8_AGENT.md).
+
 M0 provides the repository foundation; M1 implements read-only whole-binary
 indexing. M2 implements SQLite persistence of ProgramIndex. The broader
 pipeline includes M3 stored CALL queries, M4 bounded evidence, M5 local chat and

@@ -262,15 +262,16 @@ def render_bundle(bundle: EvidenceBundle) -> str:
         record.assembly = writer.text('ASSEMBLY (stored data)', record.assembly,
                                      'assembly', record.function_id, enabled=shown)
 
+    priority_ids = set(bundle.metadata.get('priority_function_ids', ()))
     for item in bundle.functions:
-        if item.inclusion_reason == 'target function':
+        if item.inclusion_reason == 'target function' or item.function.function_id in priority_ids:
             function(item)
     for item in bundle.edges:
         if item.depth == 1:
             writer.block('CALL EDGE', {'edge': asdict(item.edge), 'caller': asdict(item.caller),
                                       'callee': asdict(item.callee), 'reason': item.inclusion_reason, 'depth': item.depth})
     for item in bundle.functions:
-        if item.inclusion_reason != 'target function':
+        if item.inclusion_reason != 'target function' and item.function.function_id not in priority_ids:
             function(item)
     for item in bundle.edges:
         if item.depth > 1:

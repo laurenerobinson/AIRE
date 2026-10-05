@@ -8,7 +8,25 @@ M5 adds local Ollama chat with deterministic fact selection, cited interpretatio
 strict JSON validation and a CLI. M5 is committed; targeted local inference passed.
 M6 adds bounded advisory naming suggestions with strict evidence/name validation.
 M7 adds two deterministic, evidence-backed CWE signals without LLM dependencies.
+M8 adds a bounded read-only agent, public operational activity and follow-up sessions.
 Semantic retrieval and an API service remain unimplemented. The Java v1 plugin is unchanged.
+
+## Conversational agent (M8)
+
+```bash
+aire-server/.venv/bin/pip install --no-deps -e aire-server
+export AIRE_OLLAMA_HOST=http://127.0.0.1:11434
+export AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b
+export AIRE_OLLAMA_NUM_CTX=4096
+aire-server/.venv/bin/aire chat aire_test_binary --database analysis.sqlite \
+  --session /tmp/aire-session.json
+```
+
+The existing database must contain the binary's persisted analysis. File arguments
+are matched by SHA-256; stored IDs and unique names also work. Activity prints as
+tools execute. Session state is separate from stored facts. Standard-library module
+fallback: `python -m aire.agent.cli chat <binary> --database analysis.sqlite`.
+See [M8 architecture, tools, controls and validation](../docs/M8_AGENT.md).
 
 Validated environment: Python 3.11, PyGhidra 3.1.0, Ghidra 12.1.3, JDK 21.
 PyGhidra is an optional `indexing` dependency; pure record/unit-test imports do

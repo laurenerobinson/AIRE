@@ -2,9 +2,9 @@
 
 A.I.R.E. helps analysts understand binary programs using Ghidra evidence and
 local language models. This repository restores the working Java v1 extension
-and implements **A.I.R.E. 2.0 M1–M7: read-only whole-binary indexing, SQLite
+and implements **A.I.R.E. 2.0 M1–M8: read-only whole-binary indexing, SQLite
 persistence, relationship queries, bounded evidence, local grounded chat and
-advisory function naming and deterministic security rules**.
+advisory function naming, deterministic security rules and a bounded conversational agent**.
 M5 is committed/tagged; targeted local inference passed. M6 adds bounded naming
 suggestions for analyst review, with no automatic rename or write-back.
 
@@ -23,6 +23,9 @@ M7 evaluates versioned, deterministic CWE rules over stored facts, without a mod
 Its `strcpy` and `gets` signals preserve callsite/import provenance and require
 analyst review; they do not establish a vulnerability.
 See [M7 security rules](docs/M7_SECURITY_RULES.md), [M6 naming](docs/M6_NAMING.md) and [M5 chat](docs/M5_CHAT.md).
+M8 adds 12 read-only tools, immediate operational activity, bounded model actions,
+binary-scoped follow-up sessions and `aire chat <binary>` over an existing database.
+See [agent architecture, CLI and validation](docs/M8_AGENT.md).
 It does not execute or modify the target. See the
 [backend README](aire-server/README.md) for API, CLI, and test commands.
 
@@ -86,7 +89,7 @@ No packages or models are installed automatically.
 
 M0 cleanup and architecture → M1 read-only indexing → M2 SQLite → M3 relationships
 → M4 retrieval → M5 chat → M6 analyst-controlled naming suggestions → M7 CWE framework →
-M8 initial checks → M9 evidence/confidence → M10 optional dynamic validation →
+M8 read-only agent → M9 evidence/confidence and richer stored provenance → M10 optional dynamic validation →
 M11 evaluation → M12 reporting/integration. See [roadmap](docs/ROADMAP.md).
 
 **Next: M8 — expand deterministic checks and source/sink/context facts while

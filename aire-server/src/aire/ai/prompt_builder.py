@@ -81,12 +81,13 @@ def build_prompt(question, bundle, *, policy):
                   f'Stored binary SHA-256 is {json_text(binary.sha256)}; format is {json_text(binary.format)}.'))
     # Target first, then direct relationships, then remaining bodies/artifacts.
     target_id = bundle.metadata.get('resolved_target_id')
+    priority_ids = set(bundle.metadata.get('priority_function_ids', ()))
     def add_function(item):
         f = item.function
         items.append(('FUNC', f.function_id, asdict(item), item.provenance,
                       f'Stored function {json_text(f.current_name)} has entry address {json_text(f.address)}.'))
     for item in bundle.functions:
-        if item.function.function_id == target_id:
+        if item.function.function_id == target_id or item.function.function_id in priority_ids:
             add_function(item)
     for item in bundle.edges:
         items.append(('EDGE', item.provenance.source_id, asdict(item), item.provenance,
@@ -94,7 +95,7 @@ def build_prompt(question, bundle, *, policy):
             f'{item.edge.edge_type} to {json_text(item.callee.current_name)} ({item.callee.address}) '
             f'at callsite {item.edge.callsite_address}.'))
     for item in bundle.functions:
-        if item.function.function_id != target_id:
+        if item.function.function_id != target_id and item.function.function_id not in priority_ids:
             add_function(item)
     for item in bundle.artifacts:
         a = item.artifact

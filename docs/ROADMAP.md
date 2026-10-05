@@ -8,7 +8,8 @@ M5 implementation and targeted low-memory live validation are complete;
 binary-summary and a clean full live regression remain pending after
 runtime/resource timeouts.
 M6 advisory function naming is implemented and committed (`ed8881e`, `aire-m6`).
-M7 deterministic security rules are implemented; M8 and later remain planned.
+M7 deterministic security rules and the M8 read-only conversational agent are
+implemented. Richer stored provenance and later analysis remain planned.
 
 | Milestone | Scope |
 | --- | --- |
@@ -20,7 +21,7 @@ M7 deterministic security rules are implemented; M8 and later remain planned.
 | M5 (targeted live validation passed) | Local evidence-grounded chat, strict citations and separate interpretation |
 | M6 (implemented) | Analyst-controlled whole-binary naming suggestions; no automatic renaming |
 | M7 (implemented) | Versioned deterministic CWE rule framework; two API signals |
-| M8 | Expanded deterministic checks and source/sink/context facts |
+| M8 (implemented) | Read-only tools, visible activity, bounded agent, sessions and CLI |
 | M9 | Evidence/confidence model |
 | M10 | Dynamic validation prototype |
 | M11 | Benchmark/evaluation |
@@ -113,7 +114,17 @@ INSUFFICIENT_EVIDENCE. A bounded memcpy control emits neither signal. Signals do
 not establish overflow, input control or exploitability. No persistence/schema
 change or write-back is added. See [M7 validation](M7_SECURITY_RULES.md).
 
-## Next milestone — M8, not started
+## M8 acceptance
+
+Twelve validated read-only tools delegate to existing M2–M7 functionality.
+Serializable activity exposes execution, retrieval, selected functions and
+grounded results without private chain-of-thought. Iteration, tool-call, context,
+deadline and cancellation controls bound orchestration. Session state is separate
+from immutable facts. `aire chat <binary>` opens an existing database read-only.
+Deterministic tests mock the model; debug/stripped integrations and opt-in local
+inference record limitations. See [M8 implementation and validation](M8_AGENT.md).
+
+## Recommended next milestone — evaluation and richer stored provenance
 
 Expand the small deterministic security checks and begin richer source/sink/
 context analysis with explicit provenance and positive/negative controls. First
@@ -121,4 +132,5 @@ address persisted thunk binding and bounded argument/source/destination facts,
 then design rules that can use those facts without guessing missing flows.
 Preserve SIGNAL/CANDIDATE versus confirmed-vulnerability distinctions. Do not
 introduce model-created findings, target execution or automatic changes as part
-of static rule work. M8 has not been implemented.
+of static rule work. Evaluate agent tool selection and grounded answers across
+more binaries and models before expanding autonomous analysis scope.
