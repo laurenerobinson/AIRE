@@ -121,7 +121,7 @@ class RunnerTests(unittest.TestCase):
             result = AgentRunner(self.store, model).run(self.session, question)
             self.assertEqual(result.status, 'completed', question)
             names = [r['tool'] for r in result.tool_results]
-            self.assertEqual(names[:4], ['binary_metadata', 'get_function', 'get_callees', 'rank_functions'])
+            self.assertEqual(names[:3], ['binary_metadata', 'rank_application_functions', 'get_callees'])
             self.assertEqual(names[-1], 'retrieve_evidence')
             self.assertEqual(result.response.target, None)
             self.assertEqual(len(model.calls), 1, 'Only synthesis needs a model call')
@@ -142,9 +142,10 @@ class RunnerTests(unittest.TestCase):
         model = AgentModel()
         result = AgentRunner(self.store, model).run(self.session, 'What does this binary do?')
         self.assertEqual(result.status, 'completed')
-        self.assertFalse(next(r for r in result.tool_results if r['tool'] == 'get_function')['ok'])
-        self.assertEqual([r['tool'] for r in result.tool_results[:3]],
-                         ['binary_metadata', 'get_function', 'rank_functions'])
+        self.assertEqual([r['tool'] for r in result.tool_results[:2]],
+                         ['binary_metadata', 'rank_application_functions'])
+        ranking = next(r for r in result.tool_results if r['tool'] == 'rank_application_functions')
+        self.assertEqual(ranking['data']['items'][0]['classification'], 'UNKNOWN_INTERNAL')
         self.assertIn('b:a', result.response.evidence_bundle.metadata['priority_function_ids'])
         self.assertTrue(any(c['kind'] == 'FUNC' and c['data']['function']['function_id'] == 'b:a'
             and c['data']['function']['decompiled_text'] for c in catalog_from_prompt(model.calls[0])))
@@ -263,7 +264,7 @@ class RunnerTests(unittest.TestCase):
     def test_action_grammar_matches_catalog_and_tool_facts(self):
         tools = AgentTools(self.store, 'b')
         schema = action_schema(tools.registry.catalog())
-        self.assertEqual(len(schema['anyOf']), 13)
+        self.assertEqual(len(schema['anyOf']), 19)
         rank = tools.registry.run('rank_functions', {'limit': 2})
         self.assertIn('join', render_tool_facts([rank]))
         self.assertIn('Connectivity', render_tool_facts([rank]))

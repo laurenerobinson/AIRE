@@ -12,7 +12,7 @@ import sqlite3
 
 from aire.knowledge.database import BinaryKnowledgeStore, BinaryNotFoundError, KnowledgeStoreError
 from aire.knowledge.graph import CallPath, CallRelationship, FunctionRelationshipSummary, TraversalNode
-from aire.knowledge.models import FunctionRecord
+from aire.knowledge.models import FunctionRecord, ReferenceRecord, ThunkRecord
 
 MAX_DEPTH = 64
 _METRICS = ('unique_callers', 'unique_callees', 'incoming_callsites', 'outgoing_callsites')
@@ -158,6 +158,60 @@ class ProgramQueryService:
         with self._snapshot(binary_id) as db:
             source = self._resolve(db, binary_id, function)
             return self._relationships(db, binary_id, source, False, {source.function_id: source})
+
+    @staticmethod
+    def _reference_rows(db, binary_id, predicate, identity):
+        from aire.knowledge.investigation import reference_record
+        version = db.execute("SELECT value FROM schema_metadata WHERE key='schema_version'").fetchone()[0]
+        if version == '1':
+            return []  # Legacy analyses contain no persisted reference facts.
+        result = []
+        for row in db.execute(f'SELECT * FROM binary_references WHERE binary_id = ? AND {predicate} = ? '
+                              'ORDER BY ordinal', (binary_id, identity)):
+            try:
+                record = reference_record(row)
+            except ValueError as exc:
+                raise QueryError(str(exc)) from exc
+            if predicate == 'target_function_id' and record.target_function_id != identity:
+                continue  # Legacy computed-jump destinations do not resolve functions.
+            result.append(record)
+        return result
+
+    def get_function_references(self, binary_id: str, function) -> list[ReferenceRecord]:
+        """Observed outgoing references; computed calls remain explicitly marked."""
+        with self._snapshot(binary_id) as db:
+            source = self._resolve(db, binary_id, function)
+            return self._reference_rows(db, binary_id, 'source_function_id', source.function_id)
+
+    def get_function_referrers(self, binary_id: str, function) -> list[ReferenceRecord]:
+        """References to an exact entry; computed calls do not assert a target."""
+        with self._snapshot(binary_id) as db:
+            target = self._resolve(db, binary_id, function)
+            return self._reference_rows(db, binary_id, 'target_function_id', target.function_id)
+
+    def get_artifact_references(self, binary_id: str, artifact_id: str) -> list[ReferenceRecord]:
+        with self._snapshot(binary_id) as db:
+            if db.execute('SELECT 1 FROM artifacts WHERE binary_id = ? AND artifact_id = ?',
+                          (binary_id, artifact_id)).fetchone() is None:
+                raise QueryError(f'Unknown artifact {artifact_id!r} in binary {binary_id!r}')
+            return self._reference_rows(db, binary_id, 'target_artifact_id', artifact_id)
+
+    def get_thunk_bindings(self, binary_id: str, function) -> list[ThunkRecord]:
+        """Immediate Ghidra bindings from this thunk; never synthesized CALL edges."""
+        with self._snapshot(binary_id) as db:
+            source = self._resolve(db, binary_id, function)
+            version = db.execute("SELECT value FROM schema_metadata WHERE key='schema_version'").fetchone()[0]
+            if version == '1':
+                return []
+            result = []
+            for row in db.execute('SELECT * FROM thunk_relations WHERE binary_id = ? AND thunk_function_id = ? '
+                                  'ORDER BY ordinal', (binary_id, source.function_id)):
+                values = {field.name: row[field.name] for field in fields(ThunkRecord)}
+                if values['is_direct_jump'] not in (0, 1):
+                    raise QueryError('Invalid persisted thunk boolean')
+                values['is_direct_jump'] = bool(values['is_direct_jump'])
+                result.append(ThunkRecord(**values))
+            return result
 
     def get_callsites(self, binary_id: str, source, target) -> list[CallRelationship]:
         """Exact stored CALL relationships connecting two resolved functions."""

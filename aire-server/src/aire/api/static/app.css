@@ -133,3 +133,11 @@ button.tool-row { width: 100%; text-align: left; cursor: pointer; }.tool-row:hov
 @media (max-width: 820px) { .chat-layout .tools-panel { top: 0; } }
 @media (max-width: 1100px) { :root { --sidebar: 210px; --tools: 290px; } .prompt-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .binary-stats .stat-chip:nth-child(n+3) { display: none; } }
 @media (max-width: 820px) { body { overflow: auto; } .app-shell { grid-template-columns: 74px 1fr; min-height: 100vh; height: auto; } .sidebar { position: sticky; top: 0; height: 100vh; padding: 18px 10px; } .brand { justify-content: center; padding: 4px 0 18px; }.brand > span:last-child,.new-chat:not(:hover) .plus + *, .nav-item span:last-child,.sidebar-foot { display: none; }.brand-mark svg { width: 34px; }.new-chat { font-size: 0; }.new-chat .plus { font-size: 26px; margin: 0; }.nav-item { justify-content: center; padding: 0; }.nav-icon { width: auto; }.workspace { height: 100vh; }.chat-layout { grid-template-columns: 1fr; }.tools-panel { position: absolute; right: 0; top: 72px; bottom: 0; width: min(340px,80vw); z-index: 5; box-shadow: -20px 0 50px #0008; }.chat-layout.tools-collapsed .tools-panel { transform: translateX(100%); opacity: 0; }.prompt-grid { grid-template-columns: 1fr; }.home-view { padding: 34px 20px 24px; }.hero-expanded { display: none; }.binary-stats { display: none; }.topbar { padding: 12px 15px; }.about-grid { grid-template-columns: 1fr; } }
+/* Analyst answers keep operational and audit records available on demand. */
+.analysis-footer, .interpretation-label { color: var(--muted, #9aa9ba); font-size: 12px; }
+.analysis-footer { margin-top: 20px; }
+.interpretation-label { margin-bottom: 12px; }
+.workspace-preview { white-space: pre-line; color: var(--muted, #9aa9ba); font-size: 13px; margin: 12px 0; }
+.analysis-details { border-top: 1px solid var(--border, #263344); padding: 10px 0; }
+.analysis-details summary { cursor: pointer; color: var(--muted, #9aa9ba); font-size: 13px; }
+.analysis-details pre { max-height: 360px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; }

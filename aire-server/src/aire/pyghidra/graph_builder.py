@@ -1,8 +1,10 @@
 """Resolved direct CALL references only; no inferred indirect targets."""
 from aire.knowledge.models import FunctionEdge
 from aire.pyghidra.extractor import function_id, read_fact
+from aire.profiling import profiled
 
 
+@profiled('call_graph')
 def build_call_edges(program, functions, binary, warnings):
     known = {str(f.getEntryPoint()) for f in functions}
     edges = {}

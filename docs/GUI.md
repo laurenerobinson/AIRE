@@ -53,7 +53,7 @@ behavior.
 
 The welcome screen presents six binary-analysis prompt starters and the active
 binary's stored format, architecture, function count and SHA-256. The active
-chat view renders user/assistant messages and public operational events emitted
+chat view renders concise analyst explanations and public operational events emitted
 by the agent. Hidden model reasoning is never requested or shown.
 
 The right-side Analysis Tools panel maps directly to existing read-only tools:
@@ -88,15 +88,54 @@ static assets use a restrictive content-security policy, tool names/arguments ar
 validated by the existing registry, and the server never accepts model-supplied
 code for execution.
 
-Chat uses newline-delimited JSON so existing `AgentEvent` objects can reach the
-browser immediately while the synchronous agent run is in progress. The final
-`AgentResult` follows as the last packet. This is activity streaming, not token or
-private-reasoning streaming.
+Chat uses newline-delimited JSON for the existing `AgentEvent` activity stream,
+immediate verified overview facts, and progressive model summary text. Summary
+text is marked as provisional until structured output and citations pass the
+existing parser. Private reasoning is never streamed. The validated `AgentResult`
+replaces the preview as the last packet.
+
+Answers place interpretation and relevant stored observations first, followed by
+a compact static-analysis footer. Evidence, Call Relationships, Security Checks,
+and Raw Analysis Details are collapsed by default. Full source IDs, provenance,
+model configuration, tool results, bounded code and context diagnostics remain
+available there and are restored with recent chats.
+
+Selecting a binary prepares a `BinaryWorkspace` backed by existing `AgentTools`.
+It caches metadata, up to 100 function identifiers, connectivity ranking, bounded
+imports/strings/exports, deterministic findings, seed call relationships and a
+bounded overview evidence bundle. Function code and assembly remain lazy except
+for the small overview sample. Deterministic tool results are cached by binary,
+tool and validated arguments, including defaults. Up to four binary workspaces
+are retained; each has an LRU tool cache with 128 entries and a 4 MB serialized
+payload budget. Database and WAL changes invalidate all loaded workspaces.
+
+Common prompt cards use deterministic retrieval recipes in the existing runner.
+Exact graph queries and the suspicious-behavior card return stored results
+without a model planning pass. Other questions retain the existing bounded agent
+loop. Successful binary overview answers are reused for repeated identical
+questions, independently of the selected function; cache entries also include
+model and context settings. Other answers are not cached as conversation prose.
+
+The GUI reuses one Ollama client. Generation requests send `keep_alive="10m"`;
+the model can still be unloaded by Ollama under resource pressure. There is no
+automatic background generation at startup. `OllamaClient.warm()` is available
+for an explicit evidence-free model warm-up.
+
+Enable development timing logs with `AIRE_GUI_PERFORMANCE=1`. The
+`aire.performance` logger records session/workspace resolution, retrieval,
+evidence construction, prompt construction, all model requests (including
+planning), Ollama startup/first output/generation, formatting, and first useful
+visible output. Timings are not shown in normal answer text. Transport startup
+includes provider work before its response headers arrive; Ollama's own load,
+prompt-evaluation and generation durations provide the more precise breakdown.
+
+For measurements and limitations, see [GUI_CHAT_PERFORMANCE.md](GUI_CHAT_PERFORMANCE.md).
 
 ## Limits
 
 The GUI operates only on analyses already persisted in the selected SQLite
 database. It does not currently index a newly chosen file from the browser,
-visualize the call graph as an interactive node diagram, stream individual model
-tokens, or provide dynamic execution. The Call Graph panel displays exact stored
+visualize the call graph as an interactive node diagram, or provide dynamic
+execution. Progressive text covers the public summary; further structured
+interpretations appear after validation. The Call Graph panel displays exact stored
 caller/callee relationships. Existing M8 model/tool/evidence limits still apply.

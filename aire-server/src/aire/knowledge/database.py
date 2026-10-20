@@ -12,10 +12,12 @@ from pathlib import Path
 import sqlite3
 
 from aire.knowledge.models import (
-    ArtifactRecord, BinaryRecord, FunctionEdge, FunctionRecord, ProgramIndex,
+    ArtifactRecord, BinaryRecord, FunctionEdge, FunctionRecord, ProgramIndex, ReferenceRecord, ThunkRecord,
 )
+from aire.profiling import profiled, stage
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+READABLE_SCHEMA_VERSIONS = ('1', '2')
 
 
 class KnowledgeStoreError(RuntimeError):
@@ -104,6 +106,42 @@ _SCHEMA = (
     'CREATE INDEX edges_callee_idx ON function_edges(callee_function_id)',
 )
 
+_REFERENCE_SCHEMA = (
+    'CREATE UNIQUE INDEX artifacts_owner_idx ON artifacts(binary_id, artifact_id)',
+    '''CREATE TABLE binary_references (
+        reference_id TEXT PRIMARY KEY NOT NULL,
+        binary_id TEXT NOT NULL REFERENCES binaries(binary_id) ON DELETE CASCADE,
+        ordinal INTEGER NOT NULL CHECK (ordinal >= 0),
+        source_address TEXT NOT NULL, target_address TEXT NOT NULL, reference_type TEXT NOT NULL,
+        source_function_id TEXT, target_function_id TEXT, target_artifact_id TEXT,
+        source_instruction TEXT, operand_index INTEGER NOT NULL,
+        is_call INTEGER NOT NULL CHECK (is_call IN (0, 1)),
+        is_indirect INTEGER NOT NULL CHECK (is_indirect IN (0, 1)),
+        is_read INTEGER NOT NULL CHECK (is_read IN (0, 1)), data_hex TEXT,
+        UNIQUE (binary_id, ordinal),
+        FOREIGN KEY (binary_id, source_function_id) REFERENCES functions(binary_id, function_id),
+        FOREIGN KEY (binary_id, target_function_id) REFERENCES functions(binary_id, function_id),
+        FOREIGN KEY (binary_id, target_artifact_id) REFERENCES artifacts(binary_id, artifact_id)
+    )''',
+    '''CREATE TABLE thunk_relations (
+        binary_id TEXT NOT NULL REFERENCES binaries(binary_id) ON DELETE CASCADE,
+        ordinal INTEGER NOT NULL CHECK (ordinal >= 0),
+        thunk_function_id TEXT NOT NULL, target_function_id TEXT NOT NULL,
+        source_address TEXT NOT NULL, target_address TEXT NOT NULL, source_instruction TEXT,
+        is_direct_jump INTEGER NOT NULL CHECK (is_direct_jump IN (0, 1)),
+        PRIMARY KEY (binary_id, ordinal),
+        FOREIGN KEY (binary_id, thunk_function_id) REFERENCES functions(binary_id, function_id),
+        FOREIGN KEY (binary_id, target_function_id) REFERENCES functions(binary_id, function_id)
+    )''',
+    '''CREATE TABLE program_information (
+        binary_id TEXT NOT NULL REFERENCES binaries(binary_id) ON DELETE CASCADE,
+        key TEXT NOT NULL, value TEXT NOT NULL, PRIMARY KEY (binary_id, key)
+    )''',
+    'CREATE INDEX references_source_idx ON binary_references(binary_id, source_function_id)',
+    'CREATE INDEX references_target_idx ON binary_references(binary_id, target_function_id)',
+    'CREATE INDEX references_artifact_idx ON binary_references(binary_id, target_artifact_id)',
+)
+
 # SQL identifiers below come exclusively from these internal dataclass mappings,
 # never caller values. Ordinal-bearing UNIQUE/PRIMARY KEY indexes cover binary_id.
 _COLUMNS = {
@@ -111,8 +149,11 @@ _COLUMNS = {
     'functions': tuple(f.name for f in fields(FunctionRecord)),
     'artifacts': tuple(f.name for f in fields(ArtifactRecord)),
     'function_edges': tuple(f.name for f in fields(FunctionEdge)),
+    'binary_references': tuple(f.name for f in fields(ReferenceRecord)),
+    'thunk_relations': tuple(f.name for f in fields(ThunkRecord)),
 }
 _BOOLEAN_FIELDS = ('is_external', 'is_thunk', 'is_library', 'assembly_truncated')
+_REFERENCE_BOOLEANS = ('is_call', 'is_indirect', 'is_read')
 
 
 def _reject_json_constant(value):
@@ -120,7 +161,7 @@ def _reject_json_constant(value):
 
 
 class BinaryKnowledgeStore:
-    """Open and initialize schema v1; missing loads raise BinaryNotFoundError.
+    """Open schema v2, atomically upgrading v1; missing loads raise BinaryNotFoundError.
 
     Paths are database paths only. This class never opens/deletes executable
     paths stored in BinaryRecord. Metadata reloads as M1's JSON-safe values.
@@ -163,14 +204,18 @@ class BinaryKnowledgeStore:
             raise
 
     def initialize(self) -> None:
-        """Create an empty schema atomically, or validate v1 without migrating."""
+        """Create/validate v2, or add reference tables to v1 atomically.
+
+        A v1 upgrade preserves every original row; historical snapshots load
+        with empty reference facts until reindexed with the new options.
+        """
         try:
             with self._transaction(write=True) as db:
                 tables = {row[0] for row in db.execute(
                     "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT GLOB 'sqlite_*'"
                 )}
                 if not tables:
-                    for statement in _SCHEMA:
+                    for statement in _SCHEMA + _REFERENCE_SCHEMA:
                         db.execute(statement)
                     db.execute('INSERT INTO schema_metadata(key, value) VALUES (?, ?)',
                                ('schema_version', str(SCHEMA_VERSION)))
@@ -180,20 +225,33 @@ class BinaryKnowledgeStore:
                     version = db.execute(
                         'SELECT value FROM schema_metadata WHERE key = ?', ('schema_version',)
                     ).fetchone()
-                    if version is None or version[0] != str(SCHEMA_VERSION):
+                    if version is None or version[0] not in READABLE_SCHEMA_VERSIONS:
                         found = None if version is None else version[0]
                         raise UnsupportedSchemaError(
                             f'Unsupported schema version {found!r}; expected {SCHEMA_VERSION}')
+                    if version[0] == '1':
+                        # Validate the original tables before adding anything.
+                        for table, columns in _COLUMNS.items():
+                            if table not in ('binary_references', 'thunk_relations'):
+                                db.execute(f'SELECT {", ".join(columns)} FROM {table} LIMIT 0')
+                        db.execute('SELECT id, binary_id, ordinal, warning_text FROM warnings LIMIT 0')
+                        db.execute('SELECT binary_id, key, value FROM analysis_metadata LIMIT 0')
+                        for statement in _REFERENCE_SCHEMA:
+                            db.execute(statement)
+                        db.execute('UPDATE schema_metadata SET value = ? WHERE key = ?',
+                                   (str(SCHEMA_VERSION), 'schema_version'))
                 for table, columns in _COLUMNS.items():
                     extra = () if table == 'binaries' else ('ordinal',)
-                    if table == 'function_edges':
+                    if table in ('function_edges', 'thunk_relations'):
                         extra += ('binary_id',)
                     db.execute(f'SELECT {", ".join(columns + extra)} FROM {table} LIMIT 0')
                 db.execute('SELECT id, binary_id, ordinal, warning_text FROM warnings LIMIT 0')
                 db.execute('SELECT binary_id, key, value FROM analysis_metadata LIMIT 0')
+                db.execute('SELECT binary_id, key, value FROM program_information LIMIT 0')
         except sqlite3.Error as exc:
             raise UnsupportedSchemaError(f'Cannot initialize/validate schema in {self.path}: {exc}') from exc
 
+    @profiled('database_save', 'database_saves')
     def save_program_index(self, program_index: ProgramIndex) -> None:
         """Replace all facts for one binary atomically, preserving list order.
 
@@ -202,14 +260,19 @@ class BinaryKnowledgeStore:
         """
         self._db
         try:
-            data = program_index.to_dict()
+            with stage('serialization'):
+                data = program_index.to_dict()
             binary = data['binary']
             identity = binary['binary_id']
-            for kind in ('functions', 'artifacts'):
+            for kind in ('functions', 'artifacts', 'references'):
                 if any(record['binary_id'] != identity for record in data[kind]):
                     raise ValueError(f'{kind} contain a different binary_id')
-            metadata = [(identity, key, json.dumps(value, ensure_ascii=True, allow_nan=False))
-                        for key, value in data['metadata'].items()]
+            with stage('serialization'):
+                metadata = [(identity, key, json.dumps(value, ensure_ascii=True, allow_nan=False))
+                            for key, value in data['metadata'].items()]
+            if not all(isinstance(key, str) and isinstance(value, str)
+                       for key, value in data['program_info'].items()):
+                raise ValueError('program_info must contain string keys and values')
             with self._transaction(write=True) as db:
                 db.execute('DELETE FROM binaries WHERE binary_id = ?', (identity,))
                 columns = _COLUMNS['binaries']
@@ -223,6 +286,16 @@ class BinaryKnowledgeStore:
                 db.executemany(self._insert_sql('function_edges', columns),
                                (tuple(edge[c] for c in _COLUMNS['function_edges']) + (identity, ordinal)
                                 for ordinal, edge in enumerate(data['function_edges'])))
+                for table, key in (('binary_references', 'references'), ('thunk_relations', 'thunks')):
+                    columns = _COLUMNS[table] + ('ordinal',)
+                    if table == 'thunk_relations':
+                        columns += ('binary_id',)
+                    db.executemany(self._insert_sql(table, columns),
+                                   (tuple(record[c] for c in _COLUMNS[table]) + (ordinal,)
+                                    + ((identity,) if table == 'thunk_relations' else ())
+                                    for ordinal, record in enumerate(data[key])))
+                db.executemany('INSERT INTO program_information(binary_id, key, value) VALUES (?, ?, ?)',
+                               ((identity, key, value) for key, value in data['program_info'].items()))
                 db.executemany('INSERT INTO warnings(binary_id, ordinal, warning_text) VALUES (?, ?, ?)',
                                ((identity, ordinal, warning) for ordinal, warning in enumerate(data['warnings'])))
                 db.executemany('INSERT INTO analysis_metadata(binary_id, key, value) VALUES (?, ?, ?)', metadata)
@@ -249,20 +322,26 @@ class BinaryKnowledgeStore:
                     raise BinaryNotFoundError(f'No stored analysis for binary_id {binary_id!r}')
                 binary = self._binary_record(row)
                 records = {}
-                for table, cls in [('functions', FunctionRecord), ('artifacts', ArtifactRecord),
-                                   ('function_edges', FunctionEdge)]:
+                version = db.execute("SELECT value FROM schema_metadata WHERE key='schema_version'").fetchone()[0]
+                tables = [('functions', FunctionRecord), ('artifacts', ArtifactRecord),
+                          ('function_edges', FunctionEdge)]
+                if version == '2':
+                    tables += [('binary_references', ReferenceRecord), ('thunk_relations', ThunkRecord)]
+                for table, cls in tables:
                     rows = db.execute(f'SELECT * FROM {table} WHERE binary_id = ? ORDER BY ordinal', (binary_id,))
                     records[table] = []
                     for ordinal, item in enumerate(rows):
                         if item['ordinal'] != ordinal:
                             raise ValueError(f'Non-contiguous {table} ordering')
                         values = {name: item[name] for name in _COLUMNS[table]}
-                        if table == 'functions':
-                            for name in _BOOLEAN_FIELDS:
-                                if values[name] is not None:
-                                    if values[name] not in (0, 1):
-                                        raise ValueError(f'Invalid persisted boolean: {name}')
-                                    values[name] = bool(values[name])
+                        booleans = (_BOOLEAN_FIELDS if table == 'functions' else _REFERENCE_BOOLEANS
+                                    if table == 'binary_references' else ('is_direct_jump',)
+                                    if table == 'thunk_relations' else ())
+                        for name in booleans:
+                            if values[name] is not None:
+                                if values[name] not in (0, 1):
+                                    raise ValueError(f'Invalid persisted boolean: {name}')
+                                values[name] = bool(values[name])
                         records[table].append(cls(**values))
                 warnings = []
                 for ordinal, item in enumerate(db.execute(
@@ -281,8 +360,21 @@ class BinaryKnowledgeStore:
                 if any(edge.caller_function_id not in known or edge.callee_function_id not in known
                        for edge in records['function_edges']):
                     raise ValueError('Stored call edge references a missing function')
+                references = records.get('binary_references', [])
+                thunks = records.get('thunk_relations', [])
+                artifact_ids = {artifact.artifact_id for artifact in records['artifacts']}
+                for reference in references:
+                    if any(identity is not None and identity not in known for identity in
+                           (reference.source_function_id, reference.target_function_id)):
+                        raise ValueError('Stored reference points to a missing function')
+                    if reference.target_artifact_id is not None and reference.target_artifact_id not in artifact_ids:
+                        raise ValueError('Stored reference points to a missing artifact')
+                if any(thunk.thunk_function_id not in known or thunk.target_function_id not in known for thunk in thunks):
+                    raise ValueError('Stored thunk points to a missing function')
+                program_info = dict(db.execute('SELECT key, value FROM program_information WHERE binary_id = ?',
+                                               (binary_id,))) if version == '2' else {}
                 return ProgramIndex(binary, records['functions'], records['artifacts'],
-                                    records['function_edges'], warnings, metadata)
+                                    records['function_edges'], warnings, metadata, references, thunks, program_info)
         except (sqlite3.Error, TypeError, ValueError) as exc:
             raise PersistedDataError(f'Cannot load analysis {binary_id!r}: {exc}') from exc
 

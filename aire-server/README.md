@@ -95,15 +95,26 @@ with BinaryKnowledgeStore(Path("analysis.sqlite")) as store:
     assert loaded == index
 ```
 
-The store initializes schema v1 automatically and supports explicit `initialize`,
+The store initializes schema v2 automatically, atomically upgrades v1, and supports explicit `initialize`,
 `has_binary`, `list_binaries` (binary metadata only), `delete_binary` (bool), and
 `close`. Missing loads raise BinaryNotFoundError. Each save atomically replaces
 all facts for that binary; foreign keys enforce ownership and cascade database
 row deletion. Executable files are never opened or deleted by the store.
 All M1 fields and list ordering survive; metadata uses JSON-safe normalization.
 Use one instance on its creating thread in a single-writer workflow. Context
-exit closes; each successful save/delete is already committed. No migrations,
-semantic retrieval or AI calls are included in M2; M3 queries are separate.
+exit closes; each successful save/delete is already committed. The additive v1
+upgrade preserves all original facts and adds reference/thunk/program-information
+tables. Read-only adapters support both versions without migrating. Semantic
+retrieval and AI calls remain separate; M3 queries are separate.
+
+M9 read-only investigation uses the existing v2 schema, with no additional runtime
+dependencies. `InvestigationService.references()` pages exact outgoing/incoming
+references and function-local strings; `thunk_chain()` follows at most sixteen
+stored bindings without creating CALL edges; `classification()` returns derived
+categories and entry/import provenance. These power four new M8 tools, bringing
+the catalog to eighteen. M4/M5 carry separately cited `XREF`/`THUNK` evidence and
+prioritize actual referenced strings. Exact string/xref/thunk questions can be
+answered offline without Ollama. See [implementation, tests and limits](../docs/M9_IMPLEMENTATION_2026-10-13.md).
 
 Use temporary database paths during development; `*.db`, `*.sqlite`, `*.sqlite3`
 are ignored and must not be committed. No extra package is required for SQLite.
@@ -114,6 +125,122 @@ AIRE_RUN_GHIDRA_TESTS=1 PYTHONPATH=aire-server/src aire-server/.venv/bin/python 
 ```
 
 See [development](../docs/DEVELOPMENT.md) for reopen/load and reporting examples.
+
+## Reuse compatible static analysis
+
+```python
+from aire.analysis.cache import analyze_binary
+from aire.knowledge.database import BinaryKnowledgeStore
+from aire.pyghidra.options import IndexOptions
+
+with BinaryKnowledgeStore("analysis.sqlite") as store:
+    result = analyze_binary("sample", store, options=IndexOptions())
+    label = "Loaded cached analysis" if result.cache_hit else "Fresh analysis"
+    print(f"{label}: {result.elapsed_seconds:.3f} seconds")
+    index = result.program_index
+    # Explicitly rerun static indexing and atomically replace the snapshot:
+    fresh = analyze_binary("sample", store, force=True)
+```
+
+`aire.analysis.cache` validates the file and computes its SHA-256 before consulting
+the store. A hit requires the same binary ID and complete, exactly matching
+`metadata["options"]`, including value types. Missing or different options cause
+fresh indexing through the unchanged `index_binary()`, followed by an atomic
+save. The store holds one snapshot per SHA-256; different options replace that
+snapshot. Cache hits load the stored `ProgramIndex` without starting Ghidra or
+requiring PyGhidra to be installed. A snapshot retains its original recorded path,
+even when identical bytes are requested from another path.
+
+The target is only read. SHA-256 is verified after lookup/indexing (including
+failures), and the returned binary ID and SHA-256 must match the input before
+return/save. Storage failures propagate. The caller owns the store and follows
+its existing thread and single-writer contract.
+
+`AnalysisResult.cache_hit` and `elapsed_seconds` describe the current request.
+Elapsed time includes validation, hashing, lookup/load, any indexing/save, and
+integrity verification; opening the store is excluded. Original indexing timings
+in `ProgramIndex.metadata` are preserved on hits.
+
+Benchmark one real cache miss followed by a hit using a disposable database,
+reopened before the hit, from the repository root:
+
+```bash
+GHIDRA_INSTALL_DIR="$HOME/tools/ghidra" JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 \
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python scripts/benchmark_analysis_cache.py \
+  professor_samples/function_overloading/original/FunctionOverloading.exe
+```
+
+The benchmark reports both request timings and SHA-256 values, verifies snapshot
+equality, and fails if the second request attempts indexing. It never executes the
+target and does not touch an existing analysis database.
+
+For exclusive fresh-analysis profiling, start the script in a new Python
+process with `--profile --output /tmp/aire-fresh-profile.json`. It performs a
+forced cold analysis, a second forced analysis in the same JVM, and then a cache
+hit after reopening SQLite. `force=True` bypasses the result cache in both fresh
+experiments. The table includes startup, project creation, import, auto-analysis,
+discovery, decompiler setup, decompilation, instruction/basic-block extraction,
+individual artifact kinds, call graph, serialization, database save, integrity,
+cleanup, and other overhead. Nested timers are exclusive; rows sum to TOTAL.
+Counters and per-function decompile counts are in the JSON report. Profiling is
+request-local and does not add metadata to the persisted `ProgramIndex`.
+
+```bash
+GHIDRA_INSTALL_DIR="$HOME/tools/ghidra" JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 \
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python scripts/benchmark_analysis_cache.py \
+  professor_samples/function_overloading/original/FunctionOverloading.exe \
+  --profile --output /tmp/aire-fresh-profile.json \
+  --xref-script scripts/demoL_function_overloading.py
+```
+
+`--xref-script` optionally verifies that the matching demo's `collect_xrefs(index)`
+reads the cached snapshot after A/B/C, with Ghidra project creation and analysis
+blocked. References are now collected during core indexing from the original
+analyzed Program. The demo target path and pinned hash must match the input.
+
+Cold means a new Python process/JVM, not flushed OS disk caches. Request totals
+exclude opening the database, writing/serializing the benchmark report, snapshot
+comparisons, and process-exit JVM shutdown; per-request program/project cleanup
+is included. Serialization measures the actual database snapshot preparation,
+and database-save time excludes that nested work. Existing indexer metadata
+timers are inclusive and are not added to the exclusive table. Ghidra's own
+analyzer-internal work remains under auto-analysis; explicit extraction
+decompilation counts do not trace Java analyzers internally. Normal execution
+emits no profiling logs and requires no additional packages.
+
+## References and function interactions
+
+`ProgramIndex.references` contains typed observed source/destination/type/operand
+facts with exact function and artifact links, source instructions, computed-call
+flags, and up to eight initialized bytes at READ destinations.
+`ProgramIndex.thunks` records Ghidra's immediate bindings, separately from CALL
+edges, with a flag for independently verified literal jumps.
+`ProgramIndex.program_info` preserves loader/PDB and ELF metadata used by the
+demos. All are extracted from the same analyzed Program before normal disposal
+and round-trip through SQLite/cache. No second import/project/analysis is needed.
+
+`IndexOptions.include_references` defaults to true. Legacy cache options lack
+this field and therefore cause fresh indexing instead of returning missing
+reference evidence. Current options still require exact matching.
+
+`ProgramQueryService` adds `get_function_references`, `get_function_referrers`,
+`get_artifact_references`, and `get_thunk_bindings`. Existing `get_callers` and
+`get_callees` keep their direct-CALL semantics. Computed references never assert
+a target function or manufacture call edges. Pure reference views and demos
+can consume a loaded snapshot with no Ghidra installation or target-file access.
+Current AI bundles still use their explicitly scoped existing evidence; no
+AI-generated summaries or automatic expansion of those bundles is added.
+
+Benchmark a single fresh integrated workflow and its stored demo evidence:
+
+```bash
+GHIDRA_INSTALL_DIR="$HOME/tools/ghidra" JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 \
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python scripts/benchmark_integrated_references.py \
+  professor_samples/function_overloading/original/FunctionOverloading.exe \
+  --output /tmp/aire-integrated-references.json
+```
+
+See [reference architecture, validation, and measured results](../docs/REFERENCE_FACTS.md).
 
 ## Query persisted relationships (M3)
 

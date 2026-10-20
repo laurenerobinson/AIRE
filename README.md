@@ -23,9 +23,12 @@ M7 evaluates versioned, deterministic CWE rules over stored facts, without a mod
 Its `strcpy` and `gets` signals preserve callsite/import provenance and require
 analyst review; they do not establish a vulnerability.
 See [M7 security rules](docs/M7_SECURITY_RULES.md), [M6 naming](docs/M6_NAMING.md) and [M5 chat](docs/M5_CHAT.md).
-M8 adds 12 read-only tools, immediate operational activity, bounded model actions,
+M8 adds 18 read-only tools, immediate operational activity, bounded model actions,
 binary-scoped follow-up sessions and `aire chat <binary>` over an existing database.
 See [agent architecture, CLI and validation](docs/M8_AGENT.md).
+Exact function/string and data references and separate thunk bindings are persisted
+in schema v2. Agent tools and evidence citations now expose these relationships;
+see [M9 implementation and validation](docs/M9_IMPLEMENTATION_2026-10-13.md).
 The optional `aire gui` browser workspace uses the same agent and read-only tools.
 See [GUI launch and usage](docs/GUI.md).
 It does not execute or modify the target. See the

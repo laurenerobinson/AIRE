@@ -6,10 +6,11 @@ import time
 from aire.knowledge.database import BinaryKnowledgeStore
 from aire.knowledge.evidence import (
     ArtifactEvidence, EdgeEvidence, EvidenceBundle, EvidenceRequest, FunctionEvidence,
-    FunctionReference, Provenance, Truncation, WarningEvidence, render_bundle,
+    FunctionReference, Provenance, Truncation, WarningEvidence, ReferenceEvidence, ThunkEvidence, render_bundle,
 )
-from aire.knowledge.models import ArtifactRecord, FunctionEdge
+from aire.knowledge.models import ArtifactRecord, FunctionEdge, ThunkRecord
 from aire.knowledge.retrieval import ProgramQueryService, _address_key, _function_key
+from aire.knowledge.investigation import InvestigationService, reference_record, thunk_item
 
 
 def _edge_key(edge):
@@ -56,7 +57,7 @@ class ContextBuilder:
             bundle.metadata.update({
                 'schema_version': 1,
                 'resolved_target_id': target.function_id if target is not None else None,
-                'artifact_linkage': 'No function-to-string xrefs are persisted; strings are binary-level only',
+                'artifact_linkage': 'Function-local only with exact stored reference provenance; other artifacts remain binary-level',
                 'warning_policy': 'Only global Import:/Analysis: diagnostics; no inferred function association',
                 'ordering': 'target; direct edges; callers; callees; shallow traversal; address-associated artifacts; binary artifacts',
             })
@@ -88,6 +89,7 @@ class ContextBuilder:
                 bundle.provenance.append(provenance)
             timings['graph_selection_seconds'] = time.perf_counter() - tick
             tick = time.perf_counter()
+            self._references(db, request, bundle)
             self._artifacts(db, request, bundle)
             timings['artifact_selection_seconds'] = time.perf_counter() - tick
             self._warnings(db, request, bundle)
@@ -138,6 +140,50 @@ class ContextBuilder:
             _address_key(x[2].callsite_address), x[2].edge_type))
         return function_list, edge_list
 
+    def _references(self, db, request, bundle):
+        coverage = InvestigationService.coverage(db, request.binary_id)
+        bundle.metadata['reference_coverage'] = coverage
+        identities = [f.function.function_id for f in bundle.functions]
+        if coverage['schema_version'] < 2 or not identities:
+            return
+        placeholders = ','.join('?' for _ in identities)
+        params = (request.binary_id, *identities)
+        # Bound materialized rows independently from function and artifact caps.
+        if request.include_references:
+            predicate = f' FROM binary_references WHERE binary_id=? AND source_function_id IN ({placeholders})'
+            total = db.execute('SELECT count(*)' + predicate, params).fetchone()[0]
+            # Selected target's data/string evidence precedes graph-neighbor references.
+            rows = db.execute('SELECT *' + predicate +
+                ' ORDER BY (source_function_id=? ) DESC,is_call,source_address,target_address,reference_id LIMIT ?',
+                (*params, bundle.metadata.get('resolved_target_id'), request.max_references)).fetchall()
+            for row in rows:
+                record = reference_record(row)
+                record.source_instruction = _text_limit(bundle, record.source_instruction, 200, 'reference_instruction', record.reference_id)
+                p = Provenance('binary_references', record.reference_id, request.binary_id, record.source_address,
+                    'observed Ghidra reference; computed calls do not resolve a target function',
+                    tuple(i for i in (record.source_function_id, record.target_function_id) if i))
+                bundle.references.append(ReferenceEvidence(record, p))
+                bundle.provenance.append(p)
+            if total > len(rows):
+                bundle.truncations.append(Truncation('references', 'max_references', request.max_references, total, len(rows)))
+        if request.include_thunks:
+            predicate = f' FROM thunk_relations WHERE binary_id=? AND (thunk_function_id IN ({placeholders}) OR target_function_id IN ({placeholders}))'
+            args = (*params, *identities)
+            total = db.execute('SELECT count(*)' + predicate, args).fetchone()[0]
+            rows = db.execute('SELECT *' + predicate + ' ORDER BY source_address,target_address LIMIT ?',
+                              (*args, request.max_thunks)).fetchall()
+            for row in rows:
+                record = ThunkRecord(**{k: row[k] for k in ThunkRecord.__dataclass_fields__})
+                record.is_direct_jump = bool(record.is_direct_jump)
+                record.source_instruction = _text_limit(bundle, record.source_instruction, 200, 'thunk_instruction', record.thunk_function_id)
+                p = Provenance('thunk_relations', thunk_item(request.binary_id, record)['provenance']['source_id'],
+                    request.binary_id, record.source_address, 'Ghidra immediate thunk binding; direct JMP verification is a separate flag',
+                    (record.thunk_function_id, record.target_function_id))
+                bundle.thunks.append(ThunkEvidence(record, p))
+                bundle.provenance.append(p)
+            if total > len(rows):
+                bundle.truncations.append(Truncation('thunks', 'max_thunks', request.max_thunks, total, len(rows)))
+
     def _artifacts(self, db, request, bundle):
         kinds = [kind for kind, enabled in [('STRING', request.include_strings),
                  ('IMPORT', request.include_imports), ('EXPORT', request.include_exports)] if enabled]
@@ -149,9 +195,14 @@ class ContextBuilder:
                           (request.binary_id, *kinds)).fetchall()
         externals = {item.function.address: item.function.function_id for item in bundle.functions
                      if item.function.is_external}
+        local = {}
+        for item in bundle.references:
+            ref = item.reference
+            if ref.target_artifact_id and not ref.is_indirect and not ref.is_call:
+                local.setdefault(ref.target_artifact_id, []).append(ref)
         def associated(row):
             return row['type'] == 'IMPORT' and row['address'] in externals
-        rows.sort(key=lambda row: (0 if associated(row) else 1,
+        rows.sort(key=lambda row: (0 if row['artifact_id'] in local else 1 if associated(row) else 2,
             ('STRING', 'IMPORT', 'EXPORT').index(row['type']), _address_key(row['address'] or ''), row['artifact_id']))
         for row in _limit(bundle, 'artifacts', rows, request.max_artifacts):
             # Measure in Python: SQLite length(TEXT)/substr stop at embedded NULs.
@@ -159,12 +210,15 @@ class ContextBuilder:
                                   (request.binary_id, row['artifact_id'])).fetchone()[0]
             value = _text_limit(bundle, original, request.max_total_chars, 'artifact_value', row['artifact_id'])
             linked = associated(row)
-            reason = 'import symbol at selected external function address' if linked else 'requested binary-level ' + row['type']
+            refs = local.get(row['artifact_id'], []) if row['type'] == 'STRING' else []
+            reason = ('exact string reference(s): ' + ', '.join(r.reference_id for r in refs) if refs else
+                'import symbol at selected external function address' if linked else 'requested binary-level ' + row['type'])
             provenance = Provenance('artifacts', row['artifact_id'], request.binary_id, row['address'], reason,
+                                    tuple(dict.fromkeys(r.source_function_id for r in refs)) if refs else
                                     (externals[row['address']],) if linked else ())
             bundle.artifacts.append(ArtifactEvidence(
                 ArtifactRecord(row['artifact_id'], request.binary_id, row['type'], row['address'], value),
-                reason, 'external-address-match' if linked else 'binary', provenance))
+                reason, 'function-reference' if refs else 'external-address-match' if linked else 'binary', provenance))
             bundle.provenance.append(provenance)
 
     def _warnings(self, db, request, bundle):

@@ -1,0 +1,336 @@
+# A.I.R.E. BOARD OF TRUSTEES — PRE-DEMO VERIFICATION
+
+**Date:** October 8, 2026
+**Verification completed:** 2026-10-08 12:09:34 CDT
+**Scope:** Current working checkout at /home/laurene/aire. Verification only.
+**Result:** READY WITH LIMITATIONS. Use the verified static demonstration as the main presentation. Live AI is not reliable enough to be the critical path.
+
+**1. Repository Status**
+- Project root: /home/laurene/aire, confirmed by pwd (exit 0).
+- Branch: main.
+- Commit: 4bbc112ff60c1342947b680bc6ceba0d7834d136, October 5, 2026, "Add integrated A.I.R.E. analysis GUI".
+- Remote: origin = git@github.com:laurenerobinson/AIRE.git (fetch and push); remote reachability was not tested.
+- Uncommitted changes: 30 modified tracked files; 30 untracked status entries representing 34 untracked files. Nothing was staged initially.
+- Working tree status: dirty before verification; all existing contents and initial status preserved. The requested report is the only new project file created by this run.
+- Hash verification: all 221 original inventoried project/input/database files unchanged; SHA-256 snapshots in before.json and after.json under the evidence directory.
+- No project code edits, staging, commits, pushes, dependency installations or target execution. Temporary test/project/session outputs were confined to /tmp and cleaned by existing test lifecycles.
+
+Initial git status --short (exit 0):
+```text
+ M aire-server/README.md
+ M aire-server/src/aire/agent/runner.py
+ M aire-server/src/aire/agent/tools.py
+ M aire-server/src/aire/ai/chat.py
+ M aire-server/src/aire/ai/evidence_selector.py
+ M aire-server/src/aire/ai/naming.py
+ M aire-server/src/aire/ai/ollama_client.py
+ M aire-server/src/aire/ai/prompt_builder.py
+ M aire-server/src/aire/api/server.py
+ M aire-server/src/aire/api/static/app.css
+ M aire-server/src/aire/api/static/app.js
+ M aire-server/src/aire/knowledge/database.py
+ M aire-server/src/aire/knowledge/models.py
+ M aire-server/src/aire/knowledge/retrieval.py
+ M aire-server/src/aire/pyghidra/extractor.py
+ M aire-server/src/aire/pyghidra/graph_builder.py
+ M aire-server/src/aire/pyghidra/indexer.py
+ M aire-server/src/aire/pyghidra/options.py
+ M aire-server/src/aire/security/rule_engine.py
+ M aire-server/tests/test_agent_runner.py
+ M aire-server/tests/test_agent_tools.py
+ M aire-server/tests/test_database.py
+ M aire-server/tests/test_ollama_client.py
+ M docs/ARCHITECTURE.md
+ M docs/CURRENT_STATE.md
+ M docs/GUI.md
+ M docs/M8_AGENT.md
+ M scripts/demoL_function_overloading.py
+ M scripts/demo_function_overloading.py
+ M scripts/demo_function_overloading_WINDOWS_backup.py
+?? aire-server/src/aire/analysis/
+?? aire-server/src/aire/api/chat_presentation.py
+?? aire-server/src/aire/api/workspace.py
+?? aire-server/src/aire/knowledge/application_relevance.py
+?? aire-server/src/aire/knowledge/reference_views.py
+?? aire-server/src/aire/profiling.py
+?? aire-server/src/aire/pyghidra/references.py
+?? aire-server/tests/test_analysis_cache.py
+?? aire-server/tests/test_analysis_cache_integration.py
+?? aire-server/tests/test_analysis_profiling.py
+?? aire-server/tests/test_application_relevance.py
+?? aire-server/tests/test_binary_formats_integration.py
+?? aire-server/tests/test_function_crosscheck.py
+?? aire-server/tests/test_gui_workspace.py
+?? aire-server/tests/test_references.py
+?? aire-server/tests/test_references_integration.py
+?? docs/APPLICATION_RELEVANCE.md
+?? docs/BINARY_FORMAT_SUPPORT.md
+?? docs/FRESH_ANALYSIS_PROFILE.json
+?? docs/FRESH_ANALYSIS_PROFILE.md
+?? docs/GUI_CHAT_BENCHMARK.json
+?? docs/GUI_CHAT_PERFORMANCE.md
+?? docs/INTEGRATED_REFERENCES_BENCHMARK.json
+?? docs/REFERENCE_FACTS.md
+?? scripts/benchmark_analysis_cache.py
+?? scripts/benchmark_gui_chat.py
+?? scripts/benchmark_integrated_references.py
+?? scripts/demo_aire_formats.sh
+?? scripts/validate_application_relevance.py
+?? scripts/validate_function_crosscheck.py
+```
+
+**2. Environment Status**
+- Python: system and aire-server/.venv Python 3.12.3. sys.prefix is /home/laurene/aire/aire-server/.venv; base prefix /usr. pip check: "No broken requirements found" (exit 0).
+- Java: OpenJDK 21.0.12.1, 64-bit. JAVA_HOME is unset; discovery successfully finds /usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so. Real Ghidra startup succeeded, so this is not a current blocker.
+- Ghidra: 12.1.3 PUBLIC installed at /home/laurene/tools/ghidra (resolved installation /home/laurene/tools/ghidra_12.1.3_PUBLIC). GHIDRA_INSTALL_DIR is set correctly. application.java.min=21.
+- PyGhidra: 3.1.0, import and real JVM analysis verified. JPype1: 1.5.2.
+- Ollama: /usr/local/bin/ollama, version 0.35.0. Existing local service responds at http://127.0.0.1:11434; /api/tags, /api/version and GUI /api/health succeeded.
+- Available models: qwen2.5-coder:1.5b, ID d7372fd82851, approximately 986 MB. No models downloaded. Initially no model was loaded; smoke testing loaded the installed model.
+- AI environment: AIRE_OLLAMA_HOST=http://127.0.0.1:11434; AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b; AIRE_OLLAMA_NUM_CTX=4096.
+- Required fixtures and demo scripts: all requested paths exist, including both small ELF fixtures, the ELF professor sample and its SHA256SUMS, root FunctionOverloading, PE original, demo_function_overloading.py and validate_function_crosscheck.py. tests/binaries/aire_test_stripped was also successfully analyzed by the integration suite.
+- Existing analysis.sqlite: SQLite quick_check=ok, contains the debug ELF and professor PE indexes. Existing small-ELF index has 34 functions, 29 direct CALL edges, 135 artifacts and 6 stored warnings. The new professor ELF demo analyzes fresh and does not require this database.
+- Missing dependencies/configuration blockers: none found for the exercised backend/static paths. JAVA_HOME being unset is informational. Target runtime libraries were not installed or executed; unresolved external libraries are analysis caveats, not failed Python dependencies.
+
+**3. Test Results**
+
+| Run | Total | Passed | Failed | Errors | Skipped | Exit | Time |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Default backend suite | 411 | 389 | 0 | 0 | 22 | 0 | 13.813 s |
+| Ghidra-enabled complete suite | 411 | 406 | 1 | 0 | 4 | 1 | 347.514 s |
+
+- Total: 411 discovered top-level tests per complete suite. The two runs overlap and must not be added as distinct coverage.
+- Passed: 389 default; 406 with Ghidra enabled.
+- Failed: 0 default; 1 with Ghidra enabled, detailed below.
+- Errors: 0 unittest errors in either complete run. Separate AI smoke checks exposed a handled timeout and an incorrect operand explanation.
+- Skipped: 22 default opt-in cases; 4 remaining live-inference opt-in cases with Ghidra enabled. Every skipped identifier/reason is listed below. No missing-dependency skip was mistaken for success.
+- Baseline comparison: previous 261 passed + 16 skipped = 277 top-level tests; this checkout has 411 (+134). Default passes increased by 128 and skips by 6. New cache, relevance, reference, format, cross-check and workspace tests are present. The previous 146 successful subtests are not independently reported by stock unittest output; no current subtest count is claimed. No subtest failure is reported.
+- Ghidra integration: JVM starts and real static analysis succeeds on debug/stripped ELF, controlled ELF, professor ELF and professor PE. Function/signature extraction, bounded assembly, decompilation, metadata, direct CALL edges, references, persistence, cache reuse and security-rule fixtures pass. The complete integration run is FAILED because the agent overview case fails; it is not reported as an all-green integration suite.
+- Security regression: VERIFIED on this Python 3.12.3 environment. Both http://[::ffff:127.0.0.1] and the :11434 form raise ValueError. IPv4 loopback and ::1 are accepted. test_remote_hosts_rejected_without_dns passes. No endpoint fix was applied or is required for this runtime.
+
+Exact integration failure:
+```text
+FAIL: test_debug_and_stripped_deterministic (test_agent_integration.AgentIntegrationTests.test_debug_and_stripped_deterministic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/laurene/aire/aire-server/tests/test_agent_integration.py", line 58, in test_debug_and_stripped_deterministic
+    self.assertEqual(overview.status, 'completed', overview.answer)
+AssertionError: 'partial' != 'completed'
+- partial
++ completed
+ : Agent could not complete the request (ChatError). Retrieved tool results remain available.
+```
+
+Cause confirmed by a separate read-only replay:
+- test_agent_integration.py:58 expects a completed overview with a 6000-character evidence budget.
+- AgentTools supplies three derived cross-check reports; prompt_builder.py appends them before code-bearing FUNC and CALL EDGE blocks.
+- The recorded noncompact catalog contains BINARY + three CROSSCHECK blocks + WARNING, with no FUNC or EDGE. Compact category quotas do not apply to this path.
+- test_chat.valid_output() prefers EDGE citations, then falls back to the first catalog ID, BINARY. It does not select CROSSCHECK citations. Both attempts therefore cite metadata for behavior.
+- aire.ai.chat correctly rejects that response with unsupported_grounding: "Behavior explanation lacks code or call-relationship references". The agent returns partial. The failing test aborts before its later stripped-agent assertions; those assertions are not considered verified.
+- Suggested fix, not applied: reserve bounded space for at least one code-bearing function and an exact CALL edge before derived reports in noncompact overview prompts; budget/shorten cross-check reports; make fake-model output honor eligible behavioral citation kinds. Preserve metadata-only grounding rejection and the test's real code/edge assertions.
+
+Warnings and limitations recorded:
+- Professor ELF demo reports 12 warning records, including 11 intentionally omitted indirect callsites, unresolved external implementations and unsupported runtime-copy relocation for std::cout.
+- Controlled ELF round-trip reports 26 warning records; bounded evidence correctly marks omissions. Warnings are retained as diagnostics, not inferred vulnerabilities.
+- Existing database metadata has null entry_point for its older indexes. Display Ghidra image/function addresses; do not label main as the executable entry point or as a runtime relocated address.
+- Cross-check validator passes its acceptance assertions, while honestly returning PARTIAL_AGREEMENT for complex coordinator functions and INSUFFICIENT_EVIDENCE for calculate_checksum. It does not establish whole-function equivalence.
+- No Python syntax/deprecation warning appeared in the captured suite output; full diagnostic output remains in the logs.
+
+Default-suite skipped tests (exact output):
+- test_debug_and_stripped_deterministic (test_agent_integration.AgentIntegrationTests.test_debug_and_stripped_deterministic) ... skipped 'Opt-in Ghidra integration'
+- test_live_demo (test_agent_integration.AgentIntegrationTests.test_live_demo) ... skipped 'Opt-in Ghidra integration'
+- test_real_miss_then_reopened_cache_hit (test_analysis_cache_integration.AnalysisCacheIntegrationTests.test_real_miss_then_reopened_cache_hit) ... skipped 'Opt-in Ghidra integration'
+- test_01_simple_elf (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_01_simple_elf) ... skipped 'Opt-in Ghidra integration'
+- test_02_professor_pe (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_02_professor_pe) ... skipped 'Opt-in Ghidra integration'
+- test_03_professor_elf (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_03_professor_elf) ... skipped 'Opt-in Ghidra integration'
+- test_04_shared_runtime_format_isolation (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_04_shared_runtime_format_isolation) ... skipped 'Opt-in Ghidra integration'
+- test_debug_deterministic_pipeline (test_chat_integration.ChatIntegrationTests.test_debug_deterministic_pipeline) ... skipped 'Opt-in Ghidra integration'
+- test_debug_live_ollama (test_chat_integration.ChatIntegrationTests.test_debug_live_ollama) ... skipped 'Opt-in Ghidra integration'
+- test_stripped_deterministic_pipeline (test_chat_integration.ChatIntegrationTests.test_stripped_deterministic_pipeline) ... skipped 'Opt-in Ghidra integration'
+- test_stripped_live_ollama (test_chat_integration.ChatIntegrationTests.test_stripped_live_ollama) ... skipped 'Opt-in Ghidra integration'
+- test_real_context (test_context_builder_integration.ContextIntegrationTests.test_real_context) ... skipped 'Opt-in Ghidra integration'
+- test_real_round_trip (test_database_integration.DatabaseIntegrationTests.test_real_round_trip) ... skipped 'Opt-in Ghidra integration'
+- test_controlled_binary (test_indexer_integration.GhidraIntegrationTests.test_controlled_binary) ... skipped 'Opt-in Ghidra integration'
+- test_rejected_output_leaves_analysis_unchanged (test_naming_integration.NamingIntegrationTests.test_rejected_output_leaves_analysis_unchanged) ... skipped 'Opt-in Ghidra naming integration'
+- test_stripped_fake_naming (test_naming_integration.NamingIntegrationTests.test_stripped_fake_naming) ... skipped 'Opt-in Ghidra naming integration'
+- test_stripped_live_naming (test_naming_integration.NamingIntegrationTests.test_stripped_live_naming) ... skipped 'Opt-in Ghidra naming integration'
+- test_same_analyzed_program_pe_and_elf_with_one_import_each (test_references_integration.ReferenceIntegrationTests.test_same_analyzed_program_pe_and_elf_with_one_import_each) ... skipped 'Opt-in Ghidra integration'
+- test_real_queries (test_retrieval_integration.RetrievalIntegrationTests.test_real_queries) ... skipped 'Opt-in Ghidra integration'
+- test_negative_bounded_copy (test_security_integration.SecurityIntegrationTests.test_negative_bounded_copy) ... skipped 'Opt-in static security integration'
+- test_positive_gets (test_security_integration.SecurityIntegrationTests.test_positive_gets) ... skipped 'Opt-in static security integration'
+- test_positive_strcpy (test_security_integration.SecurityIntegrationTests.test_positive_strcpy) ... skipped 'Opt-in static security integration'
+
+Remaining Ghidra-suite skipped tests (exact output):
+- test_live_demo (test_agent_integration.AgentIntegrationTests.test_live_demo) ... skipped 'Opt-in agent Ollama validation'
+- test_debug_live_ollama (test_chat_integration.ChatIntegrationTests.test_debug_live_ollama) ... skipped 'Opt-in local Ollama inference'
+- test_stripped_live_ollama (test_chat_integration.ChatIntegrationTests.test_stripped_live_ollama) ... skipped 'Opt-in local Ollama inference'
+- test_stripped_live_naming (test_naming_integration.NamingIntegrationTests.test_stripped_live_naming) ... skipped 'Opt-in one-function Ollama naming'
+
+The separate five-question live agent test, full/stripped live chat tests and live naming test were not enabled beyond those explicit skips. Safe local inference was exercised through the real GUI and focused chat checks below. Naming inference and stripped live AI behavior remain NOT TESTED.
+
+**4. Demo Verification**
+- Function overloading demo: PASS, exit 0, total process 83.961 s; script reports 83.3 s analysis/demo time. It ran while Ghidra integration and local AI were active, so timing includes resource contention. Pre-run before the presentation.
+- ELF fixture: VERIFIED through real format/chat/naming/cache integration and read-only cross-check validation.
+- Stripped ELF fixture: VERIFIED through real deterministic chat/naming integration and an additional fresh static cross-check. Its autogenerated names are preserved; addresses match debug functions.
+- Binary integrity: VERIFIED independently and by existing demo/tests. No target binaries executed.
+- Function extraction: professor ELF 46 functions; square(int) at 00101189, square(double) at 001011da; main at 0010123e.
+- Disassembly: integer self-multiply IMUL EAX,EAX at 001011d5 and double self-multiply MULSD XMM0,XMM0 at 0010122e, with verified argument spill/reload evidence.
+- Decompilation: 33 functions; overloads contain return x * x and return y * y.
+- Call graph: 19 direct CALL records. main calls integer square at 00101247 and double square at 00101282.
+- Arguments: integer 7 from MOV EDI,0x7; double 7.5 from referenced bytes at 00102038 loaded via RAX/XMM0. Both VERIFIED by the demo.
+- References: strings "square of integer " and "square of double " linked to exact DATA/PARAM reference sites. Core reference persistence/consumers pass for ELF and PE.
+- Existing scripts/validate_function_crosscheck.py --index-stripped: PASS, exit 0, 15.388 s, inputs/database hashes unchanged. Debug/stripped addition and multiplication show local AGREEMENT; complex cases retain honest uncertainty.
+
+AI implementation versus verification:
+- IMPLEMENTED AND VERIFIED: AgentRunner, bounded validated read-only tool registry, session scope, backend/API routes, real evidence retrieval, function addresses, structured citations, local Ollama transport, strict JSON/citation validation, retries, bounded context, advisory naming infrastructure and deterministic security rules.
+- VERIFIED CONNECTION: Real HTTP /api/chat reached AgentRunner and local Ollama. HTTP tools returned real stored Ghidra evidence. Fresh Ghidra-to-chat deterministic tests validated both small fixtures with a fake provider; these are not live AI success claims.
+- PARTIAL LIVE AI: The GUI request "Explain multiply_values in plain English using both decompiled code and assembly" returned partial after 183.85 s with OllamaTimeoutError. First provisional summary appeared after approximately 82.8 s; it was not a completed validated explanation. Smoke verification exit 1.
+- PARTIAL FOCUSED AI: With 2500-character evidence budget, one function and no edge/artifact payload, qwen2.5-coder:1.5b completed in 18.81 s (process 20.527 s), after two response attempts. Summary correctly says multiply_values multiplies its arguments using IMUL. FUNC:2 is tied to 00401354 and the correct source ID. Transport/structure check exit 0.
+- FAILED SEMANTIC DETAIL: The focused answer also says IMUL multiplies EAX and EDX, confidence high. The supplied instruction is "00401361: IMUL EAX,dword ptr [RBP + -0x8]"; EDX does not appear in that function's assembly. The independent semantic check exits 1. Valid citations did not prevent this hallucination.
+- VERIFIED FAILURE HANDLING: A deliberately unavailable loopback service produces partial with OllamaConnectionError and preserves three read-only tool results. Database unchanged. No crash or target mutation.
+- VERIFIED OFFLINE AGENT PATH: GUI graph request "What calls it?" after selecting process_input returns main -> process_input @ 00401545, completed, with zero model requests; an assertion would fail if generation were attempted.
+- MITIGATION EXISTS, WITH LIMITS: Unknown/mismatched citations, cross-binary evidence, malformed JSON, metadata-only behavioral claims and selected operation/call contradictions are checked. Facts are rendered from stored evidence and untrusted analyzed content is separated in prompts. Arbitrary model prose and operand-level semantics are not fully validated, demonstrated by the EDX error.
+- NOT IMPLEMENTED/PLANNED: semantic/vector search and embeddings, taint analysis, dynamic validation, confirmed vulnerabilities/CVE matching, automatic binary edits/renaming/comments/signatures, browser-side indexing and interactive node-graph visualization. Source inspection/tests, not file existence alone, support the implementation claims above.
+- NOT TESTED: Native Java plugin GUI/build, visual browser layout, live naming inference, complete multi-turn live agent reliability, stripped live AI explanations, remote deployment or internet access. No unavailable dependency blocked the checks that were run.
+
+Independent integrity evidence:
+| Input | SHA-256 before = after |
+| --- | --- |
+| FunctionOverloading | be3d58ba6ba922f2e8499025dc28a65d9cc97fe5ca6332310ced1622b7e115e3 |
+| professor_samples/function_overloading_elf/original/FunctionOverloading | be3d58ba6ba922f2e8499025dc28a65d9cc97fe5ca6332310ced1622b7e115e3 |
+| professor_samples/function_overloading/original/FunctionOverloading.exe | cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07 |
+| tests/fixtures/simple_elf/aire_test_binary | be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e |
+| tests/fixtures/simple_elf/aire_test_binary_stripped | 08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188 |
+| analysis.sqlite | 22b6d8cf1a452a71df952f70400091eb282fcc0d7316439e51ef508a0dbe1ff4 |
+
+**5. Security and Quality**
+- Security tests: deterministic rule engine/CWE signal tests, real positive strcpy/gets and negative bounded-copy fixtures pass with Ghidra enabled. Evidence forgery, cross-binary access, SQL data handling, prohibited mutation/tools, transport failures, proxy disabling, redirect rejection and output bounds have passing coverage.
+- Endpoint regression: explicit IPv4-mapped IPv6 origin rejected on current interpreter; no sockets opened by that check. Current code relies on ipaddress.is_loopback; explicit ipv4_mapped rejection would make this policy unambiguous across interpreter changes, but was not applied.
+- GUI boundary: real hostile Host and Origin requests returned HTTP 403. Loopback binding, CSP and read-only database behavior have passing tests. Frontend escapeHtml/textContent use was inspected. This is verification of exercised controls, not a full penetration test.
+- Code syntax: Python AST parsing passes for 92 backend/test/demo Python files; 51 backend modules import successfully without generating bytecode during the checks. Six shell scripts pass bash -n. app.js passes node --check. The scripts were syntax-checked, not built or executed as shell demos.
+- Dependency issues: pip check passes; no packages installed. Python backend pyproject has no mandatory third-party runtime dependencies; optional PyGhidra is already present. No runtime-dependency CVE database scan was performed, since no such tool/database was installed or requested to be downloaded.
+- Secrets: heuristic scan covered 220 tracked and untracked nonignored file paths, reading text files up to 2 MB. No token/private-key or sensitive-filename finding. One password-like hit at tests/source/crackmedemo.c:22 is an intentional crackme teaching password, not a service credential. Binary contents, git history and ignored home credential stores were not scanned; no claim of an exhaustive secret audit.
+- Local analysis network: fresh static indexing and the standalone demo complete without any LLM or target execution. Python network calls inspected are local Ollama HTTP and loopback GUI serving; remote Ollama requires explicit opt-in. No unexpected mandatory external service was found for exercised static paths. Network traffic was not packet-captured, and native Ghidra internals were not exhaustively audited.
+- Binary/database modification: zero content changes across 221 original inventoried files. Existing analysis.sqlite hash remains unchanged. Test databases/projects/sessions were disposable outputs under /tmp.
+- Git issues: git diff --check passes (exit 0); no staged changes or unresolved merge status reported. Significant pre-existing uncommitted/untracked work needs deliberate review before a commit.
+
+**6. Board Demo Readiness**
+
+| Demo feature | Status | Supporting evidence / limitation |
+| --- | --- | --- |
+| 1. Load an ELF binary | VERIFIED | Fresh real Ghidra tests and ELF overloading demo passed; targets were never executed. |
+| 2. Extract binary metadata | VERIFIED | ELF format, x86-64, gcc, little endian, 64-bit pointers and image base asserted by format tests; demo shows Linux ABI and PIE. |
+| 3. Identify functions | VERIFIED | Demo: 46 functions, including square at 00101189/001011da and main at 0010123e. Both small fixtures passed static indexing. |
+| 4. Display disassembly | VERIFIED | Demo printed exact MOV/IMUL/MOVSD/MULSD instructions; real HTTP get_assembly returned stored instructions. Browser visual layout was not inspected. |
+| 5. Extract decompiled code | VERIFIED | Demo: 33 decompiled functions, both square return expressions; real HTTP get_decompiled_text passed. |
+| 6. Identify calls and cross-references | VERIFIED | Demo: 19 direct CALL records and string xrefs; callsites 00101247/00101282. Reference persistence and real graph-query tests passed. Indirect targets remain unresolved. |
+| 7. Explain a function understandably | PARTIAL | Static demo explanations passed. Live focused summary correctly explains multiplication, but its detailed operand explanation is wrong; GUI explanation timed out. |
+| 8. Demonstrate the AI agent | PARTIAL | Agent/API and read-only tools are connected and tested. Real GUI synthesis timed out; deterministic real-evidence overview integration failed. Focused local chat transport completed. |
+| 9. Tie conclusions to evidence | VERIFIED | Addresses, exact assembly, direct CALLs, string references and hashes shown; live FUNC:2 resolves to multiply_values at 00401354. Citation validity does not prove model prose. |
+| 10. Prove original binary unchanged | VERIFIED | Demo before/after pinned SHA-256 matched; independent hashes of all 221 original project/database files matched. |
+| Offline GUI graph fallback | VERIFIED | What calls it? for process_input returned main -> process_input @ 00401545 with zero model requests. |
+| AI instruction-operand accuracy | FAILED | Live model cited EAX and EDX; actual 00401361 is IMUL EAX,dword ptr [RBP + -0x8]. Verification assertion failed. |
+| Browser rendering and interactive graph | NOT TESTED | Frontend assets served and JavaScript syntax passed; no visual browser interaction was run. Interactive node-graph visualization is not implemented. |
+
+**7. Issues Requiring Attention**
+- CRITICAL: None observed in the exercised static demo and local controls. This is not a claim that no undiscovered issue exists.
+- HIGH: Complete Ghidra-enabled suite is red: test_agent_integration.py:58. Derived reports crowd raw code/CALL evidence out of a 6000-character overview prompt; the fake provider selects metadata, correctly rejected by the grounding validator. Fix budgeting and fake-provider behavior without weakening grounding, then rerun this test and the full Ghidra suite.
+- HIGH: Live model produced a specific false operand explanation despite a valid code citation. Treat AI output as advisory. Before claiming accurate instruction explanations, add appropriate operand/evidence checking or suppress unsupported specifics and evaluate representative live cases. Do not present this answer as verified assembly semantics.
+- HIGH (for an AI-centered presentation): Default GUI synthesis timed out at about 184 s. A smaller chat request completed in about 19 s but still contained an error. Use static analysis and deterministic GUI tools as the critical demonstration path; reduce/tune context or model runtime only after explicit implementation work and revalidation.
+- MEDIUM: Four live-inference integration cases remain skipped, and the failed agent integration method never reaches its later stripped-agent assertions. Complete multi-turn AI and live naming reliability are unverified.
+- MEDIUM: Cold/live static demo took 83.3 s during concurrent verification. Pre-run and keep the captured successful output ready; do not make the Board wait on simultaneous indexing/inference.
+- LOW: Some documentation is stale: docs/ARCHITECTURE.md still states M8 remains unimplemented, while the current agent is implemented; several documents still say function/string xrefs are unimplemented even though new core reference extraction and its tests pass. Reconcile those statements before committing.
+- LOW: JAVA_HOME unset but automatic Java 21 discovery works. For a repeatable presentation shell, explicitly set JAVA_HOME to the known installed system JDK.
+- LOW: Existing database indexes lack entry_point values; indirect calls/external libraries and runtime relocation remain analysis limitations. Avoid overclaiming completeness or exact original source/ABI.
+
+**8. Recommended Demo Sequence**
+
+Prepare one terminal from the project root; no dependency installation or target execution:
+```bash
+cd ~/aire
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH="$PWD/aire-server/src"
+export GHIDRA_INSTALL_DIR="$HOME/tools/ghidra"
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export AIRE_OLLAMA_HOST=http://127.0.0.1:11434
+export AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b
+export AIRE_OLLAMA_NUM_CTX=4096
+ollama list
+aire-server/.venv/bin/python scripts/demo_function_overloading.py
+```
+Explain the two multiply instructions, common caller, arguments, exact references and before/after hash. This is the reliable static demonstration, requiring no AI service.
+
+For the GUI, in a second terminal using the same environment:
+```bash
+aire-server/.venv/bin/aire gui tests/fixtures/simple_elf/aire_test_binary \
+  --database analysis.sqlite --session-dir /tmp/aire-board-live-sessions --no-browser
+```
+Open http://127.0.0.1:8765/ manually. The existing analysis database is ready; use metadata/function tools, select process_input, show decompiled/assembly evidence and callers/callees. The "What calls it?" GUI path was independently verified with zero AI inference. Browser appearance itself was not visually verified in this run. Do not present an interactive node graph as implemented.
+
+Reliable fallback if Ollama or live indexing is slow:
+```bash
+cat /tmp/aire-board-verification-20261008/demo.log
+cat /tmp/aire-board-verification-20261008/offline_fallback.log
+```
+Identify these as recorded successful verification output. The existing GUI static tools also work without synthesis. Keep live free-form AI optional; if it fails, show stored evidence and clearly state the AI limitation. The focused-AI log includes an inaccurate operand claim and must not be used as a fully verified answer.
+
+**9. Commit Readiness**
+NOT READY for a clean, fully verified release commit. Do not commit now.
+- First fix the deterministic real-evidence agent overview failure, including prompt evidence starvation and test fake-provider citation selection; preserve code/edge visibility assertions.
+- Address or clearly scope the demonstrated false instruction-operand interpretation and GUI timeout before claiming reliable live AI behavior. Add meaningful targeted validation for the observed failures during a later authorized implementation pass.
+- Reconcile stale capability/test-baseline documentation and review the 30 modified tracked files plus new source/tests/scripts as a deliberate change set.
+- After fixes, rerun the affected agent/grounding tests and complete Ghidra-enabled suite; repeat the real GUI/AI cases that failed. Retain the currently passing IPv6 endpoint restriction.
+- Whitespace/syntax/dependency checks pass, and no source fixes have been applied during this verification. No staging, commit or push was performed.
+
+**10. FINAL VERDICT**
+READY WITH LIMITATIONS
+
+A.I.R.E. can credibly demonstrate real static ELF analysis, function extraction, disassembly, decompilation, direct calls, cross-references, provenance and preserved binary integrity. The professor function-overloading demo passes all of its assertions, and the GUI can expose existing evidence and answer exact graph questions without inference.
+
+The current agent integration regression, default GUI AI timeout and observed operand hallucination prevent calling the whole project fully stable or live AI fully verified. Lead with the static demo and deterministic GUI tools. Treat AI as optional, advisory and visibly limited; do not describe skipped or mock-provider checks as successful local-model demonstrations.
+
+Verification command exit-code ledger (individual checks; wrapper completion is not test success):
+| # | Check / command | Exit | Seconds | Evidence log |
+| --- | --- | --- | --- | --- |
+| 1 | git status --short (initial) | 0 | 0.016 | repository_status.log |
+| 2 | git branch --show-current | 0 | 0.006 | branch.log |
+| 3 | git log -1 --format=fuller | 0 | 0.013 | commit.log |
+| 4 | git remote -v | 0 | 0.011 | remotes.log |
+| 5 | venv python --version | 0 | 0.008 | python.log |
+| 6 | java -version | 0 | 0.125 | java.log |
+| 7 | ollama --version | 0 | 0.074 | ollama_version.log |
+| 8 | ollama list | 0 | 0.069 | ollama_models.log |
+| 9 | venv pip check | 0 | 0.704 | pip_check.log |
+| 10 | runtime imports, JVM discovery and local Ollama API health | 0 | 0.32 | runtime_imports.log |
+| 11 | demo/fixture existence checks | 0 | 0.044 | required_files.log |
+| 12 | git diff --check | 0 | 0.096 | diff_check.log |
+| 13 | Python AST/imports and bash -n checks | 0 | 0.5 | syntax_imports.log |
+| 14 | node --check app.js | 0 | 0.171 | javascript_syntax.log |
+| 15 | credential heuristic scan (tracked plus untracked on second run) | 0 | 0.278 | secret_scan.log |
+| 16 | requested complete default unittest suite | 0 | 14.292 | unit.log |
+| 17 | explicit mapped-IPv6 rejection and allowed-loopback checks | 0 | 0.282 | endpoint_regression.log |
+| 18 | existing SQLite read-only quick_check and metadata | 0 | 0.195 | demo_database.log |
+| 19 | real GUI/API + live AI + unavailable Ollama smoke | 1 | 185.786 | gui_smoke.log |
+| 20 | existing demo_function_overloading.py | 0 | 83.961 | demo.log |
+| 21 | read-only deterministic overview diagnosis (partial result recorded) | 0 | 0.202 | agent_diagnosis.log |
+| 22 | git diff --check | 0 | 0.028 | diff_check.log |
+| 23 | Python AST/imports and bash -n checks | 0 | 0.459 | syntax_imports.log |
+| 24 | node --check app.js | 0 | 0.169 | javascript_syntax.log |
+| 25 | credential heuristic scan (tracked plus untracked on second run) | 0 | 0.406 | secret_scan.log |
+| 26 | requested complete Ghidra-enabled unittest suite | 1 | 348.391 | ghidra.log |
+| 27 | recorded prompt/citation analysis | 0 | 0.189 | diagnosis_details.log |
+| 28 | existing validate_function_crosscheck.py --index-stripped | 0 | 15.388 | crosscheck.log |
+| 29 | GUI graph query with forbidden model generation | 0 | 0.323 | offline_fallback.log |
+| 30 | small-evidence real Ollama chat; transport/structure assertions | 0 | 20.527 | focused_ai.log |
+| 31 | git status --short (after verification) | 0 | 0.011 | repository_status_after.log |
+| 32 | compare real AI operand claim to exact cited instruction | 1 | 0.077 | focused_ai_semantics.log |
+
+Supporting command/safety notes:
+- All ledger logs and commands.jsonl (including exact commands and environment overrides) are under /tmp/aire-board-verification-20261008. Duplicate quality entries reflect the expanded untracked-file secret scan; both runs passed.
+- before/after file-hash snapshots, content_changes.json, GUI/live-chat/diagnosis/cross-check JSON and complete suite logs are preserved there.
+- Independent SHA-256 snapshot inventories and final comparison completed successfully (exit 0); content_changes.json is empty.
+- Initial pwd: exit 0. Initial sandbox attempts for repository/source-instruction checks: exit 1 with "bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted"; rerun with required execution permission succeeded. An interrupted permission call returned no result and is not counted as a successful check.
+- Instruction-file search returned exit 1 because no AGENTS.md matched; ancestor-file probe exited 0 with none present. No delegation or file modification was required.
+- Early exploratory reads guessed test_api.py and test_gui.py paths that do not exist (read/search exit 2); the actual tests are test_gui_server.py and test_gui_workspace.py and were then inspected and executed. These were tooling lookup mistakes, not missing application modules. One combined read returned overall exit 0 after the earlier missing-file message; that intermediate failure is disclosed here.
+- Other completed read-only repository inventories/source inspections returned exit 0. No build scripts, target executables, dependency downloads, remote git operations or service restarts were run.
+- Explicit FAILED checks: Ghidra-enabled complete suite (exit 1); real GUI AI smoke completion assertion (exit 1); focused AI operand semantic verification (exit 1). Focused AI transport exits 0 but semantic correctness fails. Agent diagnostic commands exit 0 because they successfully record a partial result, not because that result is a pass.
+- Report save and re-read verification: exit 0 after content and repository-preservation assertions. Requested output: /home/laurene/aire/board_demo_verification_2026-10-08.txt.

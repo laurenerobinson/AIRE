@@ -4,7 +4,7 @@ import json
 import sqlite3
 import time
 
-from aire.knowledge.database import BinaryKnowledgeStore, KnowledgeStoreError, SCHEMA_VERSION
+from aire.knowledge.database import BinaryKnowledgeStore, KnowledgeStoreError, READABLE_SCHEMA_VERSIONS
 from aire.security.contracts import SecurityRule, RuleMetadata, RuleRegistry
 from aire.security.facts import load_rule_facts
 from aire.security.findings import (SecurityScanResult, RuleEvaluation, RuleFailure,
@@ -142,7 +142,7 @@ class _ReadOnlyRuleStore(BinaryKnowledgeStore):
             self._connection.row_factory = sqlite3.Row
             self._connection.execute('PRAGMA query_only=ON')
             version = self._connection.execute("SELECT value FROM schema_metadata WHERE key='schema_version'").fetchone()
-            if version is None or version[0] != str(SCHEMA_VERSION):
+            if version is None or version[0] not in READABLE_SCHEMA_VERSIONS:
                 raise KnowledgeStoreError('Unsupported existing schema version')
         except (sqlite3.Error, KnowledgeStoreError) as exc:
             self.close()

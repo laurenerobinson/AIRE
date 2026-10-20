@@ -12,6 +12,7 @@ import unittest
 from aire.knowledge.database import (
     BinaryKnowledgeStore, BinaryNotFoundError, DatabaseOpenError,
     KnowledgeStoreError, PersistedDataError, TransactionError, UnsupportedSchemaError,
+    SCHEMA_VERSION,
 )
 from aire.knowledge.models import (
     ArtifactRecord, BinaryRecord, FunctionEdge, FunctionRecord, ProgramIndex,
@@ -57,7 +58,7 @@ class DatabaseTests(unittest.TestCase):
     def test_initialize_version_and_indexes(self):
         self.store.initialize()
         self.assertEqual(self.store._db.execute(
-            'SELECT value FROM schema_metadata WHERE key = ?', ('schema_version',)).fetchone()[0], '1')
+            'SELECT value FROM schema_metadata WHERE key = ?', ('schema_version',)).fetchone()[0], str(SCHEMA_VERSION))
         self.assertEqual(self.counts(), dict.fromkeys(self.counts(), 0))
         indexes = {r[0] for r in self.store._db.execute("SELECT name FROM sqlite_master WHERE type = 'index'")}
         self.assertTrue({'functions_address_idx', 'functions_name_idx', 'artifacts_type_idx',
@@ -245,7 +246,7 @@ class DatabaseTests(unittest.TestCase):
         self.store._db.execute('DELETE FROM schema_metadata')
         with self.assertRaises(UnsupportedSchemaError):
             self.store.initialize()
-        self.store._db.execute('INSERT INTO schema_metadata VALUES (?, ?)', ('schema_version', '1'))
+        self.store._db.execute('INSERT INTO schema_metadata VALUES (?, ?)', ('schema_version', str(SCHEMA_VERSION)))
         self.store._db.execute('DROP TABLE analysis_metadata')
         with self.assertRaises(UnsupportedSchemaError):
             self.store.initialize()

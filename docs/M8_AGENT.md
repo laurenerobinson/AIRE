@@ -63,14 +63,16 @@ Requested decompiled text and assembly are displayed from the final evidence
 bundle even when model synthesis fails.
 These results are not converted into unvalidated model prose.
 
-For whole-binary behavior questions, the runner now performs a bounded preflight
-before model synthesis: binary metadata, exact `main` lookup (or stored entry
-address), direct callees, connectivity ranking, then optional imports and M7
-findings as the tool budget permits. If `main` is absent, an internal non-thunk
-ranked function supplies a structural seed; this is not a semantic guess about
-the entry point. Up to two seed functions are passed to the existing M5 overview
-selector. Their stored code and direct CALL edges receive priority in the M4
-render and M5 citation catalog. The final `retrieve_evidence` call remains
+For whole-binary behavior questions, the runner performs a deterministic preflight
+before model synthesis: binary metadata, `rank_application_functions`, direct
+callees, then optional imports and M7 findings as the tool budget permits.
+The separate application relevance service prefers exact stored `main`, `wmain`,
+`WinMain` or `wWinMain`; otherwise stored entry/export paths and recognized runtime
+bridges guide a bounded traversal. It supplements paths with metadata and modest
+graph scores. Up to two eligible seeds are passed to the M5 selector; the first
+three relevance-selected functions receive code admission priority. Runtime
+bridges guide traversal without winning behavioral slots through fan-out.
+Generic internal names remain eligible. The final `retrieve_evidence` call remains
 bounded to six functions, twelve edges, six artifacts, and the configured
 character budget. The tool preflight uses the same public activity events,
 read-only registry, timeout/cancellation checks, and final tool reservation.
@@ -107,19 +109,39 @@ not provide a hard wall-clock execution guarantee. CLI Ctrl-C returns 130.
 | `get_function` | `function` | Exact ID/name/address; source function row |
 | `get_callers` | `function`, `limit` | Direct incoming resolved CALLs with callsites |
 | `get_callees` | `function`, `limit` | Direct outgoing resolved CALLs with callsites |
+| `get_xrefs` | `function`, `direction`, `limit`, `offset` | Exact outgoing/incoming references; computed call targets remain unresolved |
+| `get_function_strings` | `function`, `limit`, `offset` | Exact data references with instruction address, operand, artifact value and provenance |
+| `get_thunk_target` | `function`, `max_depth` | Bounded immediate Ghidra thunk chain, direct JMP verification, cycle/depth/ambiguity status |
+| `classify_function` | `function` | Derived conservative category, stored flags, loader entry/export and import sources |
 | `find_call_path` | `source`, `target`, `max_depth` | Deterministic shortest path within depth 0–8 |
 | `rank_functions` | `metric`, `limit` | M3 connectivity counts; no semantic importance claim |
+| `rank_application_functions` | `limit` | Likely application logic heuristic: classification, score, reasons, bounded path provenance |
 | `get_artifacts` | `kind`, `limit` | STRING/IMPORT/EXPORT, scope and provenance |
 | `get_decompiled_text` | `function`, `max_chars` | Stored text prefix and original size |
 | `get_assembly` | `function`, `max_chars` | Stored assembly and upstream truncation flag |
+| `crosscheck_function` | `function` | Bounded x86 assembly/decompiler observations, local agreement/conflicts and uncertainty |
 | `retrieve_evidence` | optional `function`, `max_chars` | M4 target or M5 overview bundle |
 | `security_findings` | none | M7 evaluations, evidence, findings and qualifications |
 
-Function selectors match exact stored IDs, names or address text. Ambiguous names
-remain errors. No function-local string tool exists: function/string xrefs are
-not persisted. Artifacts explicitly disclose binary scope. Missing code or stored
-edges does not establish absence of runtime behavior. Rankings include external
-and thunk functions under the existing M3 policy.
+The current catalog contains 18 tools. Function selectors match exact stored IDs,
+names or address text. Ambiguous names remain errors. Function-local strings use
+stored reference IDs and exact instruction/data addresses; other artifacts retain
+binary scope. Missing code or stored
+edges does not establish absence of runtime behavior. M3 connectivity rankings
+include external and thunk functions; application relevance demotes them.
+
+The relevance score is an ordered heuristic, not ML confidence, a probability,
+or proof of source authorship. No model classifies functions before selection.
+The extractor leaves `is_library` unset, so this policy ignores that field.
+Results are transient; there is no database/schema or M1 change. See
+[policy, exact runtime patterns and validation](APPLICATION_RELEVANCE.md).
+Overview code excerpts preserve declarations and tails under existing text caps,
+with explicit middle-omission markers. GUI requests for assembly retain bounded
+assembly; compact prompts share the existing budget across three priority
+functions, reserving more of that same budget for code when assembly is requested.
+Exact targeted M4 selection remains unchanged. GUI tool/evidence and overview
+answer caches include the selection policy version, preserving repeated-query
+reuse, binary/fingerprint isolation, streaming and session behavior.
 
 ## Public activity
 
@@ -367,14 +389,16 @@ and evidence truncation can omit useful results. Final M5 synthesis consumes its
 explicit bundle; independent tool rankings/paths/rules are rendered as stored
 facts alongside it, not merged into M5's model citation catalog.
 
-No function/string xrefs, indirect-call recovery, taint/data-flow analysis,
-vulnerability confirmation, target execution or automatic edits are introduced.
+Function/string xrefs and separate thunk bindings are now available; see
+[M9 implementation](M9_IMPLEMENTATION_2026-10-13.md). Indirect-call recovery,
+taint analysis, vulnerability confirmation, target execution and automatic edits
+remain unavailable.
 There is no async hard cancellation, token-budget accounting, semantic search,
 multi-agent execution or concurrent use of a SQLite connection.
 
-Recommended next milestone: evaluate action selection and answer grounding across
-more binaries/models, then add persisted function/string xrefs, thunk bindings
-and bounded source/sink facts. Extend deterministic rules only when those facts
+Recommended next milestone: bounded P-code/CFG analysis and an investigation report,
+then evaluate action selection and answer grounding across more binaries/models
+and add bounded source/sink facts. Extend deterministic rules only when those facts
 provide provenance, with positive and negative controls.
 
 ## Adding a tool

@@ -10,7 +10,7 @@ from aire.ai.naming_models import NamingOptions, NamingResult, NameSuggestion
 from aire.ai.naming_prompt import (GENERIC_NAMES, GENERATED_NAME, build_naming_prompt,
                                    parse_naming_response, response_schema)
 from aire.ai.ollama_client import OllamaClient, OllamaError
-from aire.knowledge.database import BinaryKnowledgeStore, KnowledgeStoreError, SCHEMA_VERSION
+from aire.knowledge.database import BinaryKnowledgeStore, KnowledgeStoreError, READABLE_SCHEMA_VERSIONS
 from aire.knowledge.models import FunctionRecord
 from aire.knowledge.evidence import EvidenceRequest
 from aire.knowledge.retrieval import ProgramQueryService, _address_key
@@ -221,7 +221,7 @@ class _ReadOnlyNamingStore(BinaryKnowledgeStore):
             self._connection.execute('PRAGMA query_only=ON')
             version = self._connection.execute(
                 "SELECT value FROM schema_metadata WHERE key='schema_version'").fetchone()
-            if version is None or version[0] != str(SCHEMA_VERSION):
+            if version is None or version[0] not in READABLE_SCHEMA_VERSIONS:
                 raise KnowledgeStoreError('Existing A.I.R.E. schema version is unsupported')
         except (sqlite3.Error, KnowledgeStoreError) as exc:
             self.close()

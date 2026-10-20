@@ -2,7 +2,7 @@
 from dataclasses import asdict, dataclass, field
 import json
 
-from aire.knowledge.models import ArtifactRecord, BinaryRecord, FunctionEdge, FunctionRecord, _json_safe
+from aire.knowledge.models import ArtifactRecord, BinaryRecord, FunctionEdge, FunctionRecord, ReferenceRecord, ThunkRecord, _json_safe
 
 
 @dataclass(frozen=True)
@@ -29,6 +29,10 @@ class EvidenceRequest:
     max_total_chars: int = 60000
     max_warnings: int = 3
     max_warning_chars: int = 2000
+    include_references: bool = True
+    include_thunks: bool = True
+    max_references: int = 32
+    max_thunks: int = 16
 
     def __post_init__(self):
         if not isinstance(self.binary_id, str) or not self.binary_id:
@@ -47,7 +51,8 @@ class EvidenceRequest:
         caps = {'max_depth': 64, 'max_functions': 1000, 'max_artifacts': 5000,
                 'max_edges': 10000, 'max_decompiled_chars_per_function': 1000000,
                 'max_assembly_chars_per_function': 1000000, 'max_total_chars': 2000000,
-                'max_warnings': 100, 'max_warning_chars': 100000}
+                'max_warnings': 100, 'max_warning_chars': 100000,
+                'max_references': 1000, 'max_thunks': 1000}
         for name, cap in caps.items():
             value = getattr(self, name)
             if type(value) is not int or not 0 <= value <= cap:
@@ -122,6 +127,18 @@ class WarningEvidence:
 
 
 @dataclass
+class ReferenceEvidence:
+    reference: ReferenceRecord
+    provenance: Provenance
+
+
+@dataclass
+class ThunkEvidence:
+    binding: ThunkRecord
+    provenance: Provenance
+
+
+@dataclass
 class EvidenceBundle:
     binary: BinaryRecord
     request_summary: dict
@@ -133,6 +150,8 @@ class EvidenceBundle:
     provenance: list[Provenance] = field(default_factory=list)
     metadata: dict = field(default_factory=dict)
     _rendered_text: str = field(default='', repr=False)
+    references: list[ReferenceEvidence] = field(default_factory=list)
+    thunks: list[ThunkEvidence] = field(default_factory=list)
 
     def render_text(self) -> str:
         """Return the immutable text snapshot finalized by ContextBuilder.build()."""
@@ -270,6 +289,10 @@ def render_bundle(bundle: EvidenceBundle) -> str:
         if item.depth == 1:
             writer.block('CALL EDGE', {'edge': asdict(item.edge), 'caller': asdict(item.caller),
                                       'callee': asdict(item.callee), 'reason': item.inclusion_reason, 'depth': item.depth})
+    for item in bundle.references:
+        writer.block('OBSERVED REFERENCE', asdict(item))
+    for item in bundle.thunks:
+        writer.block('THUNK BINDING (separate from CALL)', asdict(item))
     for item in bundle.functions:
         if item.inclusion_reason != 'target function' and item.function.function_id not in priority_ids:
             function(item)

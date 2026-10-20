@@ -42,6 +42,53 @@ class OllamaClientTests(unittest.TestCase):
         self.assertEqual(body['model'], 'installed:small')
         self.assertEqual(body['format'], {'type': 'object'})
         self.assertEqual(self.client._opener.open.call_args.kwargs['timeout'], 240)
+        self.assertEqual(body['keep_alive'], '10m')
+
+    def stream_reply(self, records):
+        lines = [json.dumps(r).encode() + b'\n' for r in records]
+        response = self.client._opener.open.return_value.__enter__.return_value
+        response.readline.side_effect = lines + [b'']
+
+    def test_streaming_preserves_schema_and_records_timings(self):
+        self.stream_reply([{'response': '{', 'done': False},
+                           {'response': '}', 'done': False},
+                           {'response': '', 'model': 'm', 'done': True, 'eval_duration': 25000000}])
+        chunks = []
+        result = self.client.generate('evidence', response_schema={'type': 'object'}, on_chunk=chunks.append)
+        self.assertEqual(result.text, '{}')
+        self.assertEqual(chunks, ['{', '}'])
+        self.assertIn('first_output_seconds', result.timing)
+        self.assertEqual(result.timing['eval_duration_seconds'], .025)
+        body = json.loads(self.client._opener.open.call_args.args[0].data)
+        self.assertTrue(body['stream'])
+        self.assertEqual(body['format'], {'type': 'object'})
+
+    def test_stream_rejects_invalid_and_incomplete_records(self):
+        for records in ([{'response': '{}', 'done': False}],
+                        [{'response': '{}', 'model': 'm', 'done': True, 'done_reason': 'length'}],
+                        [{'response': 42, 'done': True}],
+                        [{'response': '{}', 'done': True}]):
+            self.stream_reply(records)
+            with self.assertRaises(OllamaProtocolError):
+                self.client.generate('evidence', on_chunk=lambda s: None)
+
+    def test_stream_rejects_malformed_oversized_and_model_errors(self):
+        response = self.client._opener.open.return_value.__enter__.return_value
+        for line in (b'not json\n', b'[]\n', b'x' * 1000001):
+            response.readline.side_effect = [line]
+            with self.assertRaises(OllamaProtocolError):
+                self.client.generate('evidence', on_chunk=lambda s: None)
+        self.stream_reply([{'error': 'model unavailable'}])
+        with self.assertRaises(OllamaModelError):
+            self.client.generate('evidence', on_chunk=lambda s: None)
+
+    def test_explicit_warmup_has_no_binary_evidence_and_keeps_model_loaded(self):
+        self.reply({'done': True})
+        self.client.warm()
+        body = json.loads(self.client._opener.open.call_args.args[0].data)
+        self.assertEqual(body['prompt'], '')
+        self.assertEqual(body['keep_alive'], '10m')
+        self.assertNotIn('system', body)
 
     def test_num_ctx_default(self):
         self.assertEqual(OllamaClient().num_ctx, 32768)
@@ -181,6 +228,17 @@ class OllamaClientTests(unittest.TestCase):
 
     def test_loopback_ipv6(self):
         self.assertEqual(OllamaClient(host='http://[::1]:11434').host, 'http://[::1]:11434')
+
+    def test_mapped_ipv6_policy_independent_of_python_loopback_classification(self):
+        from unittest.mock import PropertyMock
+        # Some Python versions classify mapped loopback differently. Honor the
+        # same narrow default allowlist on both, without performing a request.
+        with patch('ipaddress.IPv6Address.is_loopback', new_callable=PropertyMock, return_value=True):
+            for host in ('http://[::ffff:127.0.0.1]', 'http://[::ffff:7f00:1]'):
+                with self.subTest(host=host), self.assertRaises(ValueError):
+                    OllamaClient(host=host)
+            client = OllamaClient(host='http://[::ffff:127.0.0.1]', allow_remote_host=True)
+            self.assertEqual(client.host, 'http://[::ffff:127.0.0.1]')
 
     def test_unsafe_url_shapes(self):
         for host in ('file:///tmp/a', 'http://user:pass@localhost', 'http://localhost/path',

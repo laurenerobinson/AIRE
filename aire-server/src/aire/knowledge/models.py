@@ -60,6 +60,40 @@ class FunctionEdge:
 
 
 @dataclass
+class ReferenceRecord:
+    """Observed Ghidra reference; computed flows never assert a target function.
+
+    data_hex holds at most eight initialized bytes at a READ destination. It is
+    raw evidence, not an inferred type/value. Null owners/targets stay unknown.
+    """
+    reference_id: str
+    binary_id: str
+    source_address: str
+    target_address: str
+    reference_type: str
+    source_function_id: str | None = None
+    target_function_id: str | None = None
+    target_artifact_id: str | None = None
+    source_instruction: str | None = None
+    operand_index: int = -1
+    is_call: bool = False
+    is_indirect: bool = False
+    is_read: bool = False
+    data_hex: str | None = None
+
+
+@dataclass
+class ThunkRecord:
+    """Ghidra's immediate thunk binding, separate from direct CALL edges."""
+    thunk_function_id: str
+    target_function_id: str
+    source_address: str
+    target_address: str
+    source_instruction: str | None = None
+    is_direct_jump: bool = False
+
+
+@dataclass
 class ProgramIndex:
     binary: BinaryRecord
     functions: list[FunctionRecord] = field(default_factory=list)
@@ -67,6 +101,9 @@ class ProgramIndex:
     function_edges: list[FunctionEdge] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     metadata: dict[str, object] = field(default_factory=dict)
+    references: list[ReferenceRecord] = field(default_factory=list)
+    thunks: list[ThunkRecord] = field(default_factory=list)
+    program_info: dict[str, str] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, object]:
         return _json_safe(asdict(self))

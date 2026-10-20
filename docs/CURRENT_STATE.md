@@ -1,11 +1,19 @@
 # Current state
 
-M8 implements the initial A.I.R.E. conversational agent: twelve validated
+M8 implements the initial A.I.R.E. conversational agent: eighteen validated
 read-only tools, immediate activity callbacks, a bounded model action loop,
 binary-scoped persistent follow-up sessions and `aire chat <binary>`. Existing
 M1–M7 modules remain the sources of facts and grounded synthesis. The default
 regression suite passes; live small-model success is qualified by per-question
 results in [M8 validation and limitations](M8_AGENT.md).
+
+October 13 implementation reconciled the research snapshot with the existing
+schema v2 reference extractor, migration, cache, crosscheck and GUI work. Exact
+function string/data references and bounded thunk chains are now available through
+read-only agent tools and M4/M5 citation evidence. String/xref/thunk questions with
+an exact selection bypass model planning and synthesis. Standard-library symbol
+families are conservatively demoted by relevance v2; all relationships remain
+queryable. See [actual changes, validation and remaining phases](M9_IMPLEMENTATION_2026-10-13.md).
 
 M0 restores the archived Java v1 implementation and establishes a Python package
 layout. M1 now implements a read-only whole-binary PyGhidra indexer, validated
@@ -14,7 +22,8 @@ ProgramIndex snapshots in SQLite. M3 adds deterministic persisted relationship
 queries and bounded graph traversal. M4 now constructs deterministic bounded
 evidence bundles without an LLM. M5 implements local grounded chat; both targeted
 live pipelines passed with explicit low-memory context allocation. Binary-summary
-validation remains pending. M6 adds advisory, bounded function naming with
+validation is reported in [application relevance validation](APPLICATION_RELEVANCE.md).
+M6 adds advisory, bounded function naming with
 deterministic candidate discovery. M7 adds deterministic CWE rule evaluation
 and transient evidence-backed security signals without an LLM. The v1 description below remains based on
 source inspection, not a new live Ghidra/Ollama session.
@@ -26,6 +35,17 @@ public agent activity, stored binary metadata, and a collapsible Analysis Tools
 panel over the existing M8 agent. It uses standard-library HTTP, reads analysis
 facts through the existing read-only store, and saves GUI sessions separately.
 See [GUI.md](GUI.md).
+
+Whole-binary CLI/GUI evidence now uses a separate deterministic application
+relevance layer. Connectivity remains unchanged and does not establish behavioral
+importance. The policy promotes likely application paths through runtime bridges,
+keeps stripped functions eligible, and demotes known compiler/runtime scaffolding,
+external functions and thunks. Six-function M8 bundles use the new ranking;
+code admission stays bounded and requires no additional Ollama call. Repeated GUI
+overviews still reuse validated answers; cache keys include the policy version.
+The existing indexed professor PE and controlled ELF were validated read-only,
+without re-indexing or executing targets. Detailed results, limitations, hashes
+and reproduction commands are in [APPLICATION_RELEVANCE.md](APPLICATION_RELEVANCE.md).
 
 ## Working v1 behavior
 
@@ -156,7 +176,7 @@ unsupported schemas, malformed JSON, SQL parameterization, and clean close were
 also tested. Syntax compilation and git diff --check passed. No SQLite databases
 were staged; tests use temporary directories. No target execution occurred.
 
-M2 limitations: latest snapshot per binary only, schema v1 without migrations,
+M2 limitations: latest snapshot per binary only, schema v2 with transactional v1 migration,
 single-thread-owned connections intended for a single writer, no cross-binary
 edges, no semantic retrieval, and no arbitrary Python object restoration from
 metadata. Graph queries are now implemented separately in M3. SQLite retains freed pages until separately compacted;
@@ -236,8 +256,9 @@ JSON serialization, deterministic rendering and zero database-row writes.
 The target SHA-256 before/after is
 `157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de`.
 
-M4 limits: no function-string xrefs, no warning-function association, no semantic
-relevance, no token estimator, and no separate candidate-scan/time budget.
+M4 now includes bounded exact references and separate thunk evidence. Remaining
+limits: no warning-function association, no token estimator, and no separate
+candidate-scan/time budget. Overview relevance is a separate deterministic policy.
 The rendered-character limit does not bound all structured identity/metadata
 fields; omitted render blocks are recorded while those fields remain usable.
 Global artifacts are not claimed to be used by selected functions. The renderer
@@ -252,7 +273,7 @@ archive was saved under /tmp. Neither milestone was automatically committed.
 M5 adds a standard-library Ollama client, transient ChatRequest/ChatResponse,
 AireChatService, deterministic prompt/citation catalog, strict response parser,
 bounded overview selector and development CLI. Explicit targets consume M4
-unchanged; no target selects roots/connectivity evidence with no semantic search.
+unchanged; no target now selects application relevance evidence with no semantic search.
 The model selects deterministic fact IDs; its summary and interpretation remain
 advisory prose. Existing citation IDs are validated, malformed responses retry
 once, and context omissions are disclosed independently of model output.

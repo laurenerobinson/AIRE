@@ -194,13 +194,60 @@ function appendEvent(shell, event) {
 
 function finishAssistant(shell, result) {
   $('.activity-live', shell).classList.add('hidden');
-  $('.answer-body', shell).innerHTML = renderMarkdown(result.answer || 'No answer returned.');
+  $('.workspace-preview', shell)?.remove();
+  renderAnswer(shell, result.answer || 'No answer returned.', result.presentation);
   const log = $('.activity-log', shell);
   if (!log.classList.contains('hidden')) {
     const summary = $('summary', log);
     const count = $$('.activity-item', log).length;
     summary.textContent = `Analysis activity · ${count} event${count === 1 ? '' : 's'} · ${result.status}`;
   }
+}
+
+function renderAnswer(shell, answer, presentation) {
+  const body = $('.answer-body', shell);
+  body.innerHTML = renderMarkdown(answer);
+  if (!presentation) return;
+  if (presentation.interpretation) {
+    const label = document.createElement('div');
+    label.className = 'interpretation-label'; label.textContent = 'AI interpretation · grounded in stored evidence';
+    body.prepend(label);
+  }
+  const footer = document.createElement('p'); footer.className = 'analysis-footer';
+  footer.textContent = presentation.footer; body.appendChild(footer);
+  const section = (title, rows, raw = false) => {
+    const details = document.createElement('details'); details.className = 'analysis-details';
+    const summary = document.createElement('summary'); summary.textContent = title; details.appendChild(summary);
+    if (raw) {
+      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(rows, null, 2); details.appendChild(pre);
+    } else for (const row of rows) {
+      const p = document.createElement('p'); p.textContent = row.label || ''; details.appendChild(p);
+      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(row, null, 2); details.appendChild(pre);
+    }
+    body.appendChild(details);
+  };
+  section('Evidence · Verified stored facts', presentation.evidence || []);
+  section('Call Relationships', presentation.relationships || []);
+  section('Security Checks', presentation.security || [], true);
+  section('Raw Analysis Details', presentation.raw, true);
+}
+
+function previewAnswer(shell, data) {
+  const body = $('.answer-body', shell);
+  body.innerHTML = '';
+  const label = document.createElement('div'); label.className = 'interpretation-label';
+  label.textContent = 'AI interpretation · generating, validation pending';
+  const text = document.createElement('p'); text.textContent = data.text;
+  body.append(label, text);
+}
+
+function previewContext(shell, data) {
+  let context = $('.workspace-preview', shell);
+  if (!context) {
+    context = document.createElement('div'); context.className = 'workspace-preview';
+    $('.answer-body', shell).before(context);
+  }
+  context.textContent = 'Verified stored facts\n' + data.text;
 }
 
 async function sendQuestion(text) {
@@ -231,6 +278,8 @@ async function sendQuestion(text) {
         if (!line.trim()) continue;
         const packet = JSON.parse(line);
         if (packet.type === 'event') appendEvent(shell, packet.data);
+        if (packet.type === 'text') previewAnswer(shell, packet.data);
+        if (packet.type === 'context') previewContext(shell, packet.data);
         if (packet.type === 'result') final = packet.data;
         if (packet.type === 'error') throw new Error(packet.data.message || packet.data.error);
       }
@@ -240,6 +289,8 @@ async function sendQuestion(text) {
     if (!final && buffer.trim()) {
       const packet = JSON.parse(buffer);
       if (packet.type === 'result') final = packet.data;
+      if (packet.type === 'text') previewAnswer(shell, packet.data);
+      if (packet.type === 'context') previewContext(shell, packet.data);
       if (packet.type === 'error') throw new Error(packet.data.message || packet.data.error);
     }
     if (!final) throw new Error('A.I.R.E. ended the request without a result');
@@ -303,7 +354,7 @@ async function openSession(sessionId) {
       else {
         const shell = assistantShell();
         $('.activity-live', shell).classList.add('hidden');
-        $('.answer-body', shell).innerHTML = renderMarkdown(message.text);
+        renderAnswer(shell, message.text, message.presentation);
       }
     }
     if (state.currentFunctionId) {

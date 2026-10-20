@@ -13,10 +13,11 @@ class IndexOptions:
     include_imports: bool = True
     include_exports: bool = True
     include_call_edges: bool = True
+    include_references: bool = True
 
     def __post_init__(self):
         for name in ('decompile', 'include_assembly', 'include_strings',
-                     'include_imports', 'include_exports', 'include_call_edges'):
+                     'include_imports', 'include_exports', 'include_call_edges', 'include_references'):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f'{name} must be a bool')
         for name in ('max_assembly_instructions', 'max_assembly_characters',

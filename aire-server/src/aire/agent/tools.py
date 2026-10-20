@@ -1,5 +1,5 @@
 """Validated read-only tools; binary scope is supplied by the application."""
-from dataclasses import asdict, dataclass, is_dataclass
+from dataclasses import asdict, dataclass, is_dataclass, replace
 from copy import deepcopy
 import json
 import re
@@ -9,7 +9,10 @@ from aire.ai.evidence_selector import OverviewContextBuilder
 from aire.knowledge.evidence import EvidenceRequest
 from aire.knowledge.models import _json_safe
 from aire.knowledge.retrieval import ProgramQueryService, _record
+from aire.knowledge.application_relevance import ApplicationRelevanceService
 from aire.security.rule_engine import RuleEngine
+from aire.analysis.function_crosscheck import FunctionCrossCheckService, MAX_FUNCTIONS, compact_report
+from aire.knowledge.investigation import InvestigationService
 
 
 def serializable(value):
@@ -112,8 +115,10 @@ class AgentTools:
     def __init__(self, store, binary_id):
         self.store, self.binary_id = store, binary_id
         self.query = ProgramQueryService(store)
+        self.investigation = InvestigationService(store)
         self.last_evidence = None
         self.overview_seeds = ()
+        self.crosscheck_selectors = ()
         self.registry = ToolRegistry()
         entries = [
             ('binary_metadata', 'Stored binary metadata and coverage counts', {}, self.metadata),
@@ -125,19 +130,32 @@ class AgentTools:
              {'function': SELECTOR, 'limit': _integer(20, 100)}, self.callers),
             ('get_callees', 'Stored direct CALL edges out of a function',
              {'function': SELECTOR, 'limit': _integer(20, 100)}, self.callees),
+            ('get_xrefs', 'Paged observed references; computed calls remain unresolved',
+             {'function': SELECTOR, 'direction': {'type': 'string', 'default': 'outgoing', 'enum': ['outgoing', 'incoming']},
+              'limit': _integer(20, 100), 'offset': _integer(0, 1000000, 0)}, self.xrefs),
+            ('get_function_strings', 'Exact stored string references with source instruction addresses',
+             {'function': SELECTOR, 'limit': _integer(20, 100), 'offset': _integer(0, 1000000, 0)}, self.function_strings),
+            ('get_thunk_target', 'Bounded stored thunk chain; JMP bindings are separate from CALL edges',
+             {'function': SELECTOR, 'max_depth': _integer(8, 16, 0)}, self.thunk_target),
+            ('classify_function', 'Conservative symbol classification, loader entries and import provenance',
+             {'function': SELECTOR}, self.classification),
             ('find_call_path', 'Shortest stored CALL path within a depth bound',
              {'source': SELECTOR, 'target': SELECTOR, 'max_depth': _integer(3, 8, 0)}, self.path),
             ('rank_functions', 'Connectivity ranking; does not prove behavioral importance',
              {'metric': {'type': 'string', 'default': 'unique_callers', 'enum': [
                  'unique_callers', 'unique_callees', 'incoming_callsites', 'outgoing_callsites']},
               'limit': _integer(10, 100)}, self.rank),
-            ('get_artifacts', 'Bounded binary-level artifacts; strings have no function linkage',
+            ('rank_application_functions', 'Likely application logic heuristic; not proof of authorship or behavior',
+             {'limit': _integer(10, 100)}, self.rank_application),
+            ('get_artifacts', 'Bounded binary-level artifacts; use get_function_strings for exact local linkage',
              {'kind': {'type': 'string', 'default': 'STRING', 'enum': ['STRING', 'IMPORT', 'EXPORT']},
               'limit': _integer(20, 100)}, self.artifacts),
             ('get_decompiled_text', 'Stored bounded decompiled text with provenance',
              {'function': SELECTOR, 'max_chars': _integer(2000, 8000)}, self.decompiled),
             ('get_assembly', 'Stored bounded assembly with upstream truncation status',
              {'function': SELECTOR, 'max_chars': _integer(2000, 8000)}, self.assembly),
+            ('crosscheck_function', 'Deterministic local assembly/decompiler comparison; not formal equivalence or model inference',
+             {'function': SELECTOR}, self.crosscheck),
             ('retrieve_evidence', 'M4 targeted or M5 overview evidence with provenance and truncations',
              {'function': {'type': 'string', 'default': None, 'nullable': True},
               'max_chars': _integer(8000, 16000, 1000)}, self.evidence),
@@ -196,6 +214,36 @@ class AgentTools:
     def callees(self, function, limit=20):
         return {'selected_function': self.function(function), **self._edges(self.query.get_callees(self.binary_id, function), limit)}
 
+    def xrefs(self, function, direction='outgoing', limit=20, offset=0):
+        result = self.investigation.references(self.binary_id, function, direction=direction, limit=limit, offset=offset)
+        for item in result['items']:
+            text = item['reference']['source_instruction']
+            item['instruction_truncated'] = bool(text and len(text) > 200)
+            if text:
+                item['reference']['source_instruction'] = text[:200]
+        return {'selected_function': self.function(function), **result}
+
+    def function_strings(self, function, limit=20, offset=0):
+        result = self.investigation.references(self.binary_id, function, strings_only=True, limit=limit, offset=offset)
+        for item in result['items']:
+            value = item['artifact']['value']
+            item['value_truncated'] = len(value) > 512
+            item['observed_value_chars'] = len(value)
+            item['artifact']['value'] = value[:512]
+            text = item['reference']['source_instruction']
+            item['instruction_truncated'] = bool(text and len(text) > 200)
+            if text:
+                item['reference']['source_instruction'] = text[:200]
+        return {'selected_function': self.function(function), **result}
+
+    def thunk_target(self, function, max_depth=8):
+        return {'selected_function': self.function(function),
+                **self.investigation.thunk_chain(self.binary_id, function, max_depth=max_depth)}
+
+    def classification(self, function):
+        return {'selected_function': self.function(function),
+                **self.investigation.classification(self.binary_id, function)}
+
     def path(self, source, target, max_depth=3):
         path = self.query.find_call_path(self.binary_id, source, target, max_depth=max_depth)
         return {'found': path is not None, 'max_depth': max_depth,
@@ -214,7 +262,15 @@ class AgentTools:
             include_strings=kind == 'STRING', include_imports=kind == 'IMPORT', include_exports=kind == 'EXPORT',
             max_artifacts=limit, max_functions=0, max_edges=0, max_total_chars=16000))
         return {'items': serializable(bundle.artifacts), 'truncations': serializable(bundle.truncations),
-                'scope': 'binary; no function-to-string cross-references are persisted'}
+                'scope': 'binary-level list; use get_function_strings for exact stored function linkage'}
+
+    def rank_application(self, limit=10):
+        result = ApplicationRelevanceService(self.store).rank_application_functions(self.binary_id, limit=limit)
+        for row in result['items']:
+            f = row['function']
+            row['provenance'] = self._provenance('functions', f['function_id'], f['address'],
+                reason='transient relevance derived from stored metadata and graph', path=row['path'])
+        return result
 
     def _text(self, function, max_chars, field):
         record = self.query.resolve_function(self.binary_id, function)
@@ -231,15 +287,64 @@ class AgentTools:
     def assembly(self, function, max_chars=2000):
         return self._text(function, max_chars, 'assembly')
 
+    def crosscheck(self, function):
+        return FunctionCrossCheckService(self.store).analyze_function(self.binary_id, function)
+
+    def attach_crosschecks(self):
+        """Analyze original stored bodies, never the evidence's text excerpts."""
+        bundle = self.last_evidence
+        target = bundle.metadata.get('resolved_target_id')
+        selectors = self.crosscheck_selectors or ((target,) if target else
+            tuple(bundle.metadata.get('priority_function_ids', ()))[:MAX_FUNCTIONS])
+        reports = []
+        for selector in tuple(dict.fromkeys(selectors))[:MAX_FUNCTIONS]:
+            result = self.registry.run('crosscheck_function', {'function': selector})
+            if result['ok']:
+                reports.append(result['data'])
+        bundle.metadata['function_crosschecks'] = reports
+
+    def evidence_result(self):
+        """Compact tool transport, full deterministic reports in the audit bundle.
+
+        Preserve the registry's existing 100 KB ceiling. Full instruction-level
+        reports are independently available through crosscheck_function.
+        """
+        data = self.last_evidence.to_dict(include_timings=False)
+        data['metadata']['function_crosschecks'] = [compact_report(r) for r in
+            self.last_evidence.metadata.get('function_crosschecks', ())]
+        return data
+
     def evidence(self, function=None, max_chars=8000):
         seeded = function is None and bool(self.overview_seeds)
         builder = ContextBuilder(self.store) if function is not None else OverviewContextBuilder(
             self.store, seed_functions=self.overview_seeds)
-        self.last_evidence = builder.build(EvidenceRequest(self.binary_id, function, max_functions=6,
+        request = EvidenceRequest(self.binary_id, function, max_functions=6,
             max_edges=12, max_artifacts=6, include_exports=True, max_total_chars=max_chars,
+            max_references=8, max_thunks=4,
             max_decompiled_chars_per_function=800 if seeded else 1600,
-            max_assembly_chars_per_function=300 if seeded else 1000))
-        return self.last_evidence.to_dict(include_timings=False)
+            max_assembly_chars_per_function=300 if seeded else 1000)
+        return self._build_evidence(builder, request)
+
+    def _build_evidence(self, builder, request, *, prompt_chars=None, omit_rendered_text=False):
+        """Fit new relationships to CLI/GUI transport without slicing JSON records."""
+        while True:
+            self.last_evidence = builder.build(request)
+            if prompt_chars is not None:
+                self.last_evidence.request_summary['max_total_chars'] = prompt_chars
+            self.attach_crosschecks()
+            data = self.evidence_result()
+            if omit_rendered_text:
+                data.pop('rendered_text', None)
+            # Leave headroom for the GUI's existing timing metadata.
+            if len(json.dumps(data, ensure_ascii=True, allow_nan=False)) <= 99500:
+                return data
+            if not request.max_references and not request.max_thunks:
+                return data  # Preserve the registry's explicit result_limit for oversized legacy fields.
+            # Keep complete records and all pre-existing body/edge caps. Rebuild
+            # only from SQLite, with smaller new relationship sections; standard
+            # selection truncations disclose actual observed/retained counts.
+            request = replace(request, max_references=request.max_references // 2,
+                              max_thunks=request.max_thunks // 2)
 
     def security(self):
         result = RuleEngine(self.store).scan_binary(self.binary_id).to_dict()

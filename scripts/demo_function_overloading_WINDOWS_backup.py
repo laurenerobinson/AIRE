@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Static, hash-pinned professor demo. No target execution, database or LLM.
 
-Uses the unchanged M1 indexer and a disposable PyGhidra session for string
-xrefs/thunks, which M1 does not store. Analysis affects temporary programs only;
-neither session saves its program. This script writes only to stdout/stderr
+Uses core-indexed reference, thunk, metadata, and constant-byte evidence from
+one analyzed Program. Analysis affects a temporary program only; it is never
+saved. This script writes only to stdout/stderr
 and automatically cleaned temporary Ghidra directories. The default is a concise
 professor presentation; --full adds unabridged technical evidence.
 """
@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 import struct
 import sys
-import tempfile
 import threading
 import time
 
@@ -29,6 +28,9 @@ if not os.environ.get("JAVA_HOME") and (Path.home() / "tools/jdk-21").is_dir():
     os.environ["JAVA_HOME"] = str(Path.home() / "tools/jdk-21")
 
 from aire.pyghidra.indexer import index_binary, sha256_file
+from aire.knowledge.reference_views import (
+    string_references, direct_jump_thunks, referenced_reads, referenced_bytes_at,
+)
 
 
 def require(condition, message):
@@ -36,65 +38,10 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def collect_xrefs():
-    """Read actual references; never identify a function by decompiler text alone.
-
-    Called after index_binary has initialized PyGhidra. Use its existing JVM,
-    but an independent disposable project; do not patch the production indexer.
-    """
-    import pyghidra
-    from java.lang import Object
-    from ghidra.program.model.data import StringDataInstance
-
-    strings, thunks = [], []
-    with tempfile.TemporaryDirectory(prefix="aire_demo_xrefs_") as directory:
-        with pyghidra.open_project(directory, "xrefs", create=True) as project:
-            with pyghidra.program_loader().project(project).source(str(TARGET)).load() as loaded:
-                consumer = Object()
-                program = loaded.getPrimaryDomainObject(consumer)
-                try:
-                    pyghidra.analyze(program)
-                    listing = program.getListing()
-                    manager = program.getFunctionManager()
-                    references = program.getReferenceManager()
-                    for data in listing.getDefinedData(True):
-                        if not StringDataInstance.isString(data):
-                            continue
-                        value = str(StringDataInstance.getStringDataInstance(data).getStringValue())
-                        if value not in STRINGS:
-                            continue
-                        refs = []
-                        for ref in references.getReferencesTo(data.getAddress()):
-                            function = manager.getFunctionContaining(ref.getFromAddress())
-                            instruction = listing.getInstructionAt(ref.getFromAddress())
-                            refs.append({"from": str(ref.getFromAddress()),
-                                         "type": str(ref.getReferenceType()),
-                                         "function": str(function.getEntryPoint()) if function else None,
-                                         "instruction": str(instruction)})
-                        strings.append({"value": value, "address": str(data.getAddress()), "xrefs": refs})
-                    for function in manager.getFunctions(True):
-                        if not function.isThunk():
-                            continue
-                        target = function.getThunkedFunction(False)
-                        instruction = listing.getInstructionAt(function.getEntryPoint())
-                        if target is None or instruction is None:
-                            continue
-                        # Keep only an independently verified literal jump to this target.
-                        if str(instruction.getMnemonicString()) != "JMP":
-                            continue
-                        if target.getEntryPoint() not in list(instruction.getFlows()):
-                            continue
-                        thunks.append({"address": str(function.getEntryPoint()),
-                                       "target": str(target.getEntryPoint()),
-                                       "instruction": str(instruction)})
-                    info = program.getOptions("Program Information")
-                    metadata = {str(n): str(info.getValueAsString(n)) for n in info.getOptionNames()}
-                    # This constant's address is pinned to the verified sample hash.
-                    address = program.getAddressFactory().getAddress("00419b70")
-                    raw = bytes(int(program.getMemory().getByte(address.add(i))) & 255 for i in range(8))
-                    return strings, thunks, metadata, raw
-                finally:
-                    program.release(consumer)
+def collect_xrefs(index):
+    """Read core-indexed facts; never open Ghidra or read the executable."""
+    return (string_references(index, STRINGS), direct_jump_thunks(index),
+            index.program_info, referenced_bytes_at(index, "00419b70"))
 
 
 def direct_callers(index, function):
@@ -298,7 +245,7 @@ def present(index, strings, thunks, info, constant, overloads, caller, full):
     print("\n    A.I.R.E. limitations:")
     print(f"      - {omitted} indirect callsites intentionally omitted")
     print("      - Thunk JMP edges not persisted in the direct CALL graph")
-    print("      - String xrefs supplemented by this demo helper")
+    print("      - String xrefs preserved in the core index")
     print(f"\n    Warnings: {len(index.warnings)} records; details available with --full")
     if full:
         print("\n    PDB metadata:")
@@ -343,7 +290,7 @@ def demonstrate(full):
             index = index_binary(TARGET)
         print("[Recovering functions and references...]", flush=True)
         with redirect_stdout(sys.stderr):
-            strings, thunks, info, constant = collect_xrefs()
+            strings, thunks, info, constant = collect_xrefs(index)
         analysis_seconds = index.metadata['total_seconds']
         print("[Analysis complete]", flush=True)
         binary = index.binary

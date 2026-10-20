@@ -1,0 +1,319 @@
+{
+  "fixture": "tests/fixtures/simple_elf/aire_test_binary",
+  "safety_commit": "4bbc112ff60c1342947b680bc6ceba0d7834d136",
+  "baseline": [
+    {
+      "question": "What does this binary do?",
+      "total": 283.7842183839998,
+      "stages": {
+        "tool_retrieval": 0.010152657999697112,
+        "evidence_build": 0.002450528999816015,
+        "prompt": 0.0010520979999455449,
+        "model": 283.65336556500006
+      },
+      "model_metrics": [],
+      "status": "partial",
+      "answer_chars": 3858,
+      "chat_timing": null
+    },
+    {
+      "question": "Find suspicious behavior in this binary",
+      "total": 108.44713296099962,
+      "stages": {
+        "model": 108.0734553860002,
+        "tool_retrieval": 0.11003117500013104,
+        "evidence_build": 0.002308653999989474,
+        "prompt": 0.0008840269997563155
+      },
+      "model_metrics": [
+        {
+          "load_duration": 46222329,
+          "prompt_eval_duration": 22836684000,
+          "eval_duration": 5725127000,
+          "prompt_eval_count": 992,
+          "eval_count": 16
+        },
+        {
+          "load_duration": 3186142,
+          "prompt_eval_duration": 29077784000,
+          "eval_duration": 419956000,
+          "prompt_eval_count": 2436,
+          "eval_count": 6
+        },
+        {
+          "load_duration": 1018791,
+          "prompt_eval_duration": 34033807999,
+          "eval_duration": 14318757000,
+          "prompt_eval_count": 2050,
+          "eval_count": 183
+        }
+      ],
+      "status": "completed",
+      "answer_chars": 1488,
+      "chat_timing": {
+        "context_build_seconds": 7.635000201844377e-06,
+        "prompt_build_seconds": 0.0009218169998348458,
+        "inference_seconds": 48.917120477000026,
+        "parsing_seconds": 6.282200001805904e-05,
+        "total_chat_seconds": 48.918123537000156
+      }
+    },
+    {
+      "question": "Explain process_input",
+      "total": 62.456826848999754,
+      "stages": {
+        "tool_retrieval": 0.005538945000353124,
+        "model": 62.411904706000314,
+        "evidence_build": 0.003342943000006926,
+        "prompt": 0.0006510050002361822
+      },
+      "model_metrics": [
+        {
+          "load_duration": 2154097,
+          "prompt_eval_duration": 24567457000,
+          "eval_duration": 345627000,
+          "prompt_eval_count": 1443,
+          "eval_count": 6
+        },
+        {
+          "load_duration": 6040391,
+          "prompt_eval_duration": 29365965000,
+          "eval_duration": 7672538000,
+          "prompt_eval_count": 2050,
+          "eval_count": 144
+        }
+      ],
+      "status": "completed",
+      "answer_chars": 1320,
+      "chat_timing": {
+        "context_build_seconds": 6.51299978926545e-06,
+        "prompt_build_seconds": 0.0006905440000082308,
+        "inference_seconds": 37.32879312799969,
+        "parsing_seconds": 6.824000001870445e-05,
+        "total_chat_seconds": 37.32957291599996
+      }
+    },
+    {
+      "question": "What does this binary do?",
+      "total": 14.210380101000283,
+      "stages": {
+        "tool_retrieval": 0.01522641899964583,
+        "evidence_build": 0.0034707850004451757,
+        "prompt": 0.0010749439998107846,
+        "model": 14.168287897000027
+      },
+      "model_metrics": [
+        {
+          "load_duration": 2842355,
+          "prompt_eval_duration": 64683000,
+          "eval_duration": 13750265000,
+          "prompt_eval_count": 2050,
+          "eval_count": 227
+        }
+      ],
+      "status": "completed",
+      "answer_chars": 5149,
+      "chat_timing": {
+        "context_build_seconds": 7.432000074913958e-06,
+        "prompt_build_seconds": 0.0011170660000061616,
+        "inference_seconds": 14.168317990000105,
+        "parsing_seconds": 8.566399992560036e-05,
+        "total_chat_seconds": 14.169541012000082
+      }
+    }
+  ],
+  "after": {
+    "model": "qwen2.5-coder:1.5b",
+    "num_ctx": 4096,
+    "ollama_version": {
+      "version": "0.35.0"
+    },
+    "cold_model": true,
+    "workspace_load_seconds": 0.02977551499952824,
+    "requests": [
+      {
+        "question": "What does this binary do?",
+        "status": "completed",
+        "timing": {
+          "total_seconds": 75.98311303299943,
+          "session_resolution_seconds": 4.1135999708785675e-05,
+          "tool_retrieval_seconds": 0.0005412320006144,
+          "workspace_resolution_seconds": 3.07829996017972e-05,
+          "evidence_build_seconds": 0.0038923929996599327,
+          "response_formatting_seconds": 0.006335582999781764,
+          "first_visible_seconds": 0.001037416999679408,
+          "overview_cache_hit": false,
+          "first_summary_seconds": 27.990940643999238,
+          "cache_hits": 7,
+          "cache_misses": 10,
+          "context_build_seconds": 7.989999176061247e-06,
+          "prompt_build_seconds": 0.0006635099998675287,
+          "inference_seconds": 75.94739699899947,
+          "parsing_seconds": 0.0038294810001389123,
+          "request_startup_seconds": 28.26874153999961,
+          "first_output_seconds": 28.268961934999425,
+          "generation_seconds": 47.67768935600088,
+          "load_duration_seconds": 1.932756173,
+          "prompt_eval_duration_seconds": 26.030407,
+          "eval_duration_seconds": 47.623597,
+          "total_chat_seconds": 75.9519198930002,
+          "model_seconds": 75.94726738600002,
+          "model_requests": 2
+        },
+        "answer_characters": 1062,
+        "sizes": {
+          "context_characters": 4884,
+          "m4_rendered_characters": 24000,
+          "prompt_characters": 6439,
+          "response_characters": 704,
+          "total_response_characters": 4165,
+          "last_prompt_characters": 6621,
+          "prompt_eval_count": 2024,
+          "eval_count": 186
+        },
+        "answer": "### What this binary appears to do\n\nThe binary appears to be a simple calculator that processes input data and performs various operations.\n\n### How it works\n\n- The `main` function is the entry point of the binary and calls other functions to perform the operations.\n- The `choose_operation` function is responsible for selecting the appropriate operation based on the input operation code.\n\n### Important functions\n\n- `main` @ 0040148d\n- `initialize_app` @ 00401157\n- `process_input` @ 004012f8\n- `choose_operation` @ 0040139f\n- `print_result` @ 0040142b\n- `add_values` @ 00401340\n\n### Interesting observations\n\n- `main` ranks highest by unique callees (6) in the stored CALL graph. Connectivity is a starting point for review.\n- Stored imports include `<EXTERNAL>::__libc_start_main`, `<EXTERNAL>::puts`, `<EXTERNAL>::strlen`, `<EXTERNAL>::printf`, `<EXTERNAL>::__gmon_start__`.\n- No currently supported dangerous-API patterns were detected.\n\n### Suggested next step\n\nInspect `initialize_app` in the stored call path.\n\nWant me to explain `initialize_app` next?"
+      },
+      {
+        "question": "Find suspicious behavior in this binary",
+        "status": "completed",
+        "timing": {
+          "total_seconds": 0.021368001000155346,
+          "session_resolution_seconds": 0.0006505960000140476,
+          "tool_retrieval_seconds": 0.0005858290005562594,
+          "workspace_resolution_seconds": 6.349399973260006e-05,
+          "evidence_build_seconds": 0.0015146039995670435,
+          "response_formatting_seconds": 4.4873999286210164e-05,
+          "first_visible_seconds": 0.02136612799949944,
+          "overview_cache_hit": false,
+          "first_summary_seconds": null,
+          "cache_hits": 14,
+          "cache_misses": 10,
+          "model_seconds": 0.0,
+          "model_requests": 0
+        },
+        "answer_characters": 389,
+        "sizes": null,
+        "answer": "### Static security review\n\n\n### Interesting observations\n\n- `main` ranks highest by unique callees (6) in the stored CALL graph. Connectivity is a starting point for review.\n- Stored imports include `<EXTERNAL>::__libc_start_main`, `<EXTERNAL>::puts`, `<EXTERNAL>::strlen`, `<EXTERNAL>::printf`, `<EXTERNAL>::__gmon_start__`.\n- No currently supported dangerous-API patterns were detected."
+      },
+      {
+        "question": "Explain process_input",
+        "status": "completed",
+        "timing": {
+          "total_seconds": 17.765732431000288,
+          "session_resolution_seconds": 0.00043346700022084406,
+          "tool_retrieval_seconds": 0.0001245580006070668,
+          "workspace_resolution_seconds": 4.3076000110886525e-05,
+          "evidence_build_seconds": 0.0038014199999452103,
+          "response_formatting_seconds": 0.003434264000134135,
+          "first_visible_seconds": 10.561403583000356,
+          "overview_cache_hit": false,
+          "first_summary_seconds": 10.561402057000123,
+          "cache_hits": 14,
+          "cache_misses": 12,
+          "context_build_seconds": 6.347000635287259e-06,
+          "prompt_build_seconds": 0.0009481000006417162,
+          "inference_seconds": 17.744101168999805,
+          "parsing_seconds": 0.0006082039999455446,
+          "request_startup_seconds": 10.338297278000027,
+          "first_output_seconds": 10.338343727000392,
+          "generation_seconds": 7.404983999000251,
+          "load_duration_seconds": 0.016578565,
+          "prompt_eval_duration_seconds": 10.245422,
+          "eval_duration_seconds": 7.052961,
+          "total_chat_seconds": 17.745672389999527,
+          "model_seconds": 17.744069123999907,
+          "model_requests": 1
+        },
+        "answer_characters": 437,
+        "sizes": {
+          "context_characters": 2799,
+          "m4_rendered_characters": 14355,
+          "prompt_characters": 4350,
+          "response_characters": 632,
+          "total_response_characters": 632,
+          "last_prompt_characters": 4404,
+          "prompt_eval_count": 1209,
+          "eval_count": 144
+        },
+        "answer": "### Function analysis\n\nThe `process_input` function is the main coordinator of the program, responsible for validating and transforming input data before processing it further.\n\n### How it works\n\n- The `validate_input` function is called by `process_input` to ensure the input data is valid before proceeding.\n- The `transform_input` function is called by `process_input` to modify the input data according to the program's requirements."
+      },
+      {
+        "question": "What does this binary do?",
+        "status": "completed",
+        "timing": {
+          "total_seconds": 0.019010359999811044,
+          "session_resolution_seconds": 0.0005037130003984203,
+          "tool_retrieval_seconds": 0.0,
+          "workspace_resolution_seconds": 3.943699994124472e-05,
+          "evidence_build_seconds": 0.0,
+          "response_formatting_seconds": 0,
+          "first_visible_seconds": 0.007824299000276369,
+          "overview_cache_hit": true,
+          "first_summary_seconds": 0.007822309999937715,
+          "cache_hits": 14,
+          "cache_misses": 12,
+          "model_seconds": 0.0,
+          "model_requests": 0
+        },
+        "answer_characters": 1062,
+        "sizes": {
+          "context_characters": 4884,
+          "m4_rendered_characters": 24000,
+          "prompt_characters": 6439,
+          "response_characters": 704,
+          "total_response_characters": 4165,
+          "last_prompt_characters": 6621,
+          "prompt_eval_count": 2024,
+          "eval_count": 186
+        },
+        "answer": "### What this binary appears to do\n\nThe binary appears to be a simple calculator that processes input data and performs various operations.\n\n### How it works\n\n- The `main` function is the entry point of the binary and calls other functions to perform the operations.\n- The `choose_operation` function is responsible for selecting the appropriate operation based on the input operation code.\n\n### Important functions\n\n- `main` @ 0040148d\n- `initialize_app` @ 00401157\n- `process_input` @ 004012f8\n- `choose_operation` @ 0040139f\n- `print_result` @ 0040142b\n- `add_values` @ 00401340\n\n### Interesting observations\n\n- `main` ranks highest by unique callees (6) in the stored CALL graph. Connectivity is a starting point for review.\n- Stored imports include `<EXTERNAL>::__libc_start_main`, `<EXTERNAL>::puts`, `<EXTERNAL>::strlen`, `<EXTERNAL>::printf`, `<EXTERNAL>::__gmon_start__`.\n- No currently supported dangerous-API patterns were detected.\n\n### Suggested next step\n\nInspect `initialize_app` in the stored call path.\n\nWant me to explain `initialize_app` next?"
+      },
+      {
+        "question": "What calls it?",
+        "status": "completed",
+        "timing": {
+          "total_seconds": 0.01701443499950983,
+          "session_resolution_seconds": 0.0006019399997967412,
+          "tool_retrieval_seconds": 0.0021356909992391593,
+          "workspace_resolution_seconds": 0.0001392800004396122,
+          "evidence_build_seconds": 0.0009363110002595931,
+          "response_formatting_seconds": 1.8418999388813972e-05,
+          "first_visible_seconds": 0.017013624999890453,
+          "overview_cache_hit": false,
+          "first_summary_seconds": null,
+          "cache_hits": 15,
+          "cache_misses": 13,
+          "model_seconds": 0.0,
+          "model_requests": 0
+        },
+        "answer_characters": 57,
+        "sizes": null,
+        "answer": "### Call relationships\n\n- main \u2192 process_input @ 00401545"
+      }
+    ],
+    "loaded_models_after": {
+      "models": [
+        {
+          "name": "qwen2.5-coder:1.5b",
+          "model": "qwen2.5-coder:1.5b",
+          "size": 1169980128,
+          "digest": "d7372fd828518a4d38b1eb196c673c31a85f2ed302b3d1e406c4c2d1b64a0668",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen2",
+            "families": [
+              "qwen2"
+            ],
+            "parameter_size": "1.5B",
+            "quantization_level": "Q4_K_M"
+          },
+          "expires_at": "2026-10-05T10:54:44.174545674-05:00",
+          "size_vram": 0,
+          "context_length": 4096
+        }
+      ]
+    },
+    "database_unchanged": true
+  }
+}

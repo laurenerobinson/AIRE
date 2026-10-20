@@ -1,5 +1,5 @@
 """Bounded non-streaming Ollama transport. No retrieval or tool execution."""
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from http.client import HTTPException
 import ipaddress
 import json
@@ -44,9 +44,11 @@ class GenerationResult:
     seconds: float
     prompt_eval_count: int | None = None
     eval_count: int | None = None
+    timing: dict = field(default_factory=dict)
 
 
 class OllamaClient:
+    supports_streaming = True
     """Loopback literals/localhost only unless remote access is explicitly enabled.
 
     localhost is pinned to 127.0.0.1, avoiding DNS changes. Other hostnames are
@@ -55,7 +57,7 @@ class OllamaClient:
     a socket-operation timeout, not a total wall-clock deadline.
     """
     def __init__(self, host=None, model=None, timeout_seconds=240, temperature=0.1,
-                 allow_remote_host=False, *, num_ctx=None):
+                 allow_remote_host=False, *, num_ctx=None, keep_alive='10m'):
         host = host if host is not None else os.environ.get('AIRE_OLLAMA_HOST', 'http://127.0.0.1:11434')
         self.model = model if model is not None else os.environ.get('AIRE_OLLAMA_MODEL')
         if num_ctx is None:
@@ -91,7 +93,12 @@ class OllamaClient:
             if hostname == 'localhost':
                 hostname = '127.0.0.1'
             try:
-                local = ipaddress.ip_address(hostname).is_loopback and '%' not in hostname
+                address = ipaddress.ip_address(hostname)
+                # Keep the default allowlist independent of Python's changing
+                # IPv4-mapped IPv6 loopback classification. Remote opt-in still
+                # permits these origins deliberately.
+                mapped = isinstance(address, ipaddress.IPv6Address) and address.ipv4_mapped is not None
+                local = address.is_loopback and not mapped and '%' not in hostname
             except ValueError:
                 local = False
             if not local and not allow_remote_host:
@@ -102,6 +109,9 @@ class OllamaClient:
             raise ValueError(f'Invalid Ollama endpoint: {exc}') from exc
         self.timeout_seconds = timeout_seconds
         self.temperature = temperature
+        if not isinstance(keep_alive, str) or keep_alive not in ('5m', '10m', '30m'):
+            raise ValueError('keep_alive must be 5m, 10m, or 30m')
+        self.keep_alive = keep_alive
         self._opener = build_opener(ProxyHandler({}), _NoRedirect())
 
     def _request(self, route, payload=None, *, timeout=None):
@@ -150,23 +160,94 @@ class OllamaClient:
     def health(self):
         return {'host': self.host, 'models': self.list_models()}
 
-    def generate(self, prompt, *, system='', response_schema=None):
+    def warm(self):
+        """Optional explicit local model load, without binary evidence."""
+        if not self.model:
+            raise OllamaModelError('No model selected')
+        return self._request('/api/generate', {'model': self.model, 'prompt': '',
+            'stream': False, 'keep_alive': self.keep_alive,
+            'options': {'num_ctx': self.num_ctx}})
+
+    def _stream(self, payload, on_chunk):
+        tick = time.perf_counter()
+        request = Request(self.host + '/api/generate',
+            data=json.dumps(payload, allow_nan=False).encode('utf-8'),
+            headers={'Content-Type': 'application/json'})
+        pieces, total, first = [], 0, None
+        startup = None
+        try:
+            with self._opener.open(request, timeout=self.timeout_seconds) as response:
+                startup = time.perf_counter() - tick
+                while True:
+                    if time.perf_counter() - tick >= self.timeout_seconds:
+                        raise OllamaTimeoutError('Ollama generation deadline exceeded')
+                    line = response.readline(1_000_001)
+                    if not line:
+                        raise OllamaProtocolError('Ollama stream ended without completion')
+                    total += len(line)
+                    if total > 1_000_000:
+                        raise OllamaProtocolError('Ollama response exceeds 1,000,000 bytes')
+                    try:
+                        item = json.loads(line)
+                    except (ValueError, UnicodeError) as exc:
+                        raise OllamaProtocolError('Ollama returned malformed streaming JSON') from exc
+                    if not isinstance(item, dict) or type(item.get('response', '')) is not str:
+                        raise OllamaProtocolError('Invalid Ollama stream record')
+                    if 'error' in item:
+                        raise OllamaModelError(str(item['error'])[:4096])
+                    chunk = item.get('response', '')
+                    if chunk:
+                        first = first if first is not None else time.perf_counter() - tick
+                        pieces.append(chunk)
+                        on_chunk(chunk)
+                    if item.get('done') is True:
+                        item['response'] = ''.join(pieces)
+                        return item, {'request_startup_seconds': startup,
+                                      'first_output_seconds': first,
+                                      'generation_seconds': time.perf_counter() - tick - (first or 0)}
+        except HTTPError as exc:
+            with exc:
+                detail = exc.read(4096).decode('utf-8', errors='replace')
+            if exc.code == 404:
+                raise OllamaModelError(detail) from exc
+            raise OllamaError(f'Ollama HTTP {exc.code}: {detail}') from exc
+        except (TimeoutError, socket.timeout) as exc:
+            raise OllamaTimeoutError('Ollama stream timed out') from exc
+        except URLError as exc:
+            if isinstance(exc.reason, (TimeoutError, socket.timeout)):
+                raise OllamaTimeoutError('Ollama stream timed out') from exc
+            raise OllamaConnectionError(str(exc.reason)) from exc
+        except OSError as exc:
+            raise OllamaConnectionError('Ollama stream connection failed') from exc
+        except HTTPException as exc:
+            raise OllamaProtocolError('Ollama stream was incomplete') from exc
+
+    def generate(self, prompt, *, system='', response_schema=None, on_chunk=None):
         if not self.model:
             raise OllamaModelError('No model selected; set AIRE_OLLAMA_MODEL or model=. Use list_models() to discover installed models')
         if not isinstance(prompt, str) or not 0 < len(prompt) <= 250_000:
             raise ValueError('prompt must contain 1–250000 characters')
         tick = time.perf_counter()
-        result = self._request('/api/generate', {
-            'model': self.model, 'prompt': prompt, 'system': system, 'stream': False,
+        payload = {
+            'model': self.model, 'prompt': prompt, 'system': system, 'stream': on_chunk is not None,
+            'keep_alive': self.keep_alive,
             'format': response_schema or 'json',
             'options': {'temperature': self.temperature, 'seed': 0, 'num_predict': 2048,
                         'num_ctx': self.num_ctx},
-        })
+        }
+        if on_chunk is not None:
+            result, timing = self._stream(payload, on_chunk)
+        else:
+            result, timing = self._request('/api/generate', payload), {}
         if not isinstance(result.get('response'), str) or not result['response'].strip():
             raise OllamaProtocolError('Ollama response field is missing, empty, or not text')
         if result.get('done') is not True or result.get('done_reason') == 'length':
             raise OllamaProtocolError('Ollama generation was incomplete or output-token limited')
         if not isinstance(result.get('model'), str) or not result['model']:
             raise OllamaProtocolError('Ollama response has no model name')
+        for name in ('load_duration', 'prompt_eval_duration', 'eval_duration'):
+            value = result.get(name)
+            if type(value) is int and value >= 0:
+                timing[name + '_seconds'] = value / 1_000_000_000
         return GenerationResult(result['response'], result['model'], time.perf_counter() - tick,
-                                result.get('prompt_eval_count'), result.get('eval_count'))
+                                result.get('prompt_eval_count'), result.get('eval_count'), timing)

@@ -21,6 +21,8 @@ from aire.knowledge.models import ProgramIndex
 from aire.pyghidra.extractor import extract_artifacts, extract_binary, extract_functions
 from aire.pyghidra.graph_builder import build_call_edges
 from aire.pyghidra.options import IndexOptions
+from aire.pyghidra.references import REFERENCE_FACTS_VERSION, extract_references
+from aire.profiling import count, profiled, stage as profile_stage, timed_context
 
 _LOCK = threading.Lock()
 _RUNTIME = None
@@ -31,6 +33,7 @@ class IndexingError(RuntimeError):
 
 
 def sha256_file(path: Path) -> str:
+    count('sha256_reads')
     digest = hashlib.sha256()
     with path.open('rb') as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b''):
@@ -38,6 +41,7 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+@profiled('runtime_startup', 'runtime_checks')
 def _start_runtime():
     global _RUNTIME
     import jpype
@@ -58,6 +62,7 @@ def _start_runtime():
                                ('application.cachedir', 'cache'),
                                ('application.tempdir', 'temp')]:
             launcher.vm_args.append(f'-D{key}={runtime.name}/{directory}')
+        count('launcher_start_calls')
         launcher.start()
     except BaseException:
         if jpype.isJVMStarted():
@@ -74,6 +79,7 @@ def _start_runtime():
     atexit.register(close_runtime)
 
 
+@profiled('python_setup', 'index_binary_calls')
 def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramIndex:
     """Import/analyze once, extract facts, dispose without saving, verify input hash.
 
@@ -83,15 +89,16 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
     options = options if options is not None else IndexOptions()
     if not isinstance(options, IndexOptions):
         raise TypeError('options must be IndexOptions or None')
-    path = Path(path).expanduser().resolve()
-    if not path.exists():
-        raise IndexingError(f'File not found: {path}')
-    if not path.is_file():
-        raise IndexingError(f'Path is not a file: {path}')
-    try:
-        before = sha256_file(path)
-    except OSError as exc:
-        raise IndexingError(f'Cannot read {path}: {exc}') from exc
+    with profile_stage('hashing'):
+        path = Path(path).expanduser().resolve()
+        if not path.exists():
+            raise IndexingError(f'File not found: {path}')
+        if not path.is_file():
+            raise IndexingError(f'Path is not a file: {path}')
+        try:
+            before = sha256_file(path)
+        except OSError as exc:
+            raise IndexingError(f'Cannot read {path}: {exc}') from exc
     started = time.perf_counter()
     stage = 'Ghidra startup'
     try:
@@ -101,30 +108,41 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
             from java.lang import Object
             from ghidra.app.util.importer import MessageLog
             from ghidra.framework import Application
-            with tempfile.TemporaryDirectory(prefix='aire_index_') as directory:
+            with timed_context(tempfile.TemporaryDirectory(prefix='aire_index_'), 'python_setup') as directory:
                 stage = 'temporary project creation'
-                with pyghidra.open_project(directory, 'index', create=True) as project:
+                with profile_stage('project_creation'):
+                    project_context = pyghidra.open_project(directory, 'index', create=True)
+                with timed_context(project_context,
+                                   'project_creation', counter='projects_created') as project:
                     stage = 'binary import'
                     import_log = MessageLog()
-                    with pyghidra.program_loader().project(project).source(str(path)).log(import_log).load() as loaded:
-                        consumer = Object()
-                        program = loaded.getPrimaryDomainObject(consumer)
+                    with profile_stage('import_open'):
+                        count('executable_imports')
+                        loaded_context = pyghidra.program_loader().project(project).source(str(path)).log(import_log).load()
+                    with timed_context(loaded_context, 'import_open') as loaded:
+                        with profile_stage('import_open'):
+                            consumer = Object()
+                            program = loaded.getPrimaryDomainObject(consumer)
                         try:
                             warnings = []
                             if str(import_log):
                                 warnings.append(f'Import: {import_log}')
                             stage = 'analysis initialization/completion'
                             tick = time.perf_counter()
-                            analysis_log = pyghidra.analyze(program)
+                            with profile_stage('auto_analysis'):
+                                count('analyze_calls')
+                                analysis_log = pyghidra.analyze(program)
                             analysis_seconds = time.perf_counter() - tick
                             if analysis_log:
                                 warnings.append(f'Analysis: {analysis_log}')
                             monitor = pyghidra.task_monitor()
                             stage = 'fact extraction'
                             binary = extract_binary(program, path, before, warnings)
-                            manager = program.getFunctionManager()
-                            functions = list(manager.getFunctions(True)) + list(manager.getExternalFunctions())
-                            functions.sort(key=lambda f: (bool(f.isExternal()), str(f.getEntryPoint())))
+                            with profile_stage('function_discovery'):
+                                manager = program.getFunctionManager()
+                                functions = list(manager.getFunctions(True)) + list(manager.getExternalFunctions())
+                                functions.sort(key=lambda f: (bool(f.isExternal()), str(f.getEntryPoint())))
+                                count('functions_discovered', len(functions))
                             tick = time.perf_counter()
                             records = extract_functions(program, functions, binary.binary_id, options, monitor, warnings)
                             function_seconds = time.perf_counter() - tick
@@ -134,6 +152,11 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                             tick = time.perf_counter()
                             edges = build_call_edges(program, functions, binary.binary_id, warnings) if options.include_call_edges else []
                             graph_seconds = time.perf_counter() - tick
+                            tick = time.perf_counter()
+                            references, thunks, program_info = extract_references(
+                                program, functions, artifacts, binary.binary_id, warnings
+                            ) if options.include_references else ([], [], {})
+                            reference_seconds = time.perf_counter() - tick
                             result = ProgramIndex(binary, records, artifacts, edges, warnings, {
                                 'schema_version': 1,
                                 'ghidra_version': str(Application.getApplicationVersion()),
@@ -147,18 +170,22 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                                 'function_extraction_seconds': function_seconds,
                                 'artifact_extraction_seconds': artifact_seconds,
                                 'call_graph_seconds': graph_seconds,
-                            })
+                                'reference_extraction_seconds': reference_seconds,
+                                'reference_facts_version': REFERENCE_FACTS_VERSION if options.include_references else None,
+                            }, references, thunks, program_info)
                         finally:
-                            program.release(consumer)
+                            with profile_stage('cleanup'):
+                                program.release(consumer)
     except Exception as exc:
         raise IndexingError(f'{stage} failed for {path}: {exc}') from exc
     finally:
-        try:
-            after = sha256_file(path)
-        except OSError as exc:
-            raise IndexingError(f'Cannot verify input integrity for {path}: {exc}') from exc
-        if after != before:
-            raise IndexingError(f'Input SHA-256 changed during indexing: {path}')
+        with profile_stage('integrity'):
+            try:
+                after = sha256_file(path)
+            except OSError as exc:
+                raise IndexingError(f'Cannot verify input integrity for {path}: {exc}') from exc
+            if after != before:
+                raise IndexingError(f'Input SHA-256 changed during indexing: {path}')
     result.metadata['input_sha256_unchanged'] = True
     result.metadata['total_seconds'] = time.perf_counter() - started
     return result

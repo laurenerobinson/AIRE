@@ -22,7 +22,10 @@ flowchart TD
     I --> P[ProgramIndex]
     P --> K[Knowledge Store]
     K --> G[Relationship Query]
-    G --> E[Evidence Builder]
+    G --> H[Deterministic Application Relevance]
+    H --> E[Bounded Overview Evidence]
+    G --> T[Exact Targeted Evidence]
+    T --> L
     E --> L[Local Grounded Model]
     L --> N[Naming Suggestion Service — M6]
     N --> A[Analyst Review — no write-back]
@@ -52,7 +55,7 @@ supporting and contradicting evidence visible.
 | --- | --- | --- |
 | ghidra-plugin | Interactive v1 evidence and local model naming | Preserved Java implementation |
 | aire.pyghidra | Read-only fact extraction and direct call edges | Implemented M1 |
-| aire.knowledge | Records, persistence, retrieval | M2 SQLite persistence and M3 deterministic relationship queries; no semantic retrieval |
+| aire.knowledge | Records, persistence, retrieval | M2 SQLite, M3 connectivity queries and separate transient application relevance; no semantic/vector retrieval |
 | aire.ai | Deterministic evidence, grounded chat, advisory naming | M4/M5/M6 implemented; no rename/write-back |
 | aire.security | Findings and deterministic rules | M7 versioned rules, immutable fact snapshots, transient signals |
 | aire.validation | Optional approved isolated validation | Documentation only |
@@ -78,6 +81,7 @@ Binary
 → SQLite Binary Knowledge Store
    (binary, functions, artifacts, direct call edges, warnings, analysis metadata)
 → Deterministic Relationship Query Layer (M3)
+→ Deterministic Application Relevance (whole-binary overview only)
 → Deterministic Evidence / Context Builder (M4)
 
 → Local Ollama Chat Layer (M5)
@@ -144,9 +148,11 @@ binary time limit. Discovery is Ghidra coverage, not proof of all real functions
 
 `aire.knowledge.database.BinaryKnowledgeStore` uses standard-library sqlite3,
 without an ORM, global connections, Ghidra imports, or executable-file access.
-Construction opens/creates the database and initializes schema version **1**.
+Construction opens/creates the database and initializes schema version **2**.
 `initialize()` is also explicitly callable and idempotent. Unknown/unversioned
-existing schemas are rejected, not migrated or overwritten. Store schema version
+existing schemas are rejected, not migrated or overwritten. Known v1 schemas are
+upgraded transactionally with reference/thunk/program-information tables; read-only
+adapters accept v1/v2 without migrating. Store schema version
 is independent of the M1 JSON schema version in analysis metadata.
 
 Tables: `schema_metadata`, `binaries`, `functions`, `artifacts`, `function_edges`,
@@ -195,7 +201,7 @@ belong at temporary/ignored paths, never in version control.
 `aire.knowledge.retrieval.ProgramQueryService(store)` reads the persisted graph.
 `graph.py` holds transient CallRelationship, TraversalNode, CallPath and
 FunctionRelationshipSummary dataclasses; none are new database entities. M1/M2
-models, schema version 1, extraction, and persistence code remain unchanged.
+models, extraction, and persistence remain independent of graph traversal.
 Each public query reads one transaction snapshot using the store's existing
 internal transaction helper, on the same owning thread. No long-lived cache or
 additional connection is introduced. Caller/callee queries fetch targeted rows;
@@ -256,6 +262,32 @@ Python API only; no new CLI/server is added.
 
 ## M4 deterministic evidence selection
 
+Whole-binary M5/M8 overviews now use the separate
+`ApplicationRelevanceService.rank_application_functions` API before bounded
+evidence selection. CRT fan-out made pure connectivity a poor overview policy
+on real MSVC PE programs. M3 `rank_functions` keeps all four connectivity metrics
+and its existing meaning; no importance metric was added.
+
+The new service scans lightweight metadata and stored resolved CALL rows, then
+uses deterministic symbol classification, exact application-entry symbols,
+bounded entry/runtime-bridge traversal, code availability and capped non-runtime
+neighbor contributions. It returns JSON-serializable classifications, scores,
+reasons and path references. Generic stripped functions are UNKNOWN_INTERNAL,
+eligible alongside APPLICATION_CANDIDATE. External/thunk/runtime categories are
+demoted; runtime bridges remain useful traversal nodes. `is_library` is ignored.
+Only selected bounded function bodies are loaded. Traversal limits are eight
+hops, 256 visited nodes and 1,024 links, with a three-hop bounded application
+descendant supplement. Global metadata/graph sorting still scales with index size.
+
+A stored x86 thunk with exactly one literal direct JMP to a unique stored entry
+can supply a separate THUNK_JUMP traversal reference. Its source function and
+instruction address remain visible in relevance provenance. This never enters
+M3 or the evidence bundle as a CALL edge; indirect targets are never guessed.
+No path within these bounds establishes global unreachability. The selector
+preserves function/edge/text bounds and explicit omissions, without extra model
+calls, database migrations, indexing, target execution or Ghidra writes.
+See [full policy and PE/ELF validation](APPLICATION_RELEVANCE.md).
+
 `aire.ai.context_builder.ContextBuilder(store).build(EvidenceRequest(...))`
 returns an EvidenceBundle. `knowledge/evidence.py` contains request/result records
 and the budgeted renderer. No model, network API, natural-language interpretation,
@@ -299,13 +331,20 @@ M3's visited set prevents repeated traversal nodes; functions, artifacts and
 exact edges are deduplicated. One reason/route wins by priority, not semantic
 relevance. Only stored resolved CALL edges participate.
 
-No function→string xrefs are persisted. STRING evidence is always labeled
-binary-level, even if its address resembles a selected function address. IMPORT
+Schema v2 persists function-to-string/data references and immediate thunk bindings.
+M4 selects bounded `ReferenceEvidence` and `ThunkEvidence` records from the same
+read snapshot, preserving IDs, source addresses, types, operands and coverage.
+Referenced STRING artifacts precede unrelated artifacts and have `function-reference`
+scope only when an exact supporting reference is retained. Other strings remain
+binary-level; address resemblance never establishes ownership. IMPORT
 evidence gets higher priority only for an exact address match to a selected
 external function, labeled external-address-match; this does not infer a call
 or synthesize a thunk link. Other imports and all exports remain explicitly
 binary-level. Remaining artifacts sort by STRING/IMPORT/EXPORT, address, ID.
-Function-local strings would require a later explicit xref schema extension.
+M5 admits separate `XREF` and `THUNK` citation blocks. Thunks never become direct
+CALL edges. `InvestigationService` powers paged read-only agent queries and bounded
+chains with explicit cycle, depth, ambiguity and unresolved status. See
+[M9 implementation](M9_IMPLEMENTATION_2026-10-13.md).
 
 Warnings have no structured function association. Only the existing M1 `Import:`
 and `Analysis:` log prefixes are treated as global diagnostics and bounded by

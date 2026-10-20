@@ -30,7 +30,7 @@ class AgentToolTests(unittest.TestCase):
         return result['data']
 
     def test_registration(self):
-        self.assertEqual(len(self.tools.registry.catalog()), 12)
+        self.assertEqual(len(self.tools.registry.catalog()), 18)
         with self.assertRaises(ValueError):
             self.tools.registry.register(Tool('get_function', '', {}, lambda: None))
         with self.assertRaises(ValueError):

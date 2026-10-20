@@ -9,6 +9,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import partial
+from collections import OrderedDict
+from copy import deepcopy
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import ipaddress
 import json
@@ -16,6 +18,8 @@ import os
 from pathlib import Path
 import re
 import threading
+import time
+import logging
 from urllib.parse import parse_qs, urlparse
 from uuid import uuid4
 import webbrowser
@@ -26,6 +30,14 @@ from aire.agent.session import AgentSession
 from aire.agent.tools import AgentTools, serializable
 from aire.ai.ollama_client import OllamaClient
 from aire.security.rule_engine import _ReadOnlyRuleStore
+from aire.api.workspace import BinaryWorkspace
+from aire.api.chat_presentation import present
+from aire.agent.events import EventStream
+from aire.agent.runner import _binary_overview
+from aire.knowledge.application_relevance import RELEVANCE_POLICY_VERSION
+from aire.analysis.function_crosscheck import CROSSCHECK_POLICY_VERSION
+
+_LOG = logging.getLogger('aire.performance')
 
 _STATIC_DIR = Path(__file__).with_name('static')
 _SESSION_RE = re.compile(r'^[0-9a-f]{32}$')
@@ -53,6 +65,7 @@ class GuiSessionStore:
         self.directory.mkdir(parents=True, exist_ok=True)
         self._guard = threading.RLock()
         self._session_locks = {}
+        self._agents = OrderedDict()
 
     def _validate_id(self, session_id):
         if not isinstance(session_id, str) or not _SESSION_RE.fullmatch(session_id):
@@ -105,13 +118,31 @@ class GuiSessionStore:
             raise GuiError('Session not found')
         if path.stat().st_size > 100_000:
             raise GuiError('Session state exceeds size limit')
+        stamp = (path.stat().st_mtime_ns, path.stat().st_size)
+        with self._guard:
+            cached = self._agents.get(session_id)
+            if cached and cached[0] == stamp:
+                if binary_id:
+                    cached[1].require_binary(binary_id)
+                self._agents.move_to_end(session_id)
+                return deepcopy(cached[1])
         if binary_id is None:
             payload = json.loads(path.read_text(encoding='utf-8'))
             binary_id = payload.get('binary_id')
-        return AgentSession.load(path, binary_id)
+        agent = AgentSession.load(path, binary_id)
+        with self._guard:
+            self._agents[session_id] = (stamp, deepcopy(agent))
+            while len(self._agents) > 128:
+                self._agents.popitem(last=False)
+        return agent
 
     def save_agent(self, session_id, session):
         session.save(self._agent_path(session_id))
+        path = self._agent_path(session_id)
+        with self._guard:
+            self._agents[session_id] = ((path.stat().st_mtime_ns, path.stat().st_size), deepcopy(session))
+            while len(self._agents) > 128:
+                self._agents.popitem(last=False)
 
     def _load_transcript(self, session_id):
         path = self._transcript_path(session_id)
@@ -124,7 +155,7 @@ class GuiSessionStore:
             raise GuiError('Invalid session transcript')
         return data
 
-    def append_exchange(self, session_id, question, answer, status):
+    def append_exchange(self, session_id, question, answer, status, presentation=None):
         data = self._load_transcript(session_id)
         now = self._now()
         data['messages'].extend([
@@ -132,7 +163,11 @@ class GuiSessionStore:
             {'role': 'assistant', 'text': str(answer)[:_MAX_TRANSCRIPT_TEXT],
              'timestamp': now, 'status': str(status)[:64]},
         ])
+        if presentation:
+            data['messages'][-1]['presentation'] = presentation
         data['messages'] = data['messages'][-_MAX_TRANSCRIPT_MESSAGES:]
+        while len(data['messages']) > 2 and len(json.dumps(data, ensure_ascii=True)) > 4_000_000:
+            data['messages'] = data['messages'][2:]
         data['updated_at'] = now
         self._atomic_json(self._transcript_path(session_id), data)
         return data
@@ -185,6 +220,16 @@ class GuiApplication:
         self.model_config = model_config or GuiModelConfig()
         self.limits = limits or AgentLimits()
         self.client_factory = client_factory
+        self._shared_client = None
+        self._workspace_lock = threading.RLock()
+        self._workspaces = OrderedDict()
+        self._database_stamp = None
+        self.last_performance = {}  # Development instrumentation, never a UI footer.
+        if os.environ.get('AIRE_GUI_PERFORMANCE') == '1':
+            _LOG.setLevel(logging.INFO)
+            if not _LOG.handlers:
+                _LOG.addHandler(logging.StreamHandler())
+            _LOG.propagate = False
         with self.store() as store:
             binaries = store.list_binaries()
             if not binaries:
@@ -198,10 +243,47 @@ class GuiApplication:
             yield store
 
     def _client(self):
-        if self.client_factory:
-            return self.client_factory()
-        return OllamaClient(host=self.model_config.host, model=self.model_config.model,
-                            num_ctx=self.model_config.num_ctx)
+        with self._workspace_lock:
+            if self._shared_client is None:
+                self._shared_client = (self.client_factory() if self.client_factory else
+                    OllamaClient(host=self.model_config.host, model=self.model_config.model,
+                                 num_ctx=self.model_config.num_ctx))
+            return self._shared_client
+
+    def database_stamp(self):
+        # WAL mutations may not touch the main DB. Include replacement identity,
+        # sizes and nanosecond mtime/ctime; connections are reopened per request.
+        stamps = []
+        for path in (self.database, Path(str(self.database) + '-wal')):
+            try:
+                s = path.stat()
+                stamps.append((s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns, s.st_ctime_ns))
+            except FileNotFoundError:
+                stamps.append(None)
+        return tuple(stamps)
+
+    def workspace(self, binary_id, store):
+        with self._workspace_lock:
+            stamp = self.database_stamp()
+            if stamp != self._database_stamp:
+                self._workspaces.clear()
+                self._database_stamp = stamp
+            if binary_id not in self._workspaces:
+                workspace = BinaryWorkspace(store, binary_id)
+                if self.database_stamp() != stamp:
+                    raise GuiError('Analysis database changed during workspace load; retry the request')
+                workspace.database_stamp = stamp
+                self._workspaces[binary_id] = workspace
+                while len(self._workspaces) > 4:
+                    self._workspaces.popitem(last=False)
+            self._workspaces.move_to_end(binary_id)
+            return self._workspaces[binary_id]
+
+    def _check_database(self, stamp):
+        if self.database_stamp() != stamp:
+            with self._workspace_lock:
+                self._workspaces.clear()
+            raise GuiError('Analysis database changed during the request; retry against the refreshed workspace')
 
     def list_binaries(self):
         with self.store() as store:
@@ -209,8 +291,11 @@ class GuiApplication:
 
     def binary_metadata(self, binary_id):
         with self.store() as store:
-            resolve_binary(store, binary_id)
-            return AgentTools(store, binary_id).metadata()
+            binary_id = resolve_binary(store, binary_id).binary_id
+            workspace = self.workspace(binary_id, store)
+            data = deepcopy(workspace.metadata)
+            self._check_database(workspace.database_stamp)
+            return data
 
     def bootstrap(self, requested_binary=None):
         binaries = self.list_binaries()
@@ -248,8 +333,11 @@ class GuiApplication:
         with self.sessions.lock(session_id):
             session = self.sessions.load_agent(session_id)
             with self.store() as store:
-                result = AgentTools(store, session.binary_id).registry.run(
+                workspace = self.workspace(session.binary_id, store)
+                stamp = workspace.database_stamp
+                result = workspace.tools(store).registry.run(
                     'get_function', {'function': selector})
+                self._check_database(stamp)
             if not result['ok']:
                 raise GuiError(result['error']['message'])
             function = result['data']['function']
@@ -267,26 +355,133 @@ class GuiApplication:
                 if key in resolved:
                     resolved[key] = session.resolve_selector(resolved[key])
             with self.store() as store:
-                tools = AgentTools(store, session.binary_id)
+                workspace = self.workspace(session.binary_id, store)
+                tools = workspace.tools(store)
+                stamp = workspace.database_stamp
                 result = tools.registry.run(name, resolved)
-            if result['ok'] and name in ('get_function', 'get_decompiled_text', 'get_assembly'):
+                self._check_database(stamp)
+            if result['ok'] and name in ('get_function', 'get_decompiled_text', 'get_assembly', 'crosscheck_function'):
                 function = result['data'].get('function')
                 if function:
                     session.current_function_id = function['function_id']
                     self.sessions.save_agent(session_id, session)
             return result
 
-    def run_chat(self, session_id, question, on_event=None, cancelled=None):
+    def run_chat(self, session_id, question, on_event=None, cancelled=None, on_text=None, on_context=None):
         if not isinstance(question, str) or not question.strip():
             raise GuiError('Question must not be empty')
+        started = time.perf_counter()
         with self.sessions.lock(session_id):
             session = self.sessions.load_agent(session_id)
+            resolution = time.perf_counter() - started
             with self.store() as store:
-                runner = AgentRunner(store, self._client(), limits=self.limits)
-                result = runner.run(session, question.strip(), on_event=on_event, cancelled=cancelled)
+                tick = time.perf_counter()
+                workspace = self.workspace(session.binary_id, store)
+                workspace_resolution = time.perf_counter() - tick
+                stamp = workspace.database_stamp
+                client = self._client()
+                key = (RELEVANCE_POLICY_VERSION, CROSSCHECK_POLICY_VERSION, question.strip().lower(), getattr(client, 'model', None),
+                       getattr(client, 'num_ctx', None), self.limits.evidence_chars)
+                overview = _binary_overview(question)
+                tools = workspace.tools(store, assembly='assembly' in question.lower())
+                first_visible = None
+                first_summary = None
+                model_performance = {'model_seconds': 0.0, 'model_requests': 0}
+                def preview(text):
+                    nonlocal first_visible, first_summary
+                    if text and first_summary is None:
+                        first_summary = time.perf_counter() - started
+                    if text and first_visible is None:
+                        first_visible = time.perf_counter() - started
+                    if on_text:
+                        on_text(text)
+                with workspace.lock:
+                    cached = deepcopy(workspace.overview_answers.get(key)) if overview else None
+                if cached and not (cancelled and cancelled()):
+                    stream = EventStream(on_event)
+                    stream.emit('agent_started', 'A.I.R.E. agent started')
+                    stream.emit('progress', 'Reusing grounded binary overview')
+                    result = cached
+                    result.events = stream.events
+                    preview(result.response.summary.claim)
+                    session.remember(question, result.response.summary.claim,
+                        [vars(p) for p in result.response.evidence_bundle.provenance], result.tool_results)
+                    stream.emit('answer_completed', 'Grounded answer completed')
+                    stream.emit('agent_finished', 'Agent finished', metadata={'status': result.status, 'tool_calls': 0})
+                else:
+                    if overview:
+                        first_visible = time.perf_counter() - started
+                        if on_context:
+                            on_context(workspace.overview_preview())
+                    actions = self._prepared_actions(workspace, session, question, tools)
+                    runner = AgentRunner(store, client, limits=self.limits)
+                    result = runner.run(session, question.strip(), on_event=on_event, cancelled=cancelled,
+                        tools=tools, prepared_actions=actions, compact=True, on_text=preview,
+                        deterministic='suspicious behavior' in question.lower() or 'call relationships' in question.lower(),
+                        performance=model_performance)
+                    tick = time.perf_counter()
+                    present(result)
+                    formatting = time.perf_counter() - tick
+                    if overview and result.status == 'completed' and result.response:
+                        with workspace.lock:
+                            workspace.overview_answers[key] = deepcopy(result)
+                            while len(workspace.overview_answers) > 4:
+                                workspace.overview_answers.popitem(last=False)
+                self._check_database(stamp)
             self.sessions.save_agent(session_id, session)
-            self.sessions.append_exchange(session_id, question.strip(), result.answer, result.status)
+            self.sessions.append_exchange(session_id, question.strip(), result.answer, result.status, result.presentation)
+            model_timing = result.response.timing if result.response and not cached else {}
+            if first_visible is None and result.status == 'completed':
+                first_visible = time.perf_counter() - started
+            self.last_performance = {'total_seconds': time.perf_counter() - started,
+                'session_resolution_seconds': resolution, 'tool_retrieval_seconds': tools.retrieval_seconds,
+                'workspace_resolution_seconds': workspace_resolution,
+                'evidence_build_seconds': tools.evidence_seconds, 'response_formatting_seconds': 0 if cached else formatting,
+                'first_visible_seconds': first_visible, 'overview_cache_hit': bool(cached),
+                'first_summary_seconds': first_summary,
+                'cache_hits': workspace.hits, 'cache_misses': workspace.misses, **model_timing, **model_performance}
+            _LOG.info('chat_performance %s', json.dumps(self.last_performance, sort_keys=True))
             return result
+
+    @staticmethod
+    def _prepared_actions(workspace, session, question, tools):
+        lower = question.lower()
+        if not session.current_function_id and any(s in lower for s in (
+                'this function', 'this assembly', 'current function', 'what calls it', 'who calls it')):
+            raise GuiError('Select a function from Functions, or name a stored function in your question.')
+        if _binary_overview(question) or any(s in lower for s in ('suspicious behavior', 'crypto or hashing')):
+            actions = [('binary_metadata', {}), ('rank_application_functions', {'limit': 10})]
+            if workspace.seed_ids:
+                actions.append(('get_callees', {'function': workspace.seed_ids[0], 'limit': 12}))
+            actions += [('get_artifacts', {'kind': 'IMPORT', 'limit': 20}),
+                        ('get_artifacts', {'kind': 'STRING', 'limit': 20}), ('security_findings', {})]
+            if 'crypto or hashing' in lower:
+                actions.append(('list_functions', {'limit': 100}))
+                candidates = [r['function']['function_id'] for r in workspace.preloaded[0]['data'].get('items', [])
+                              if re.search(r'(?:crypto|hash|sha[0-9]*|md5|aes|encrypt|decrypt|checksum)',
+                                           r['function']['current_name'], re.IGNORECASE)
+                              and not r['function']['is_external'] and not r['function']['is_thunk']]
+                if candidates:
+                    # Name matches guide retrieval only; code must support any
+                    # cryptographic interpretation in the final validated prompt.
+                    tools.overview_seeds = tuple(candidates[:2])
+            return actions
+        if 'important functions' in lower:
+            return [('rank_functions', {'metric': 'unique_callers', 'limit': 10})]
+        if any(s in lower for s in ('what calls', 'who calls', 'callers of', 'call relationships', 'what does it call')):
+            if not session.current_function_id:
+                return []
+            names = ('get_callers', 'get_callees') if 'call relationships' in lower else (
+                ('get_callees',) if 'what does it call' in lower else ('get_callers',))
+            return [(n, {'function': session.current_function_id, 'limit': 20}) for n in names]
+        # Exact lookup still occurs inside AgentRunner. Recognized explanations
+        # need evidence retrieval, not a model decision to retrieve that evidence.
+        if re.search(r'\b(?:explain|summarize|summarise)\b', lower):
+            if session.current_function_id or any(
+                    tools.query.find_functions(session.binary_id, word)
+                    for word in dict.fromkeys(re.findall(r'[A-Za-z0-9_:.]+', question))):
+                return []
+        return None
 
 
 class AireHttpServer(ThreadingHTTPServer):
@@ -475,6 +670,8 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
         try:
             result = self.app.run_chat(session_id, question,
                 on_event=lambda event: emit('event', event.to_dict()),
+                on_text=lambda text: emit('text', {'text': text, 'provisional': True}),
+                on_context=lambda text: emit('context', {'text': text}),
                 cancelled=lambda: disconnected)
             emit('result', result.to_dict())
         except Exception as exc:

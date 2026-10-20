@@ -4,6 +4,7 @@ import json
 from datetime import datetime, timezone
 
 from aire.knowledge.models import ArtifactRecord, BinaryRecord, FunctionRecord
+from aire.profiling import count, decompile_attempt, profiled, stage
 
 
 def binary_id(sha256: str) -> str:
@@ -65,8 +66,10 @@ def extract_binary(program, path, digest, warnings):
     )
 
 
+@profiled('decompilation')
 def decompile_function(decompiler, function, options, monitor, warnings, context):
     def attempt():
+        decompile_attempt(context)
         result = decompiler.decompileFunction(function, options.decompile_timeout_seconds, monitor)
         if result is None:
             raise RuntimeError('decompiler returned no result')
@@ -75,10 +78,13 @@ def decompile_function(decompiler, function, options, monitor, warnings, context
         message = str(result.getErrorMessage() or '')
         if message:
             warnings.append(f'{context} decompiler: {message}')
-        return str(result.getDecompiledFunction().getC())
+        text = str(result.getDecompiledFunction().getC())
+        count('decompile_successes')
+        return text
     return read_fact(warnings, f'{context} decompilation', attempt)
 
 
+@profiled('function_metadata')
 def extract_functions(program, functions, binary, options, monitor, warnings):
     from ghidra.program.model.block import BasicBlockModel
     from ghidra.app.decompiler import DecompInterface
@@ -88,14 +94,16 @@ def extract_functions(program, functions, binary, options, monitor, warnings):
     decompiler = None
     try:
         if options.decompile:
-            decompiler = DecompInterface()
-            try:
-                if not decompiler.openProgram(program):
-                    raise RuntimeError(str(decompiler.getLastMessage()))
-            except Exception as exc:
-                warnings.append(f'Decompiler initialization: {exc}')
-                decompiler.dispose()
-                decompiler = None
+            with stage('decompiler_setup'):
+                count('decompiler_instances')
+                decompiler = DecompInterface()
+                try:
+                    if not decompiler.openProgram(program):
+                        raise RuntimeError(str(decompiler.getLastMessage()))
+                except Exception as exc:
+                    warnings.append(f'Decompiler initialization: {exc}')
+                    decompiler.dispose()
+                    decompiler = None
         for function in functions:
             address = str(function.getEntryPoint())
             name = str(function.getName())
@@ -114,7 +122,8 @@ def extract_functions(program, functions, binary, options, monitor, warnings):
             if external:
                 record.instruction_count = record.basic_block_count = record.branch_count = 0
             else:
-                buffer = AssemblyBuffer(options.max_assembly_instructions, options.max_assembly_characters)
+                with stage('assembly'):
+                    buffer = AssemblyBuffer(options.max_assembly_instructions, options.max_assembly_characters)
                 def instructions():
                     count = branches = 0
                     for instruction in program.getListing().getInstructions(function.getBody(), True):
@@ -123,14 +132,16 @@ def extract_functions(program, functions, binary, options, monitor, warnings):
                         if options.include_assembly and not buffer.truncated:
                             buffer.append(f'{instruction.getAddress()}: {instruction}')
                     return count, branches
-                metrics = fact('instructions/branches', instructions)
-                if metrics is not None:
-                    record.instruction_count, record.branch_count = metrics
-                if options.include_assembly:
-                    record.assembly = buffer.text()
-                    record.assembly_truncated = buffer.truncated
-                record.basic_block_count = fact('basic blocks', lambda: sum(
-                    1 for _ in blocks.getCodeBlocksContaining(function.getBody(), monitor)))
+                with stage('assembly'):
+                    metrics = fact('instructions/branches', instructions)
+                    if metrics is not None:
+                        record.instruction_count, record.branch_count = metrics
+                    if options.include_assembly:
+                        record.assembly = buffer.text()
+                        record.assembly_truncated = buffer.truncated
+                with stage('basic_blocks'):
+                    record.basic_block_count = fact('basic blocks', lambda: sum(
+                        1 for _ in blocks.getCodeBlocksContaining(function.getBody(), monitor)))
                 if options.decompile:
                     if decompiler is None:
                         warnings.append(f'{context} decompilation: decompiler unavailable')
@@ -140,10 +151,12 @@ def extract_functions(program, functions, binary, options, monitor, warnings):
             records.append(record)
     finally:
         if decompiler is not None:
-            decompiler.dispose()
+            with stage('cleanup'):
+                decompiler.dispose()
     return records
 
 
+@profiled('artifact_setup')
 def extract_artifacts(program, binary, options, warnings):
     from ghidra.program.model.data import StringDataInstance
     from ghidra.program.model.symbol import SymbolType
@@ -157,23 +170,26 @@ def extract_artifacts(program, binary, options, warnings):
         artifacts[identity] = ArtifactRecord(identity, binary, kind, address, value)
 
     if options.include_strings:
-        for data in program.getListing().getDefinedData(True):
-            def string():
-                if StringDataInstance.isString(data):
-                    add('STRING', data.getAddress(),
-                        StringDataInstance.getStringDataInstance(data).getStringValue())
-            read_fact(warnings, f'String at {data.getAddress()}', string)
+        with stage('strings'):
+            for data in program.getListing().getDefinedData(True):
+                def string():
+                    if StringDataInstance.isString(data):
+                        add('STRING', data.getAddress(),
+                            StringDataInstance.getStringDataInstance(data).getStringValue())
+                read_fact(warnings, f'String at {data.getAddress()}', string)
     symbols = program.getSymbolTable()
     if options.include_imports:
-        for symbol in symbols.getExternalSymbols():
-            def imported():
-                if symbol.getSymbolType() in (SymbolType.FUNCTION, SymbolType.LABEL):
-                    add('IMPORT', symbol.getAddress(), symbol.getName(True))
-            read_fact(warnings, f'Import symbol {symbol.getID()}', imported)
+        with stage('imports'):
+            for symbol in symbols.getExternalSymbols():
+                def imported():
+                    if symbol.getSymbolType() in (SymbolType.FUNCTION, SymbolType.LABEL):
+                        add('IMPORT', symbol.getAddress(), symbol.getName(True))
+                read_fact(warnings, f'Import symbol {symbol.getID()}', imported)
     if options.include_exports:
-        for address in symbols.getExternalEntryPointIterator():
-            def exported():
-                for symbol in symbols.getSymbols(address):
-                    add('EXPORT', address, symbol.getName(True))
-            read_fact(warnings, f'Export at {address}', exported)
+        with stage('exports'):
+            for address in symbols.getExternalEntryPointIterator():
+                def exported():
+                    for symbol in symbols.getSymbols(address):
+                        add('EXPORT', address, symbol.getName(True))
+                read_fact(warnings, f'Export at {address}', exported)
     return list(artifacts.values())
