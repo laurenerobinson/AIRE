@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/argc_decide",
+  "upstream_source_paths": [
+    "tests_src/argc_decide.c"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "STT_FILE is argc_decide.c. main is 0x4004b6. Comparisons at 0x4004c1 and 0x4004ce test 1 and 2; MOV EAX,0xa at 0x4004c7/0x4004d4 and MOV EAX,0 at 0x4004db establish returns.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/argc_decide/argc_decide",
+      "role": "binary",
+      "size": 6618,
+      "sha256": "e8617de193c86ae4375ef1f08d7a678e906d61e4b53ca62b1055f12983386eca",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/argc_decide",
+      "git_blob_sha1": "d249ff356671cbbc8a55132292d2dc9d50fc9855"
+    },
+    {
+      "path": "angr/argc_decide/argc_decide.c",
+      "role": "source",
+      "size": 164,
+      "sha256": "109f0fd0e1b1a1d6aedff21ab03acb74482761aa3f8426c1b6d4616e1f51295e",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/argc_decide.c",
+      "git_blob_sha1": "4cb25c89670d72ddabfef02b4f0109f18ba664e7"
+    }
+  ]
+}

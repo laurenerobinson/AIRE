@@ -1,0 +1,69 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86/windows/TLS.exe",
+  "upstream_source_paths": [
+    "tests_src/windows/AngrTests/TLS/tls.c"
+  ],
+  "upstream_support_paths": [
+    "tests_src/windows/AngrTests/TLS/TLS.vcxproj",
+    "tests_src/windows/AngrTests/AngrTests.sln"
+  ],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "Commit 822c070f87d1104283ffbd4ce0bdac0f1dde9c4f updates binary, tls.c and TLS.vcxproj together. Project uses v140; PE CodeView points to AngrTests\\Debug\\TLS.pdb. Ghidra bodies 0x4116c0 (increment), 0x411730 (main), 0x411800 (decrement) agree. FS:[0x2c] and _tls_index select storage; application TLS offset is +0x104. CreateThread gets 0x41135c, a jump thunk to the worker.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/windows_tls_x86/TLS.exe",
+      "role": "binary",
+      "size": 36864,
+      "sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86/windows/TLS.exe",
+      "git_blob_sha1": "bb27c96de22ee72c4e14acee5673f2618128f9f9"
+    },
+    {
+      "path": "angr/windows_tls_x86/tls.c",
+      "role": "source",
+      "size": 1702,
+      "sha256": "809428c095cea7f87a818c2d4dfa91d0e6d6590b370f7898aa4e7e25aa17b804",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/AngrTests/TLS/tls.c",
+      "git_blob_sha1": "c7c3d4de6ac2cb43ac4e488fd6025789dee02170"
+    },
+    {
+      "path": "angr/windows_tls_x86/TLS.vcxproj",
+      "role": "support",
+      "size": 7298,
+      "sha256": "7020be05ded3aefcba28578b0635633786f3d66cd397f1299276caaaf2419812",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/AngrTests/TLS/TLS.vcxproj",
+      "git_blob_sha1": "41ddd3ccfc8edbafa1460705082a8d39a1b9ac15"
+    },
+    {
+      "path": "angr/windows_tls_x86/AngrTests.sln",
+      "role": "support",
+      "size": 1291,
+      "sha256": "48d06f269ecaf64eaa283d50d739308125458aebd4c064c9b0e36997f4ef3698",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/AngrTests/AngrTests.sln",
+      "git_blob_sha1": "f4abc52d5552ee0bdfc57c3f0d8cb42ae56cd698"
+    }
+  ]
+}

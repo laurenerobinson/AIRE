@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/datadep_test",
+  "upstream_source_paths": [
+    "tests_src/datadep_test.c"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "STT_FILE datadep_test.c and calc_sum=0x40064c, gen_random=0x400684, buf_cpy=0x4006db, main=0x400720. calc_sum call at 0x400774 writes a scalar; lengths 0x400 are passed at 0x400780/0x40079b/0x4007b2. Copy callsites 0x4007a6/0x4007bf target the same helper; global destination is 0x601080.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/datadep_test/datadep_test",
+      "role": "binary",
+      "size": 8826,
+      "sha256": "3ea90813e09d1ef110505cb2030dbe3d50172540c389229cdf7261f1db3fe980",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/datadep_test",
+      "git_blob_sha1": "d878592fe42564203ea916f1833cc4bebd72520b"
+    },
+    {
+      "path": "angr/datadep_test/datadep_test.c",
+      "role": "source",
+      "size": 847,
+      "sha256": "f805ce4d8f84239cd8c2f0ae5655c7ad2bdbbbe50753030e127477e2962bfba3",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/datadep_test.c",
+      "git_blob_sha1": "87c06393d8094302801caa6d17cfa353e572a458"
+    }
+  ]
+}

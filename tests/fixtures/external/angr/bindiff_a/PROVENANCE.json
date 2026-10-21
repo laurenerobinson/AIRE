@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/bindiff_a",
+  "upstream_source_paths": [
+    "tests_src/bindiff_a.c"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "STT_FILE bindiff_a.c; main=0x400616, get_num=0x40064c, print_bad=0x400689. Compare at 0x40062b uses 0x539. get_num passes 0x10 to fgets. main loops at 0x40064a. All three literals are present.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/bindiff_a/bindiff_a",
+      "role": "binary",
+      "size": 7456,
+      "sha256": "f7eef0a7d8d2e0f866551c10145a2b0e9c40229ea3c85cd753a3ba0545d49616",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/bindiff_a",
+      "git_blob_sha1": "9638ac5afa2f9790b105b1246c9ce99c49917b20"
+    },
+    {
+      "path": "angr/bindiff_a/bindiff_a.c",
+      "role": "source",
+      "size": 424,
+      "sha256": "f23361b468db1c96917061c083e1e0ad62928ebed50ec49d32ccce2d85aa8002",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/bindiff_a.c",
+      "git_blob_sha1": "e407a9edce0264df7f96d246ea2d1687a7032db5"
+    }
+  ]
+}

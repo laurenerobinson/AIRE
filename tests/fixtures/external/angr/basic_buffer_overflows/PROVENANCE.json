@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/basic_buffer_overflows",
+  "upstream_source_paths": [
+    "tests_src/basic_buffer_overflows.c"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "STT_FILE and all three named functions agree. Entry addresses: overflow_1=0x40055c, overflow_2=0x4005b6, overflow_3=0x40063e, main=0x40068f. Bounds 0x27,0x77,0x4f,0x64 and initialization 0xc8 appear in assembly; overflow_3 increments at 0x40066f. main callsites are 0x400698/0x4006a2/0x4006ac.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/basic_buffer_overflows/basic_buffer_overflows",
+      "role": "binary",
+      "size": 8651,
+      "sha256": "68f759392c97968d906faf1a34cf1c50f5e86c8926926b5009d6e767429d7715",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/basic_buffer_overflows",
+      "git_blob_sha1": "3cb2e1a8494c3445de230e35a46c31737d6ed5e2"
+    },
+    {
+      "path": "angr/basic_buffer_overflows/basic_buffer_overflows.c",
+      "role": "source",
+      "size": 553,
+      "sha256": "faa9e56c5afd486f7102a7dba99710edaf77168e45179d51f61853ac18b7e151",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/basic_buffer_overflows.c",
+      "git_blob_sha1": "47036023bbd5063163ccb670ece976fcb07dda87"
+    }
+  ]
+}

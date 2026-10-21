@@ -1,0 +1,190 @@
+{
+  "unchanged": true,
+  "checked_files": 46,
+  "files": {
+    "tests/README.md": {
+      "sha256": "8d94cd99d32030158c9f900c28b6ed7fcc54a85cf440e006b20fab1fd83bdaa0",
+      "size": 4866
+    },
+    "tests/source/crackme.c": {
+      "sha256": "8023a3a3473c82b9029d60307e18541e7a23e7f5f6bebfa06269e83d7529c98a",
+      "size": 2098
+    },
+    "tests/source/analysis_target.c": {
+      "sha256": "5c05517a18d88f3549550ad91df2e572355ae0ab908ce5f30b80059cbdfa3977",
+      "size": 630
+    },
+    "tests/source/raptor7_aire.c": {
+      "sha256": "5e58088efebbaa63c0a2dfba41e778d2260345e399e97445f79a834d99344cf6",
+      "size": 56750
+    },
+    "tests/source/crackmedemo.c": {
+      "sha256": "da363d2525d4434684838e0f65fded6e1a79705a34eaed69dab24aeb3f2f863c",
+      "size": 11260
+    },
+    "tests/source/raptor7.c": {
+      "sha256": "2d88ef6be6d4e72f321cbade9cfee7d38fd307d07dd4655e78a990e318250d8b",
+      "size": 7141
+    },
+    "tests/source/aire_test.c": {
+      "sha256": "b92042039740a1fb8ad355c50478edd5e30851e737f267c75eeb03e2252cb264",
+      "size": 29896
+    },
+    "tests/ground_truth/RAPTOR7_PRESERVED_BINARY_FUNCTION_MAP.txt": {
+      "sha256": "2ee2f2e70560a7661443ec49811a828dfd28d63ec6b067a843d1d258f38e6712",
+      "size": 705
+    },
+    "tests/ground_truth/RAPTOR7_FUNCTION_MAP.txt": {
+      "sha256": "b4030d2f823b32af2fe39ac6de73f1e863beb930e3e58c3e7736d880b9e38077",
+      "size": 545
+    },
+    "tests/ground_truth/FUNCTION_MAP.txt": {
+      "sha256": "d40ef3e893b8c5d897ad70963d2b60f2414d5cf3f4b56e99a988ab6bb1171a35",
+      "size": 570
+    },
+    "tests/integration/README.md": {
+      "sha256": "96b5e681bbea1b017f00ce6edc5c8e8027267f48cea465d16adbd23c88c1e119",
+      "size": 8780
+    },
+    "tests/binaries/crackmedemo": {
+      "sha256": "cf913475037eabbbc761e1d6ea39059bd74b6b8fc0b473acab891cbb9c431045",
+      "size": 14600
+    },
+    "tests/binaries/analysis_target": {
+      "sha256": "14c673ad5e0809ad4ec1be333ac2e4591abed9e7d0a8bf5a69ead647892b043e",
+      "size": 16072
+    },
+    "tests/binaries/raptor7": {
+      "sha256": "7136f0228fc60870aa7ce97078b337c39b4a4f72b5b3b19bdb92d7f784a00b3b",
+      "size": 14624
+    },
+    "tests/binaries/aire_test_stripped": {
+      "sha256": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de",
+      "size": 22880
+    },
+    "tests/binaries/crackme": {
+      "sha256": "0fa5cddf17d6311f931a26ec7858973c26585c3fbd38bc2a0b01d91f4d229b45",
+      "size": 14584
+    },
+    "tests/binaries/raptor7_aire": {
+      "sha256": "9acf1dc538706fce4423f574fff311126ab9f84afe74160c5aa2d1bf1e0bc07e",
+      "size": 39480
+    },
+    "tests/binaries/raptor7_aire_debug": {
+      "sha256": "2d56fc5c7206f02a4f0dbbe1b0d2c854697c3ca0dc728729b3e4a7a29db889f9",
+      "size": 63192
+    },
+    "tests/binaries/aire_test_debug": {
+      "sha256": "96f662fbe24056f0c5b5a3070c203883df8df013b4fe4d2400a4871b5afc9e40",
+      "size": 38664
+    },
+    "tests/fixtures/security_rules/unsafe_copy.c": {
+      "sha256": "d1f6853b499ca453271199515775274bb07c4e2dcd52ca3304a7a3ce33714f40",
+      "size": 356
+    },
+    "tests/fixtures/security_rules/build.sh": {
+      "sha256": "f42dd96a26810967a7c1b0b4a5759bf2672e785022b9c7f663229c04ac756c74",
+      "size": 519
+    },
+    "tests/fixtures/security_rules/dangerous_gets.c": {
+      "sha256": "abfea605e98b812ee52350a5219dcb890fac0ae6151b32beeaec82ad06a26785",
+      "size": 341
+    },
+    "tests/fixtures/security_rules/GROUND_TRUTH.md": {
+      "sha256": "d5f8fa1da461e29fd893940e333cfa9c234e3b16e00ab29342a356a1449261d0",
+      "size": 2588
+    },
+    "tests/fixtures/security_rules/safe_copy.c": {
+      "sha256": "75311c77238fd3aa88ba17d4786d20b772069ebfea3bd3565077746e9fcb5233",
+      "size": 482
+    },
+    "tests/fixtures/simple_elf/build.sh": {
+      "sha256": "7661e59d4e6772bfb06d3d958ee39517b5ad286c1ce2600c46494fa250d1e813",
+      "size": 1413
+    },
+    "tests/fixtures/simple_elf/GROUND_TRUTH.md": {
+      "sha256": "381609d4a92a11b7096c153223ea26dab9dd159d8e23e49098e4401f47a33401",
+      "size": 16614
+    },
+    "tests/fixtures/simple_elf/aire_test_binary_stripped": {
+      "sha256": "08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188",
+      "size": 14424
+    },
+    "tests/fixtures/simple_elf/aire_test_binary.c": {
+      "sha256": "5ecc9043adfdd4182692fd63caeeadfd1973d09e1c63c32ba9857f7eae88498d",
+      "size": 3644
+    },
+    "tests/fixtures/simple_elf/aire_test_binary": {
+      "sha256": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e",
+      "size": 19600
+    },
+    "professor_samples/function_overloading/README.md": {
+      "sha256": "2e5ad477e13bf7af195ce782bd96b6a80bbc2a46d5bd347bce4ad1bf57ba7554",
+      "size": 15219
+    },
+    "professor_samples/function_overloading/analysis/evidence.md": {
+      "sha256": "59564f4907ee514fe8ee4558fc0b36bfcf2a628385e6a734c0b3097da4c8398f",
+      "size": 21802
+    },
+    "professor_samples/function_overloading/analysis/index.json": {
+      "sha256": "a0973dcf37641bdaec0cf5067dc7d0e93a84d64bc5b7299c5b84085ce0f7b211",
+      "size": 654967
+    },
+    "professor_samples/function_overloading/analysis/integrity.json": {
+      "sha256": "76333c8b4b208b330c6717cb11d94977236179b96784aa309591e948f1d362b2",
+      "size": 1260
+    },
+    "professor_samples/function_overloading/analysis/xrefs.json": {
+      "sha256": "82cfd5cb7943a3a038681f13b3e9ff9dad25165044ede053b3ef9f06e09bb66e",
+      "size": 392782
+    },
+    "professor_samples/function_overloading/analysis/demo-full-transcript.txt": {
+      "sha256": "a99e061f3ba3c0edfbfe86e2a3cd71527f81f12e00e93556f9c555885df37742",
+      "size": 11434
+    },
+    "professor_samples/function_overloading/analysis/demo-transcript.txt": {
+      "sha256": "97fd2945c1e7a1b44f3c8f34b15825ff4296e64bff628cb69290970e47c9cd4d",
+      "size": 3841
+    },
+    "professor_samples/function_overloading/analysis/demo-stderr.txt": {
+      "sha256": "641216f2a54cdc8ef1842e40e34826824b1ab840f975f511f688ac01d9236a52",
+      "size": 78
+    },
+    "professor_samples/function_overloading/analysis/indexer.log": {
+      "sha256": "641216f2a54cdc8ef1842e40e34826824b1ab840f975f511f688ac01d9236a52",
+      "size": 78
+    },
+    "professor_samples/function_overloading/analysis/demo-full-stderr.txt": {
+      "sha256": "641216f2a54cdc8ef1842e40e34826824b1ab840f975f511f688ac01d9236a52",
+      "size": 78
+    },
+    "professor_samples/function_overloading/analysis/pe-headers.txt": {
+      "sha256": "a66bc51443719a3d7f1cbb8508dd8913ffd0b69b299d0207c31a6c257c104f31",
+      "size": 28447
+    },
+    "professor_samples/function_overloading/analysis/xrefs.log": {
+      "sha256": "641216f2a54cdc8ef1842e40e34826824b1ab840f975f511f688ac01d9236a52",
+      "size": 78
+    },
+    "professor_samples/function_overloading/analysis/objdump-overloads-and-caller.txt": {
+      "sha256": "46fabae8233cc40eafc9255a00267ea4eb1734e80f9a0f6afa99726fee02a2dc",
+      "size": 11169
+    },
+    "professor_samples/function_overloading/original/FunctionOverloading.exe": {
+      "sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07",
+      "size": 49664
+    },
+    "professor_samples/function_overloading/original/SHA256SUMS": {
+      "sha256": "0d3cff2a08d99a962acae2d873448a915d236a71235b5a0baab0240c1ad39049",
+      "size": 90
+    },
+    "professor_samples/function_overloading_elf/original/FunctionOverloading": {
+      "sha256": "be3d58ba6ba922f2e8499025dc28a65d9cc97fe5ca6332310ced1622b7e115e3",
+      "size": 33768
+    },
+    "professor_samples/function_overloading_elf/original/SHA256SUMS": {
+      "sha256": "963dcfc76c124972a3436c7a3b417797c62250e5307bde9e5ce75d11feddc48b",
+      "size": 86
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/windows/invalid_export_forwarder.dll",
+  "upstream_source_paths": [
+    "tests_src/windows/invalid_export_forwarder.c"
+  ],
+  "upstream_support_paths": [
+    "tests_src/windows/invalid_export_forwarder.def",
+    "tests_src/windows/build_invalid_export_forwarder.py"
+  ],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "Commit 9bea8f2777201c50b96a568d7a7ecab8e0fe6cab adds binary, C, .def and build script together. Builder states gcc 15.3.0/binutils 2.46/mingw-w64 14.0.0, -shared -nostdlib, image base 0x180000000, timestamp disabled. PE DLL bit is set; two exports have RVAs 0x5059 (forwarder) and 0x1000 (local). Bytes at forwarder are 75 9f 65 72 33 32 2e 4d 65 73 73 61 67 65 42 6f 78 41 00. local_export at 0x180001000 returns 0x2a.",
+    "accuracy_scope": "local_export and raw export structure only"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/windows_invalid_export_forwarder/invalid_export_forwarder.dll",
+      "role": "binary",
+      "size": 6276,
+      "sha256": "8b2ca323c14b2f3a46142a027713fd50f56b1baf0d4ab83c38c01cc56f4cbb3a",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/windows/invalid_export_forwarder.dll",
+      "git_blob_sha1": "ec3b8ac22a1642c36cf1dca42b8bea10f8551921"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/invalid_export_forwarder.c",
+      "role": "source",
+      "size": 194,
+      "sha256": "a7060c35f041a91fbb2d06bdbbe251dbb27994d1fbae993aeae7052fe5444c26",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/invalid_export_forwarder.c",
+      "git_blob_sha1": "ed99b1a85ea341acb20a8fbeb43d7fa0035e15c9"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/invalid_export_forwarder.def",
+      "role": "support",
+      "size": 104,
+      "sha256": "06386925b0f125386a35718b8464b325ecb5eca29c8288021abdeb291c7cca7f",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/invalid_export_forwarder.def",
+      "git_blob_sha1": "72171d2f9887d388e417136382e65abc04d41f20"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/build_invalid_export_forwarder.py",
+      "role": "support",
+      "size": 2472,
+      "sha256": "924bb7542b1d3b6efc5d2db817116e220f0305cf54d104feee3c3d952bf3b5e8",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/build_invalid_export_forwarder.py",
+      "git_blob_sha1": "45ad29f6dfa45702e1cbec0f80ae9314138e7cab"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/bindiff_b",
+  "upstream_source_paths": [
+    "tests_src/bindiff_b.c"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "STT_FILE bindiff_b.c. main=0x400616, get_num=0x40066a, print_good=0x4006a7, print_bad=0x4006b7. Equality checks at 0x40062b/0x400634 use 0x539/0x1ca3. Compiler lowers the third predicate to arithmetic and unsigned range check at 0x40063d\u20130x400650, not a DIV instruction. Loop back is 0x400668.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/bindiff_b/bindiff_b",
+      "role": "binary",
+      "size": 7576,
+      "sha256": "b3308d8e7a68fa217d561dbfac55597e176941fb0545f7721476440b0cc09d1e",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/bindiff_b",
+      "git_blob_sha1": "f7e75ec9ecd03e225c3df9b33d12dfb999e8d471"
+    },
+    {
+      "path": "angr/bindiff_b/bindiff_b.c",
+      "role": "source",
+      "size": 536,
+      "sha256": "90e85e6dd480a94cd3011aa4056d9b2e52f9579f8f706c4fcb0a88616a4fd6d5",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/bindiff_b.c",
+      "git_blob_sha1": "9a371547817fa405e507660a2dee61fc65172d5d"
+    }
+  ]
+}

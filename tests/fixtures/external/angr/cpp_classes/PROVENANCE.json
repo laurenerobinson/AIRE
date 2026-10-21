@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/cpp_classes",
+  "upstream_source_paths": [
+    "tests_src/cpp_classes.cpp"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "STT_FILE cpp_classes.cpp, demangled A/B/C methods, RTTI and vtable symbols agree with the source. ELF main is 0x129d (Ghidra default 0x10129d). Direct C::bar call is 0x134b; computed calls are 0x1361, 0x1378 and 0x138f. Thunk at 0x14cb subtracts 8 from RDI then jumps to C::tool at 0x1490. C::C sets k at offset 0x10 to zero.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/cpp_classes/cpp_classes",
+      "role": "binary",
+      "size": 18416,
+      "sha256": "820b9c10aa8d8a422d464bcf920e15aef0315a865902c6798e64673f8225a985",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/cpp_classes",
+      "git_blob_sha1": "7bd3189d72c3e5a8c20e5d6079a31f5c809c9cde"
+    },
+    {
+      "path": "angr/cpp_classes/cpp_classes.cpp",
+      "role": "source",
+      "size": 789,
+      "sha256": "368b899d04b0a34fab36d0fe1dc18d8c36e17bb4c0b72e03187a085fbd80eb0c",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/cpp_classes.cpp",
+      "git_blob_sha1": "169205ba00ed886957cbf9168698d9a50e46e767"
+    }
+  ]
+}

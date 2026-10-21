@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/brancher",
+  "upstream_source_paths": [
+    "tests_src/brancher.c"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "STT_FILE names brancher.c. main at 0x400544 calls read at 0x400569 with length 4. Comparisons at 0x400571/0x400583 use 0xa/0x13; 0x4005a1 masks by 1. The unsigned jumps and all six literals agree with the source.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/brancher/brancher",
+      "role": "binary",
+      "size": 8430,
+      "sha256": "2ecad01a776415f64653de5ca89514d79a2bae68f7ffb4b1ef606f6f4e799541",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/brancher",
+      "git_blob_sha1": "932c013006c5d542b2ef95e1bc1344bcddc1c94e"
+    },
+    {
+      "path": "angr/brancher/brancher.c",
+      "role": "source",
+      "size": 307,
+      "sha256": "d2ce0f68fc55d0f1d8883d05853e809bdfa128daa33de2e08a49b97ab4ae6bad",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/brancher.c",
+      "git_blob_sha1": "5383b5f56be0e3fcba3affc1c9468e2e5f387333"
+    }
+  ]
+}

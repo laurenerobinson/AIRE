@@ -1,0 +1,59 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/langdetect_gcc_stripped_dyn",
+  "upstream_source_paths": [
+    "tests_src/language_detector/langdetect_gcc_stripped.c"
+  ],
+  "upstream_support_paths": [
+    "tests_src/language_detector/build.sh"
+  ],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "Upstream build.sh explicitly maps langdetect_gcc_stripped.c to this dynamic output using gcc, then strip --strip-all --remove-section=.comment. No .symtab or .debug_info remains. Main body is ELF VA 0x1149 (Ghidra 0x101149); loop calls atoi at 0x1182, compares i against argc at 0x1191, and calls printf at 0x11aa. Literal at ELF VA 0x2004 agrees.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped_dyn",
+      "role": "binary",
+      "size": 14376,
+      "sha256": "c90c1f272ce9a72bffd3234cccab2f5b61ae861ed16e5778cacb80ac9ab9ca6a",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/langdetect_gcc_stripped_dyn",
+      "git_blob_sha1": "d54e8da858940f255dbbb24be02ef4455387b4dc"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped.c",
+      "role": "source",
+      "size": 300,
+      "sha256": "b40d71e48df4489c6447a3d1fe4d690bdcdc85e920f2f861a8d7a4692fc5763f",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/language_detector/langdetect_gcc_stripped.c",
+      "git_blob_sha1": "8b17005fa648ad1b1e1a5b30c67934900520270b"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/build.sh",
+      "role": "support",
+      "size": 4421,
+      "sha256": "98288dc48629898eae16e1e10c8bc8a34fe45dbe9d5d1547a1bce9c9d100770d",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/language_detector/build.sh",
+      "git_blob_sha1": "a03f52c3e7cb21a46d013d13400789c2df63f16d"
+    }
+  ]
+}

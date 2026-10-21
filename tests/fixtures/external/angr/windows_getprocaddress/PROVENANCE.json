@@ -1,0 +1,47 @@
+{
+  "upstream_url": "https://github.com/angr/binaries",
+  "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+  "upstream_binary_path": "tests/x86_64/windows/GetProcAddress.exe",
+  "upstream_source_paths": [
+    "tests_src/windows/GetProcAddress.c"
+  ],
+  "upstream_support_paths": [],
+  "source_match": {
+    "status": "corroborated",
+    "confidence": "high",
+    "exact_build_verified": false,
+    "evidence": "Commit 768614954298b248f7fe8965641685499daa7686 adds the binary and GetProcAddress.c together. Application body at 0x140001480 matches both guards, exact strings and API sequence. Global pointer storage is 0x140007030; computed calls are at 0x14000149e/0x1400014c0/0x1400014f5/0x140001505. GCC 13-win32 strings corroborate MinGW provenance.",
+    "accuracy_scope": "source-defined application behavior within documented limits"
+  },
+  "license": {
+    "spdx": "MIT",
+    "attribution": "Copyright 2018 The angr Team",
+    "notice_paths": [
+      "angr/LICENSE.md",
+      "angr/LICENSE.x86_64.md"
+    ],
+    "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+  },
+  "files": [
+    {
+      "path": "angr/windows_getprocaddress/GetProcAddress.exe",
+      "role": "binary",
+      "size": 14848,
+      "sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/windows/GetProcAddress.exe",
+      "git_blob_sha1": "2898d28224353537cf85b9c9053a74a3f1ef4860"
+    },
+    {
+      "path": "angr/windows_getprocaddress/GetProcAddress.c",
+      "role": "source",
+      "size": 437,
+      "sha256": "3491c92f6cc27421ba315c807b759e32c8f0b25e113f1c65ddec45449aca5cbb",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/GetProcAddress.c",
+      "git_blob_sha1": "37ab20aff9c5cd11c3797d79cfd7841eeed8175a"
+    }
+  ]
+}

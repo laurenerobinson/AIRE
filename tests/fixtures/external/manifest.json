@@ -1,0 +1,1151 @@
+{
+  "schema_version": 1,
+  "paths_relative_to": "manifest directory",
+  "max_file_size": 2097152,
+  "source_match_policy": "Corroborated behavior is not exact build proof. Unverified matches are excluded. Negative fixture accuracy is scoped.",
+  "fixtures": [
+    {
+      "name": "brancher",
+      "category": "ELF",
+      "binary_path": "angr/brancher/brancher",
+      "source_paths": [
+        "angr/brancher/brancher.c"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/brancher",
+      "upstream_source_paths": [
+        "tests_src/brancher.c"
+      ],
+      "binary_sha256": "2ecad01a776415f64653de5ca89514d79a2bae68f7ffb4b1ef606f6f4e799541",
+      "size": 8430,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-symbol-table",
+        "debug_status": "none",
+        "elf_type": "ET_EXEC"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "STT_FILE names brancher.c. main at 0x400544 calls read at 0x400569 with length 4. Comparisons at 0x400571/0x400583 use 0xa/0x13; 0x4005a1 masks by 1. The unsigned jumps and all six literals agree with the source.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/brancher/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/brancher/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "branches",
+        "unsigned-comparisons",
+        "strings",
+        "local-xrefs"
+      ]
+    },
+    {
+      "name": "argc_decide",
+      "category": "ELF",
+      "binary_path": "angr/argc_decide/argc_decide",
+      "source_paths": [
+        "angr/argc_decide/argc_decide.c"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/argc_decide",
+      "upstream_source_paths": [
+        "tests_src/argc_decide.c"
+      ],
+      "binary_sha256": "e8617de193c86ae4375ef1f08d7a678e906d61e4b53ca62b1055f12983386eca",
+      "size": 6618,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-symbol-table",
+        "debug_status": "none",
+        "elf_type": "ET_EXEC"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "STT_FILE is argc_decide.c. main is 0x4004b6. Comparisons at 0x4004c1 and 0x4004ce test 1 and 2; MOV EAX,0xa at 0x4004c7/0x4004d4 and MOV EAX,0 at 0x4004db establish returns.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/argc_decide/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/argc_decide/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "argument-handling",
+        "leaf-functions",
+        "insufficient-string-evidence"
+      ]
+    },
+    {
+      "name": "cpp_classes",
+      "category": "ELF",
+      "binary_path": "angr/cpp_classes/cpp_classes",
+      "source_paths": [
+        "angr/cpp_classes/cpp_classes.cpp"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/cpp_classes",
+      "upstream_source_paths": [
+        "tests_src/cpp_classes.cpp"
+      ],
+      "binary_sha256": "820b9c10aa8d8a422d464bcf920e15aef0315a865902c6798e64673f8225a985",
+      "size": 18416,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-symbol-table",
+        "debug_status": "none",
+        "elf_type": "ET_DYN"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "STT_FILE cpp_classes.cpp, demangled A/B/C methods, RTTI and vtable symbols agree with the source. ELF main is 0x129d (Ghidra default 0x10129d). Direct C::bar call is 0x134b; computed calls are 0x1361, 0x1378 and 0x138f. Thunk at 0x14cb subtracts 8 from RDI then jumps to C::tool at 0x1490. C::C sets k at offset 0x10 to zero.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/cpp_classes/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/cpp_classes/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "cpp",
+        "multiple-inheritance",
+        "indirect-calls",
+        "thunks",
+        "classification",
+        "strings"
+      ]
+    },
+    {
+      "name": "basic_buffer_overflows",
+      "category": "ELF",
+      "binary_path": "angr/basic_buffer_overflows/basic_buffer_overflows",
+      "source_paths": [
+        "angr/basic_buffer_overflows/basic_buffer_overflows.c"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/basic_buffer_overflows",
+      "upstream_source_paths": [
+        "tests_src/basic_buffer_overflows.c"
+      ],
+      "binary_sha256": "68f759392c97968d906faf1a34cf1c50f5e86c8926926b5009d6e767429d7715",
+      "size": 8651,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-symbol-table",
+        "debug_status": "none",
+        "elf_type": "ET_EXEC"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "STT_FILE and all three named functions agree. Entry addresses: overflow_1=0x40055c, overflow_2=0x4005b6, overflow_3=0x40063e, main=0x40068f. Bounds 0x27,0x77,0x4f,0x64 and initialization 0xc8 appear in assembly; overflow_3 increments at 0x40066f. main callsites are 0x400698/0x4006a2/0x4006ac.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/basic_buffer_overflows/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/basic_buffer_overflows/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "memory-safety",
+        "loop-bounds",
+        "stack-canaries",
+        "call-relationships"
+      ]
+    },
+    {
+      "name": "bindiff_a",
+      "category": "ELF",
+      "binary_path": "angr/bindiff_a/bindiff_a",
+      "source_paths": [
+        "angr/bindiff_a/bindiff_a.c"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/bindiff_a",
+      "upstream_source_paths": [
+        "tests_src/bindiff_a.c"
+      ],
+      "binary_sha256": "f7eef0a7d8d2e0f866551c10145a2b0e9c40229ea3c85cd753a3ba0545d49616",
+      "size": 7456,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-symbol-table",
+        "debug_status": "none",
+        "elf_type": "ET_EXEC"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "STT_FILE bindiff_a.c; main=0x400616, get_num=0x40064c, print_bad=0x400689. Compare at 0x40062b uses 0x539. get_num passes 0x10 to fgets. main loops at 0x40064a. All three literals are present.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/bindiff_a/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/bindiff_a/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "function-similarity",
+        "calls",
+        "strings",
+        "input-conversion"
+      ]
+    },
+    {
+      "name": "bindiff_b",
+      "category": "ELF",
+      "binary_path": "angr/bindiff_b/bindiff_b",
+      "source_paths": [
+        "angr/bindiff_b/bindiff_b.c"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/bindiff_b",
+      "upstream_source_paths": [
+        "tests_src/bindiff_b.c"
+      ],
+      "binary_sha256": "b3308d8e7a68fa217d561dbfac55597e176941fb0545f7721476440b0cc09d1e",
+      "size": 7576,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-symbol-table",
+        "debug_status": "none",
+        "elf_type": "ET_EXEC"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "STT_FILE bindiff_b.c. main=0x400616, get_num=0x40066a, print_good=0x4006a7, print_bad=0x4006b7. Equality checks at 0x40062b/0x400634 use 0x539/0x1ca3. Compiler lowers the third predicate to arithmetic and unsigned range check at 0x40063d\u20130x400650, not a DIV instruction. Loop back is 0x400668.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/bindiff_b/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/bindiff_b/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "function-similarity",
+        "short-circuit",
+        "arithmetic-lowering",
+        "calls"
+      ]
+    },
+    {
+      "name": "datadep_test",
+      "category": "ELF",
+      "binary_path": "angr/datadep_test/datadep_test",
+      "source_paths": [
+        "angr/datadep_test/datadep_test.c"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/datadep_test",
+      "upstream_source_paths": [
+        "tests_src/datadep_test.c"
+      ],
+      "binary_sha256": "3ea90813e09d1ef110505cb2030dbe3d50172540c389229cdf7261f1db3fe980",
+      "size": 8826,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-symbol-table",
+        "debug_status": "none",
+        "elf_type": "ET_EXEC"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "STT_FILE datadep_test.c and calc_sum=0x40064c, gen_random=0x400684, buf_cpy=0x4006db, main=0x400720. calc_sum call at 0x400774 writes a scalar; lengths 0x400 are passed at 0x400780/0x40079b/0x4007b2. Copy callsites 0x4007a6/0x4007bf target the same helper; global destination is 0x601080.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/datadep_test/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/datadep_test/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "data-flow",
+        "global-data",
+        "repeated-callsites",
+        "bounded-copies"
+      ]
+    },
+    {
+      "name": "langdetect_gcc_stripped_dyn",
+      "category": "ELF",
+      "binary_path": "angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped_dyn",
+      "source_paths": [
+        "angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped.c"
+      ],
+      "support_paths": [
+        "angr/langdetect_gcc_stripped_dyn/build.sh"
+      ],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/langdetect_gcc_stripped_dyn",
+      "upstream_source_paths": [
+        "tests_src/language_detector/langdetect_gcc_stripped.c"
+      ],
+      "binary_sha256": "c90c1f272ce9a72bffd3234cccab2f5b61ae861ed16e5778cacb80ac9ab9ca6a",
+      "size": 14376,
+      "file_details": {
+        "format": "ELF",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "elf-stripped",
+        "debug_status": "none",
+        "elf_type": "ET_DYN"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "Upstream build.sh explicitly maps langdetect_gcc_stripped.c to this dynamic output using gcc, then strip --strip-all --remove-section=.comment. No .symtab or .debug_info remains. Main body is ELF VA 0x1149 (Ghidra 0x101149); loop calls atoi at 0x1182, compares i against argc at 0x1191, and calls printf at 0x11aa. Literal at ELF VA 0x2004 agrees.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/langdetect_gcc_stripped_dyn/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/langdetect_gcc_stripped_dyn/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "stripped",
+        "pie",
+        "argument-handling",
+        "strings",
+        "loop-recovery"
+      ]
+    },
+    {
+      "name": "windows_getprocaddress",
+      "category": "PE_executable",
+      "binary_path": "angr/windows_getprocaddress/GetProcAddress.exe",
+      "source_paths": [
+        "angr/windows_getprocaddress/GetProcAddress.c"
+      ],
+      "support_paths": [],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/windows/GetProcAddress.exe",
+      "upstream_source_paths": [
+        "tests_src/windows/GetProcAddress.c"
+      ],
+      "binary_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c",
+      "size": 14848,
+      "file_details": {
+        "format": "PE",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "executable",
+        "symbol_status": "pe-no-coff-symbol-table",
+        "debug_status": "none"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "Commit 768614954298b248f7fe8965641685499daa7686 adds the binary and GetProcAddress.c together. Application body at 0x140001480 matches both guards, exact strings and API sequence. Global pointer storage is 0x140007030; computed calls are at 0x14000149e/0x1400014c0/0x1400014f5/0x140001505. GCC 13-win32 strings corroborate MinGW provenance.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/windows_getprocaddress/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/windows_getprocaddress/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "pe",
+        "indirect-calls",
+        "global-function-pointer",
+        "local-strings",
+        "null-guards"
+      ]
+    },
+    {
+      "name": "windows_tls_x86",
+      "category": "PE_executable",
+      "binary_path": "angr/windows_tls_x86/TLS.exe",
+      "source_paths": [
+        "angr/windows_tls_x86/tls.c"
+      ],
+      "support_paths": [
+        "angr/windows_tls_x86/TLS.vcxproj",
+        "angr/windows_tls_x86/AngrTests.sln"
+      ],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86/windows/TLS.exe",
+      "upstream_source_paths": [
+        "tests_src/windows/AngrTests/TLS/tls.c"
+      ],
+      "binary_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d",
+      "size": 36864,
+      "file_details": {
+        "format": "PE",
+        "architecture": "x86",
+        "bits": 32,
+        "binary_kind": "executable",
+        "symbol_status": "pe-no-coff-symbol-table",
+        "debug_status": "external-pdb-reference"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "Commit 822c070f87d1104283ffbd4ce0bdac0f1dde9c4f updates binary, tls.c and TLS.vcxproj together. Project uses v140; PE CodeView points to AngrTests\\Debug\\TLS.pdb. Ghidra bodies 0x4116c0 (increment), 0x411730 (main), 0x411800 (decrement) agree. FS:[0x2c] and _tls_index select storage; application TLS offset is +0x104. CreateThread gets 0x41135c, a jump thunk to the worker.",
+        "accuracy_scope": "source-defined application behavior within documented limits"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": false,
+      "ground_truth_path": "angr/windows_tls_x86/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/windows_tls_x86/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "pe32",
+        "tls",
+        "callbacks",
+        "indirect-reachability",
+        "runtime-classification"
+      ]
+    },
+    {
+      "name": "windows_invalid_export_forwarder",
+      "category": "PE_DLL_negative",
+      "binary_path": "angr/windows_invalid_export_forwarder/invalid_export_forwarder.dll",
+      "source_paths": [
+        "angr/windows_invalid_export_forwarder/invalid_export_forwarder.c"
+      ],
+      "support_paths": [
+        "angr/windows_invalid_export_forwarder/invalid_export_forwarder.def",
+        "angr/windows_invalid_export_forwarder/build_invalid_export_forwarder.py"
+      ],
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_binary_path": "tests/x86_64/windows/invalid_export_forwarder.dll",
+      "upstream_source_paths": [
+        "tests_src/windows/invalid_export_forwarder.c"
+      ],
+      "binary_sha256": "8b2ca323c14b2f3a46142a027713fd50f56b1baf0d4ab83c38c01cc56f4cbb3a",
+      "size": 6276,
+      "file_details": {
+        "format": "PE",
+        "architecture": "x86_64",
+        "bits": 64,
+        "binary_kind": "dll",
+        "symbol_status": "pe-coff-symbol-table",
+        "debug_status": "none"
+      },
+      "source_match": {
+        "status": "corroborated",
+        "confidence": "high",
+        "exact_build_verified": false,
+        "evidence": "Commit 9bea8f2777201c50b96a568d7a7ecab8e0fe6cab adds binary, C, .def and build script together. Builder states gcc 15.3.0/binutils 2.46/mingw-w64 14.0.0, -shared -nostdlib, image base 0x180000000, timestamp disabled. PE DLL bit is set; two exports have RVAs 0x5059 (forwarder) and 0x1000 (local). Bytes at forwarder are 75 9f 65 72 33 32 2e 4d 65 73 73 61 67 65 42 6f 78 41 00. local_export at 0x180001000 returns 0x2a.",
+        "accuracy_scope": "local_export and raw export structure only"
+      },
+      "license": {
+        "spdx": "MIT",
+        "attribution": "Copyright 2018 The angr Team",
+        "notice_paths": [
+          "angr/LICENSE.md",
+          "angr/LICENSE.x86_64.md"
+        ],
+        "review": "Root default applies to these angr-authored samples; reviewed ancestor and file-level notices. x86_64 exceptions name unrelated valgrind/coreutils binaries; LICENSE.libc concerns copied system shared objects, none imported."
+      },
+      "ground_truth_eligible": true,
+      "negative_fixture": true,
+      "ground_truth_path": "angr/windows_invalid_export_forwarder/GROUND_TRUTH.md",
+      "static_evidence_path": "angr/windows_invalid_export_forwarder/STATIC_EVIDENCE.md",
+      "intended_test_categories": [
+        "pe-dll",
+        "exports",
+        "negative-parser",
+        "encoding",
+        "leaf-functions"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "angr/LICENSE.md",
+      "role": "license",
+      "size": 1582,
+      "sha256": "af078f795a2ee936d5baca5cfc953f344ace443f9fc4f89915116a5ecc3bc572",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "LICENSE.md",
+      "git_blob_sha1": "875054feb94958202857a40b3bc3015801e7392c"
+    },
+    {
+      "path": "angr/LICENSE.x86_64.md",
+      "role": "license",
+      "size": 1606,
+      "sha256": "89ed267ac37354aba4b74b3734a1f3ced3f86b6384419cd333f877500e019d6e",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/LICENSE.md",
+      "git_blob_sha1": "3e2c4b9ac906abdaa6dc55053df7aba0a5f6aca8"
+    },
+    {
+      "path": "angr/brancher/brancher",
+      "role": "binary",
+      "size": 8430,
+      "sha256": "2ecad01a776415f64653de5ca89514d79a2bae68f7ffb4b1ef606f6f4e799541",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/brancher",
+      "git_blob_sha1": "932c013006c5d542b2ef95e1bc1344bcddc1c94e"
+    },
+    {
+      "path": "angr/brancher/brancher.c",
+      "role": "source",
+      "size": 307,
+      "sha256": "d2ce0f68fc55d0f1d8883d05853e809bdfa128daa33de2e08a49b97ab4ae6bad",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/brancher.c",
+      "git_blob_sha1": "5383b5f56be0e3fcba3affc1c9468e2e5f387333"
+    },
+    {
+      "path": "angr/brancher/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 4269,
+      "sha256": "7059b22cb9cc93b45f7dee6298f9652a16843a51f6a9ce5d18ce927e77485066"
+    },
+    {
+      "path": "angr/brancher/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3652,
+      "sha256": "8baae10d8d5c383b290c2206f2b8cea943c8cdc175f8b596410b6c1e0c94e0fb"
+    },
+    {
+      "path": "angr/brancher/PROVENANCE.json",
+      "role": "provenance",
+      "size": 1975,
+      "sha256": "c3d03b44369f3e9a9e6416688f51cb3f916cfdf908e87d7c2767b1b5724e6467"
+    },
+    {
+      "path": "angr/brancher/SHA256SUMS",
+      "role": "checksums",
+      "size": 401,
+      "sha256": "5779fea5cb71f4bcd6ef045dd2d315478f26f004181506fab6ab9f2c3dc90459"
+    },
+    {
+      "path": "angr/argc_decide/argc_decide",
+      "role": "binary",
+      "size": 6618,
+      "sha256": "e8617de193c86ae4375ef1f08d7a678e906d61e4b53ca62b1055f12983386eca",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/argc_decide",
+      "git_blob_sha1": "d249ff356671cbbc8a55132292d2dc9d50fc9855"
+    },
+    {
+      "path": "angr/argc_decide/argc_decide.c",
+      "role": "source",
+      "size": 164,
+      "sha256": "109f0fd0e1b1a1d6aedff21ab03acb74482761aa3f8426c1b6d4616e1f51295e",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/argc_decide.c",
+      "git_blob_sha1": "4cb25c89670d72ddabfef02b4f0109f18ba664e7"
+    },
+    {
+      "path": "angr/argc_decide/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 3070,
+      "sha256": "1a3293a2ea083a3641b3d08b08de1937d584521a56d287dcbe538367a3c2816e"
+    },
+    {
+      "path": "angr/argc_decide/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3036,
+      "sha256": "9404d72cfe26a1334cd57a5a15dbd6a37b32817634e259fd2b64398a059bb261"
+    },
+    {
+      "path": "angr/argc_decide/PROVENANCE.json",
+      "role": "provenance",
+      "size": 1960,
+      "sha256": "88d73350fd63e38ffb7f5a83cfe380afded6c68e30d4e44238830bc225a1b2cc"
+    },
+    {
+      "path": "angr/argc_decide/SHA256SUMS",
+      "role": "checksums",
+      "size": 407,
+      "sha256": "8b19efbdb0f02d8186321e8a74dd043ab8491b6bd0eb4eb4d2226bc34fbfd2cb"
+    },
+    {
+      "path": "angr/cpp_classes/cpp_classes",
+      "role": "binary",
+      "size": 18416,
+      "sha256": "820b9c10aa8d8a422d464bcf920e15aef0315a865902c6798e64673f8225a985",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/cpp_classes",
+      "git_blob_sha1": "7bd3189d72c3e5a8c20e5d6079a31f5c809c9cde"
+    },
+    {
+      "path": "angr/cpp_classes/cpp_classes.cpp",
+      "role": "source",
+      "size": 789,
+      "sha256": "368b899d04b0a34fab36d0fe1dc18d8c36e17bb4c0b72e03187a085fbd80eb0c",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/cpp_classes.cpp",
+      "git_blob_sha1": "169205ba00ed886957cbf9168698d9a50e46e767"
+    },
+    {
+      "path": "angr/cpp_classes/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 15540,
+      "sha256": "33ba1221ccb6be0b3f537a26b00412817dd4df28e2d39ffafa2129107c59612f"
+    },
+    {
+      "path": "angr/cpp_classes/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 4060,
+      "sha256": "a9efd33518169bc0cbe6c07ce2633d0e8d8a39d7845a8e60099ca90eefd462fb"
+    },
+    {
+      "path": "angr/cpp_classes/PROVENANCE.json",
+      "role": "provenance",
+      "size": 2119,
+      "sha256": "66936924f55cf0afc841fb88a892da3dc65e181b0ce3d8a39d9f390d2e8ceb26"
+    },
+    {
+      "path": "angr/cpp_classes/SHA256SUMS",
+      "role": "checksums",
+      "size": 409,
+      "sha256": "8345a08b9438d599dc5e68e3158e2f17c7d74e9a1ce5a764bb1d952de15fb95e"
+    },
+    {
+      "path": "angr/basic_buffer_overflows/basic_buffer_overflows",
+      "role": "binary",
+      "size": 8651,
+      "sha256": "68f759392c97968d906faf1a34cf1c50f5e86c8926926b5009d6e767429d7715",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/basic_buffer_overflows",
+      "git_blob_sha1": "3cb2e1a8494c3445de230e35a46c31737d6ed5e2"
+    },
+    {
+      "path": "angr/basic_buffer_overflows/basic_buffer_overflows.c",
+      "role": "source",
+      "size": 553,
+      "sha256": "faa9e56c5afd486f7102a7dba99710edaf77168e45179d51f61853ac18b7e151",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/basic_buffer_overflows.c",
+      "git_blob_sha1": "47036023bbd5063163ccb670ece976fcb07dda87"
+    },
+    {
+      "path": "angr/basic_buffer_overflows/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 7583,
+      "sha256": "ce22a06351bf33896c3e3c76f808059439fe4c3d8ade225f532da44239890543"
+    },
+    {
+      "path": "angr/basic_buffer_overflows/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3760,
+      "sha256": "af8dcbb3dfd080c2e3be6e618d236e0001345b52774b5203a042d74bdb404b94"
+    },
+    {
+      "path": "angr/basic_buffer_overflows/PROVENANCE.json",
+      "role": "provenance",
+      "size": 2168,
+      "sha256": "b44a074ba4456796b262e06d74b774f21a74c6557e64724c1e8e5bfdb7f2294a"
+    },
+    {
+      "path": "angr/basic_buffer_overflows/SHA256SUMS",
+      "role": "checksums",
+      "size": 429,
+      "sha256": "fac758046ca41de4fa7dd400c3458f004f404423e146da4becea2cd0c3982054"
+    },
+    {
+      "path": "angr/bindiff_a/bindiff_a",
+      "role": "binary",
+      "size": 7456,
+      "sha256": "f7eef0a7d8d2e0f866551c10145a2b0e9c40229ea3c85cd753a3ba0545d49616",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/bindiff_a",
+      "git_blob_sha1": "9638ac5afa2f9790b105b1246c9ce99c49917b20"
+    },
+    {
+      "path": "angr/bindiff_a/bindiff_a.c",
+      "role": "source",
+      "size": 424,
+      "sha256": "f23361b468db1c96917061c083e1e0ad62928ebed50ec49d32ccce2d85aa8002",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/bindiff_a.c",
+      "git_blob_sha1": "e407a9edce0264df7f96d246ea2d1687a7032db5"
+    },
+    {
+      "path": "angr/bindiff_a/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 4161,
+      "sha256": "7d60aaab351a9342d4a876d1c705b5f2e72cc06ac77f0b5b0a1f32dae86631c1"
+    },
+    {
+      "path": "angr/bindiff_a/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3428,
+      "sha256": "3e658caa3c57a98c76cc8ad2922615e11e14614743db5840792fcd58071b5dfe"
+    },
+    {
+      "path": "angr/bindiff_a/PROVENANCE.json",
+      "role": "provenance",
+      "size": 1963,
+      "sha256": "97edc402ab13f2c29361dc13dd0e3166e98c56ca50833d5de834134dc738cee7"
+    },
+    {
+      "path": "angr/bindiff_a/SHA256SUMS",
+      "role": "checksums",
+      "size": 403,
+      "sha256": "8a2f6b03c5de3e09c583bab9034fb4f62a4f6b0c155662c73c8a6a068ba68417"
+    },
+    {
+      "path": "angr/bindiff_b/bindiff_b",
+      "role": "binary",
+      "size": 7576,
+      "sha256": "b3308d8e7a68fa217d561dbfac55597e176941fb0545f7721476440b0cc09d1e",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/bindiff_b",
+      "git_blob_sha1": "f7e75ec9ecd03e225c3df9b33d12dfb999e8d471"
+    },
+    {
+      "path": "angr/bindiff_b/bindiff_b.c",
+      "role": "source",
+      "size": 536,
+      "sha256": "90e85e6dd480a94cd3011aa4056d9b2e52f9579f8f706c4fcb0a88616a4fd6d5",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/bindiff_b.c",
+      "git_blob_sha1": "9a371547817fa405e507660a2dee61fc65172d5d"
+    },
+    {
+      "path": "angr/bindiff_b/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 5123,
+      "sha256": "98844ab35ac126d3d89f44ae3ef4d02720d1bdd06c705edb2ed9866feb68aff8"
+    },
+    {
+      "path": "angr/bindiff_b/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3634,
+      "sha256": "71b5ea535a6b209ff729d89d85e1377dbd5195b5ce1bd016a002c31edd1d777d"
+    },
+    {
+      "path": "angr/bindiff_b/PROVENANCE.json",
+      "role": "provenance",
+      "size": 2069,
+      "sha256": "84da6aa6aa643de77b46ee8bfae426a272bdfda47b98e2d4e99a55a65b56898a"
+    },
+    {
+      "path": "angr/bindiff_b/SHA256SUMS",
+      "role": "checksums",
+      "size": 403,
+      "sha256": "bafc4c8b2359cd715a4eed89f847cf01cec6ec2bc21290a0b6351199a601856d"
+    },
+    {
+      "path": "angr/datadep_test/datadep_test",
+      "role": "binary",
+      "size": 8826,
+      "sha256": "3ea90813e09d1ef110505cb2030dbe3d50172540c389229cdf7261f1db3fe980",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/datadep_test",
+      "git_blob_sha1": "d878592fe42564203ea916f1833cc4bebd72520b"
+    },
+    {
+      "path": "angr/datadep_test/datadep_test.c",
+      "role": "source",
+      "size": 847,
+      "sha256": "f805ce4d8f84239cd8c2f0ae5655c7ad2bdbbbe50753030e127477e2962bfba3",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/datadep_test.c",
+      "git_blob_sha1": "87c06393d8094302801caa6d17cfa353e572a458"
+    },
+    {
+      "path": "angr/datadep_test/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 8449,
+      "sha256": "636cfe2409a24be9551c68e4fe46781caf62ca7ce8e61f8d2b476a4db423689e"
+    },
+    {
+      "path": "angr/datadep_test/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3690,
+      "sha256": "41ade69f788af8884b4d8d63514c2d0c90cc8415abb2fce7718e121ad2ee517b"
+    },
+    {
+      "path": "angr/datadep_test/PROVENANCE.json",
+      "role": "provenance",
+      "size": 2083,
+      "sha256": "45d01fc5ee0e5ebb90600966c8e2dc72d63a429da544708ff07e0df0ddebaa4b"
+    },
+    {
+      "path": "angr/datadep_test/SHA256SUMS",
+      "role": "checksums",
+      "size": 409,
+      "sha256": "ced1d711a9c33c0bd83e14fcbbe0dffecdd1bedd7fd04d0d4dba135a4d5dba87"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped_dyn",
+      "role": "binary",
+      "size": 14376,
+      "sha256": "c90c1f272ce9a72bffd3234cccab2f5b61ae861ed16e5778cacb80ac9ab9ca6a",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/langdetect_gcc_stripped_dyn",
+      "git_blob_sha1": "d54e8da858940f255dbbb24be02ef4455387b4dc"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped.c",
+      "role": "source",
+      "size": 300,
+      "sha256": "b40d71e48df4489c6447a3d1fe4d690bdcdc85e920f2f861a8d7a4692fc5763f",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/language_detector/langdetect_gcc_stripped.c",
+      "git_blob_sha1": "8b17005fa648ad1b1e1a5b30c67934900520270b"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/build.sh",
+      "role": "support",
+      "size": 4421,
+      "sha256": "98288dc48629898eae16e1e10c8bc8a34fe45dbe9d5d1547a1bce9c9d100770d",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/language_detector/build.sh",
+      "git_blob_sha1": "a03f52c3e7cb21a46d013d13400789c2df63f16d"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 4037,
+      "sha256": "a85fdc418d22b0f1ea0ac042785250f003f5e64a597678331132b96affbb48f3"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3530,
+      "sha256": "40b53c292a77829d00036a2cf69a8c66bf7377cad4e3c2ca23d64e0da9869fbe"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/PROVENANCE.json",
+      "role": "provenance",
+      "size": 2790,
+      "sha256": "6f20b28601a0b689b62a91a064cbdb3fd4c80cc6f3696615d1ee57b7410a37f2"
+    },
+    {
+      "path": "angr/langdetect_gcc_stripped_dyn/SHA256SUMS",
+      "role": "checksums",
+      "size": 510,
+      "sha256": "3b30d1dab91650f0b37fcc690ab4bac3292a73b3c3ca0f42bf2393b8d09c66a0"
+    },
+    {
+      "path": "angr/windows_getprocaddress/GetProcAddress.exe",
+      "role": "binary",
+      "size": 14848,
+      "sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/windows/GetProcAddress.exe",
+      "git_blob_sha1": "2898d28224353537cf85b9c9053a74a3f1ef4860"
+    },
+    {
+      "path": "angr/windows_getprocaddress/GetProcAddress.c",
+      "role": "source",
+      "size": 437,
+      "sha256": "3491c92f6cc27421ba315c807b759e32c8f0b25e113f1c65ddec45449aca5cbb",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/GetProcAddress.c",
+      "git_blob_sha1": "37ab20aff9c5cd11c3797d79cfd7841eeed8175a"
+    },
+    {
+      "path": "angr/windows_getprocaddress/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 23003,
+      "sha256": "2a5fd7f876e25e230835034458aa07636e20500b349734cff63afb206f4744f1"
+    },
+    {
+      "path": "angr/windows_getprocaddress/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3790,
+      "sha256": "aebdcb7e29802e8961cee5da531f5be0a9b1254e30206c6338fb3869a1681218"
+    },
+    {
+      "path": "angr/windows_getprocaddress/PROVENANCE.json",
+      "role": "provenance",
+      "size": 2212,
+      "sha256": "b584c4366ead1fdc17f05de241c667c9a1d17810b570c2856a6c32dcac6db432"
+    },
+    {
+      "path": "angr/windows_getprocaddress/SHA256SUMS",
+      "role": "checksums",
+      "size": 417,
+      "sha256": "1f17bf9a1727472acf6c5dfdbb712ea27f48a1b49bd5c24498bb823c54c404d8"
+    },
+    {
+      "path": "angr/windows_tls_x86/TLS.exe",
+      "role": "binary",
+      "size": 36864,
+      "sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86/windows/TLS.exe",
+      "git_blob_sha1": "bb27c96de22ee72c4e14acee5673f2618128f9f9"
+    },
+    {
+      "path": "angr/windows_tls_x86/tls.c",
+      "role": "source",
+      "size": 1702,
+      "sha256": "809428c095cea7f87a818c2d4dfa91d0e6d6590b370f7898aa4e7e25aa17b804",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/AngrTests/TLS/tls.c",
+      "git_blob_sha1": "c7c3d4de6ac2cb43ac4e488fd6025789dee02170"
+    },
+    {
+      "path": "angr/windows_tls_x86/TLS.vcxproj",
+      "role": "support",
+      "size": 7298,
+      "sha256": "7020be05ded3aefcba28578b0635633786f3d66cd397f1299276caaaf2419812",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/AngrTests/TLS/TLS.vcxproj",
+      "git_blob_sha1": "41ddd3ccfc8edbafa1460705082a8d39a1b9ac15"
+    },
+    {
+      "path": "angr/windows_tls_x86/AngrTests.sln",
+      "role": "support",
+      "size": 1291,
+      "sha256": "48d06f269ecaf64eaa283d50d739308125458aebd4c064c9b0e36997f4ef3698",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/AngrTests/AngrTests.sln",
+      "git_blob_sha1": "f4abc52d5552ee0bdfc57c3f0d8cb42ae56cd698"
+    },
+    {
+      "path": "angr/windows_tls_x86/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 15648,
+      "sha256": "a757c56e0f06dde474f80ba4e1e4956c3da1bc89aa08aba12acbc8767c69f9ad"
+    },
+    {
+      "path": "angr/windows_tls_x86/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 4083,
+      "sha256": "79414354a75ed977d548d0bebbfe5ce76a75d09cc418d1cd3ec288c057bec92c"
+    },
+    {
+      "path": "angr/windows_tls_x86/PROVENANCE.json",
+      "role": "provenance",
+      "size": 3170,
+      "sha256": "f55f112eba01c02512196215c740cc2f6844ee6a76cd465ef8352dd4722519e4"
+    },
+    {
+      "path": "angr/windows_tls_x86/SHA256SUMS",
+      "role": "checksums",
+      "size": 553,
+      "sha256": "1a8e6b6069f19d7b27ebe7a7170f5dacc30a33a2ec7d1ab90d7e629ec0522b86"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/invalid_export_forwarder.dll",
+      "role": "binary",
+      "size": 6276,
+      "sha256": "8b2ca323c14b2f3a46142a027713fd50f56b1baf0d4ab83c38c01cc56f4cbb3a",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests/x86_64/windows/invalid_export_forwarder.dll",
+      "git_blob_sha1": "ec3b8ac22a1642c36cf1dca42b8bea10f8551921"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/invalid_export_forwarder.c",
+      "role": "source",
+      "size": 194,
+      "sha256": "a7060c35f041a91fbb2d06bdbbe251dbb27994d1fbae993aeae7052fe5444c26",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/invalid_export_forwarder.c",
+      "git_blob_sha1": "ed99b1a85ea341acb20a8fbeb43d7fa0035e15c9"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/invalid_export_forwarder.def",
+      "role": "support",
+      "size": 104,
+      "sha256": "06386925b0f125386a35718b8464b325ecb5eca29c8288021abdeb291c7cca7f",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/invalid_export_forwarder.def",
+      "git_blob_sha1": "72171d2f9887d388e417136382e65abc04d41f20"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/build_invalid_export_forwarder.py",
+      "role": "support",
+      "size": 2472,
+      "sha256": "924bb7542b1d3b6efc5d2db817116e220f0305cf54d104feee3c3d952bf3b5e8",
+      "upstream_url": "https://github.com/angr/binaries",
+      "upstream_commit": "7c257a842592b885be27acf5c836bcbb8ec84e08",
+      "upstream_path": "tests_src/windows/build_invalid_export_forwarder.py",
+      "git_blob_sha1": "45ad29f6dfa45702e1cbec0f80ae9314138e7cab"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/STATIC_EVIDENCE.md",
+      "role": "static_evidence",
+      "size": 4765,
+      "sha256": "b84356d18b7e719a915c2c8f55a45d1909df5625be1199aac7103f182518162a"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/GROUND_TRUTH.md",
+      "role": "ground_truth",
+      "size": 3926,
+      "sha256": "e892a6d3ff30450fbb82d5f72390c0b4dcfaf30d58c5a0ac7a8ba791fcbf9623"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/PROVENANCE.json",
+      "role": "provenance",
+      "size": 3460,
+      "sha256": "cb794e59402311d4984112e85360874f39e324e736575674fea696c0bab9f68e"
+    },
+    {
+      "path": "angr/windows_invalid_export_forwarder/SHA256SUMS",
+      "role": "checksums",
+      "size": 632,
+      "sha256": "e786d09026fec5e2fe6085682bac307f8f3ad9d4f763f54a84924b895ced6df8"
+    },
+    {
+      "path": "README.md",
+      "role": "documentation",
+      "size": 1314,
+      "sha256": "f6ae6da49799534b03df084e4362003d8d3529609b24cdec2d7a6d07714a265f"
+    }
+  ]
+}
