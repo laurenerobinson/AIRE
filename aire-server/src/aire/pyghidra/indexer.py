@@ -18,11 +18,13 @@ import threading
 import time
 
 from aire.knowledge.models import ProgramIndex
-from aire.pyghidra.extractor import extract_artifacts, extract_binary, extract_functions
+from aire.pyghidra.extractor import decompile_workers, extract_artifacts, extract_binary, extract_functions
 from aire.pyghidra.graph_builder import build_call_edges
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION, extract_references
 from aire.profiling import count, profiled, stage as profile_stage, timed_context
+from aire.analysis.progress import report_progress
+from aire.analysis.versions import analyzer_versions
 
 _LOCK = threading.Lock()
 _RUNTIME = None
@@ -79,6 +81,35 @@ def _start_runtime():
     atexit.register(close_runtime)
 
 
+def prewarm_runtime():
+    """Start the JVM/PyGhidra and load the classes a first analysis needs,
+    without importing or analysing any binary. Moves (does not remove) the
+    one-time startup cost off the first user request. Returns step timings.
+    Raises on failure; callers must treat that as "not warmed" and continue."""
+    steps = {}
+    with _LOCK:
+        tick = time.perf_counter()
+        _start_runtime()
+        steps['runtime_start'] = time.perf_counter() - tick
+        tick = time.perf_counter()
+        import pyghidra
+        from ghidra.app.util.importer import MessageLog  # noqa: F401
+        from ghidra.app.plugin.core.analysis import AutoAnalysisManager  # noqa: F401
+        from ghidra.app.decompiler import DecompInterface  # noqa: F401
+        from ghidra.program.model.block import BasicBlockModel  # noqa: F401
+        from ghidra.program.model.data import StringDataInstance  # noqa: F401
+        from ghidra.framework import Application
+        steps['class_loading'] = time.perf_counter() - tick
+        tick = time.perf_counter()
+        # An empty disposable project exercises project/framework initialization.
+        with tempfile.TemporaryDirectory(prefix='aire_prewarm_') as directory:
+            with pyghidra.open_project(directory, 'prewarm', create=True):
+                pyghidra.program_loader()  # loader builder initialization only; nothing is loaded
+        steps['project_framework'] = time.perf_counter() - tick
+        steps['ghidra_version'] = str(Application.getApplicationVersion())
+    return steps
+
+
 @profiled('python_setup', 'index_binary_calls')
 def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramIndex:
     """Import/analyze once, extract facts, dispose without saving, verify input hash.
@@ -103,6 +134,7 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
     stage = 'Ghidra startup'
     try:
         with _LOCK:
+            report_progress('Starting or reusing PyGhidra/JVM')
             _start_runtime()
             import pyghidra
             from java.lang import Object
@@ -115,6 +147,7 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                 with timed_context(project_context,
                                    'project_creation', counter='projects_created') as project:
                     stage = 'binary import'
+                    report_progress('Importing binary into disposable Ghidra project')
                     import_log = MessageLog()
                     with profile_stage('import_open'):
                         count('executable_imports')
@@ -128,6 +161,7 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                             if str(import_log):
                                 warnings.append(f'Import: {import_log}')
                             stage = 'analysis initialization/completion'
+                            report_progress('Running Ghidra static auto-analysis')
                             tick = time.perf_counter()
                             with profile_stage('auto_analysis'):
                                 count('analyze_calls')
@@ -137,6 +171,7 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                                 warnings.append(f'Analysis: {analysis_log}')
                             monitor = pyghidra.task_monitor()
                             stage = 'fact extraction'
+                            report_progress('Extracting functions, decompilation and assembly')
                             binary = extract_binary(program, path, before, warnings)
                             with profile_stage('function_discovery'):
                                 manager = program.getFunctionManager()
@@ -144,12 +179,17 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                                 functions.sort(key=lambda f: (bool(f.isExternal()), str(f.getEntryPoint())))
                                 count('functions_discovered', len(functions))
                             tick = time.perf_counter()
-                            records = extract_functions(program, functions, binary.binary_id, options, monitor, warnings)
+                            workers = decompile_workers() if options.decompile else 0
+                            reliability = {}
+                            records = extract_functions(program, functions, binary.binary_id, options, monitor,
+                                                        warnings, workers=workers or 1, report=reliability)
                             function_seconds = time.perf_counter() - tick
                             tick = time.perf_counter()
+                            report_progress('Extracting strings, imports and exports')
                             artifacts = extract_artifacts(program, binary.binary_id, options, warnings)
                             artifact_seconds = time.perf_counter() - tick
                             tick = time.perf_counter()
+                            report_progress('Extracting call relationships, references and thunks')
                             edges = build_call_edges(program, functions, binary.binary_id, warnings) if options.include_call_edges else []
                             graph_seconds = time.perf_counter() - tick
                             tick = time.perf_counter()
@@ -160,6 +200,7 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                             result = ProgramIndex(binary, records, artifacts, edges, warnings, {
                                 'schema_version': 1,
                                 'ghidra_version': str(Application.getApplicationVersion()),
+                                'analyzer_versions': analyzer_versions(),
                                 'analysis_completed': True,
                                 'ghidra_function_count': int(manager.getFunctionCount()),
                                 'options': asdict(options),
@@ -171,6 +212,13 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                                 'artifact_extraction_seconds': artifact_seconds,
                                 'call_graph_seconds': graph_seconds,
                                 'reference_extraction_seconds': reference_seconds,
+                                # Execution detail only; not cache identity (output is identical).
+                                'decompile_workers': workers,
+                                # Timed-out functions are retried once; any function still
+                                # lacking decompiled text is listed explicitly (fact).
+                                'decompile_retry': reliability.get('decompile_retry',
+                                                                   {'timed_out': [], 'retried': [], 'recovered': []}),
+                                'decompilation_incomplete': reliability.get('decompilation_incomplete', []),
                                 'reference_facts_version': REFERENCE_FACTS_VERSION if options.include_references else None,
                             }, references, thunks, program_info)
                         finally:

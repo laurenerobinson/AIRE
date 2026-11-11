@@ -51,11 +51,14 @@ class WorkspaceTests(unittest.TestCase):
         with self.app.store() as store:
             return self.app.workspace(binary, store)
 
-    def test_creation_preloads_bounded_metadata_and_overview(self):
+    def test_creation_defers_expensive_overview_until_requested(self):
         w = self.workspace()
         self.assertEqual(w.binary_id, 'b')
         self.assertEqual(w.sha256, 'a' * 64)
         self.assertEqual(w.metadata['counts']['functions'], 7)
+        self.assertEqual(w.preloaded, [])
+        with self.app.store() as store:
+            w.prepare_overview(store)
         names = {r['tool'] for r in w.preloaded}
         self.assertTrue({'list_functions', 'rank_functions', 'get_artifacts', 'security_findings', 'get_callees'} <= names)
         listing = w.preloaded[0]['data']['items']

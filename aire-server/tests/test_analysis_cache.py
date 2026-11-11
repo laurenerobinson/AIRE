@@ -16,6 +16,7 @@ from aire.knowledge.models import BinaryRecord, ProgramIndex
 from aire.pyghidra.indexer import IndexingError
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION
+from aire.analysis.versions import analyzer_versions
 
 
 class AnalysisCacheTests(unittest.TestCase):
@@ -39,6 +40,8 @@ class AnalysisCacheTests(unittest.TestCase):
             BinaryRecord(self.digest, str(path), self.digest, None, None, '00100000', None),
             warnings=['original'],
             metadata={'options': asdict(options), 'total_seconds': 12.5,
+                      'analyzer_versions': analyzer_versions(),
+                      'ghidra_version': analyzer_versions()['ghidra'],
                       'reference_facts_version': REFERENCE_FACTS_VERSION if options.include_references else None,
                       'input_sha256_unchanged': True})
 
@@ -53,6 +56,17 @@ class AnalysisCacheTests(unittest.TestCase):
                 self.assertFalse(result.cache_hit)
                 self.indexer.assert_called_once()
                 self.assertEqual(result.program_index.metadata['reference_facts_version'], REFERENCE_FACTS_VERSION)
+
+    def test_missing_or_different_analyzer_versions_are_cache_misses(self):
+        for versions in (None, {}, {**analyzer_versions(), 'extraction': -1},
+                         {**analyzer_versions(), 'ghidra_revision': 'different'}):
+            with self.subTest(versions=versions):
+                original = self.index(self.path, IndexOptions())
+                original.metadata['analyzer_versions'] = versions
+                self.store.save_program_index(original)
+                self.indexer.reset_mock()
+                self.assertFalse(analyze_binary(self.path, self.store).cache_hit)
+                self.indexer.assert_called_once()
 
     def test_first_miss_persists_then_reopened_store_hits(self):
         with patch('aire.analysis.cache.time.perf_counter', side_effect=[10.0, 12.0]):

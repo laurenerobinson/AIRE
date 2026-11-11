@@ -1,0 +1,29 @@
+{
+ "url": "http://127.0.0.1:8767/",
+ "steps": {
+  "page_ready_seconds": 0.46637053600352374,
+  "library": {
+   "rows": 36,
+   "analyzer_note": "Analyzer ready (pre-warmed in 3.2 s)brancherImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/brancher/brancherAnalyze & openargc_decideImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/argc_decide/argc_decideAnalyze & opencpp_classesImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/cpp_classes/cpp_classesAnalyze & openbasic_buffer_overflowsImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/basic_buffer_overflows/basic_buffer_overflowsAnalyze & openbindiff_aImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/bindiff_a/bindiff_aAnalyze & openbindiff_bImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/bindiff_b/bindiff_bAnalyze & opendatadep_testImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/datadep_test/datadep_testAnalyze & openlangdetect_gcc_stripped_dynImported benchmarks \u00b7 ELF \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped_dynAnalyze & openwindows_getprocaddressImported benchmarks \u00b7 PE \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exeAnalyze & openwindows_tls_x86Imported benchmarks \u00b7 PE \u00b7 x86 32 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/external/angr/windows_tls_x86/TLS.exeAnalyze & openwindows_invalid_export_forwarderImported benchmarks \u00b7 PE \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Negative fixture \u00b7 Structure validtests/fixtures/external/angr/windows_invalid_export_forwarder/invalid_export_forwarder.dllAnalyze & openlarge_pe_sleighM9 large PE \u00b7 PE \u00b7 x86_64 64 \u00b7 Cached \u00b7 Structure validtests/fixtures/m9/large_pe/sleigh.exeOpen cached analysislarge_pe_decompileM9 large PE \u00b7 PE \u00b7 x86_64 64 \u00b7 Not indexed \u00b7 Structure validtests/fixtures/m9/large_pe/decompile.exeAnalyze & opencorrupt_dos_signature_invalidM9 corrupted PE \u00b7 unknown \u00b7 unknown  \u00b7 Not indexed \u00b7 Negative fixture \u00b7 Invalid: rejectedSelect an ELF executable/shared object or Windows PE binary; file extensions are not trusted1 structure issue(s)Structure: PE structure is invalid; static analysis is not possible \u00b7 PE structure INVALID \u00b7 No analysis possible",
+   "has_m9_rows": true
+  },
+  "corrupt_rejected": {
+   "text": "Validation failed: Malformed or truncated PE binary: Invalid PE signature b'PX\\x00\\x00' at 0x80; expected b\"PE\\0\\0\"\nDetected: PE? \u00b7 unknown architecture\nStructure: PE structure is invalid; static analysis is not possible \u00b7 PE structure INVALID \u00b7 No analysis possible\n  [fatal] pe_signature: Invalid PE signature b'PX\\x00\\x00' at 0x80; expected b\"PE\\0\\0\" (file offset 0x80)\nThe file was not analyzed or executed. Choose another binary.",
+   "ok": true
+  },
+  "partial_accepted": {
+   "text": "import_dll_name_invalid.exe \u00b7 PE \u00b7 x86 32-bit \u00b7 36864 bytes\nSHA-256 c4d03503b52285a8cc2f56b32a7ee07c852ba2d96b42135e4486bbeeda86431f\nStructure: PE headers parse but structure is damaged; partial static analysis only \u00b7 PE structure INVALID \u00b7 Partial analysis only\n  [error] import_dll_name: Import descriptor 0 DLL name RVA 0x7fffff00 is invalid (file offset 0x77c8)",
+   "ok": true
+  },
+  "large_pe_cached": {
+   "text": "large_pe_sleigh \u00b7 completed \u00b7 Reused persisted analysis \u00b7 0.01 s elapsed\n0.01 s \u00b7 Checking SHA-256 and persisted analysis compatibility\n0.01 s \u00b7 Reused persisted analysis\nPersisted cache reused \u00b7 processing 0.005 s \u00b7 queue 0.001 s \u00b7 total 0.012 s \u00b7 SHA-256 83926858607571056109df50ae75b3304e0f075a51e20e8ccfeee6a4ec7b6cec\n1569 analyzer warnings recorded.",
+   "ok": true,
+   "browser_seconds": 0.24297430599835934
+  },
+  "crypto_panel": {
+   "ok": true,
+   "excerpt": "function(s) with crypto API calls\n7/7 crypto imports called \u00b7 families: cng\nFUN_0041d080 \u00b7 0041d080 \u00b7 key_handling\n0041d099 \u2192 BCryptOpenAlgorithmProvider (provider)\n0041d0c1 \u2192 BCryptSetProperty (configuration)\n0041d0f2 \u2192 BCryptGenerateSymmetricKey (key_handling)\nIdentifiers:\n0041d0ad \u2192 \"ChainingMode\" (chaining-mode property)\n0041d0b4 \u2192 \"ChainingModeGCM\" (GCM mode)\nCalled by: FUN_0041d2a0 @ 0041d2d7\nFUN_0041d160 \u00b7 0041d160 \u00b7 encryption\n0041d1c3 \u2192 BCryptEncrypt (encryption)\nCalled by: FUN_0041d2a0 @ 0041d2f7\nFUN_0041d1e0 \u00b7 0041d1e0 \u00b7 decryption\n0041d24c \u2192 BCryptDecrypt (decryption)\nCalled by: FUN_0041d2a0 @ 0041d350\nFUN_0041d270 \u00b7 0041d270 \u00b7 cleanup\n0041d280 \u2192 BCryptDestroyKey (cleanup)\n0041d294 \u2192 BCryptCloseAlgorithmProvider (cleanup)\nCalled by: FUN_0041d2a0 @ 0041d3be\nStatic evidence of cr"
+  }
+ },
+ "passed": true
+}

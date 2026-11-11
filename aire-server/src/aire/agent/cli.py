@@ -43,6 +43,7 @@ def main(argv=None, *, input_fn=None, output=None, client=None):
     gui.add_argument('binary', nargs='?', help='Stored binary ID, matching file path, or unique stored name')
     gui.add_argument('--database', type=Path, default=Path(os.environ.get('AIRE_DATABASE', 'analysis.sqlite')))
     gui.add_argument('--session-dir', type=Path, help='GUI conversation directory (default: ~/.aire/gui-sessions)')
+    gui.add_argument('--upload-dir', type=Path, help='Validated uploads and analysis timing records')
     gui.add_argument('--bind', default='127.0.0.1', help='Loopback bind address (default: 127.0.0.1)')
     gui.add_argument('--port', type=int, default=8765)
     gui.add_argument('--no-browser', action='store_true', help='Do not open the default browser automatically')
@@ -53,6 +54,9 @@ def main(argv=None, *, input_fn=None, output=None, client=None):
     gui.add_argument('--max-tool-calls', type=int, default=8)
     gui.add_argument('--timeout', type=float, default=180)
     gui.add_argument('--evidence-chars', type=int, default=8000)
+    gui.add_argument('--no-prewarm', action='store_true',
+                     help='Do not start the Ghidra analyzer at launch (default: pre-warm in the background; '
+                          'also disabled by AIRE_PREWARM=0)')
     args = parser.parse_args(argv)
     read = input_fn or input
     write = output or (lambda value: print(value, flush=True))
@@ -61,10 +65,17 @@ def main(argv=None, *, input_fn=None, output=None, client=None):
                              evidence_chars=args.evidence_chars)
         if args.command == 'gui':
             from aire.api.server import GuiApplication, GuiModelConfig, serve
+            if not args.database.exists():
+                from aire.knowledge.database import BinaryKnowledgeStore
+                with BinaryKnowledgeStore(args.database):
+                    pass
             application = GuiApplication(args.database, initial_binary=args.binary,
                 session_dir=args.session_dir,
+                upload_dir=args.upload_dir,
                 model_config=GuiModelConfig(args.ollama_host, args.model, args.num_ctx),
                 limits=limits)
+            if not args.no_prewarm and os.environ.get('AIRE_PREWARM', '1') != '0':
+                application.library.prewarm()  # non-blocking; lazy start-up remains the fallback
             return serve(application, host=args.bind, port=args.port,
                          open_browser=not args.no_browser, output=write)
         model = client or OllamaClient(host=args.host, model=args.model, num_ctx=args.num_ctx)

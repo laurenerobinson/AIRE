@@ -33,3 +33,15 @@ models/
 *.pem
 .DS_Store
 Thumbs.db
+/.aire-uploads/
+/demo_artifacts/oct22/uploads/
+/demo_artifacts/oct22/sessions/
+/demo_artifacts/oct22/firefox-profile/
+/demo_artifacts/oct22/firefox.log
+/demo_artifacts/m9/uploads/
+/demo_artifacts/m9/sessions/
+/demo_artifacts/m9/firefox-profile/
+/demo_artifacts/m9/firefox.log
+# Per-invocation benchmark outputs; all rows are preserved in docs/m9/benchmarks/progress.jsonl
+/docs/m9/benchmarks/interleaved/
+/docs/m9/benchmarks/before_small.json

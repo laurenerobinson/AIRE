@@ -8,6 +8,8 @@ const state = {
   currentFunctionId: null,
   busy: false,
   toolsCollapsed: false,
+  uploadId: null,
+  analysisJob: null,
 };
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -122,12 +124,13 @@ function setActiveNav(name) {
 }
 
 function showView(name) {
-  const map = {home:'#homeView', chat:'#chatView', recent:'#recentView', about:'#aboutView'};
+  const map = {home:'#homeView', chat:'#chatView', recent:'#recentView', about:'#aboutView', library:'#libraryView'};
   Object.entries(map).forEach(([key, selector]) => $(selector).classList.toggle('hidden', key !== name));
   setActiveNav(name === 'chat' ? 'home' : name);
   $('#collapseToolsTop').classList.toggle('hidden', name !== 'chat');
   if (name === 'recent') loadRecent();
   if (name === 'about') checkHealth();
+  if (name === 'library') loadLibrary();
 }
 
 function resetChat() {
@@ -143,6 +146,7 @@ function resetChat() {
 }
 
 async function ensureSession() {
+  if (!state.binaryId) throw new Error('Upload or select a repository binary first.');
   if (state.sessionId) return state.sessionId;
   const created = await api('/api/sessions', {method:'POST', body:JSON.stringify({binary_id: state.binaryId})});
   state.sessionId = created.session_id;
@@ -384,15 +388,29 @@ function openToolResult(title, content) {
   root.innerHTML = `<div class="tool-result-head"><h4>${escapeHtml(title)}</h4><button aria-label="Close tool result">×</button></div><div class="tool-result-body"></div>`;
   $('.tool-result-body', root).append(content);
   $('button', root).addEventListener('click', () => root.classList.add('hidden'));
+  root.scrollIntoView({block:'nearest', behavior:'smooth'});
 }
 
 function rowsContainer() { const el = document.createElement('div'); el.className = 'tool-list'; return el; }
 function infoRow(html, asButton = false) { const el = document.createElement(asButton ? 'button' : 'div'); el.className = 'tool-row'; el.innerHTML = html; return el; }
 
-async function showFunctions() {
-  const result = await runTool('list_functions', {limit:40, offset:0});
+async function showFunctions(offset = 0) {
+  const result = await runTool('list_functions', {limit:40, offset});
   if (!result.ok) return;
   const list = rowsContainer();
+  const lookup = document.createElement('form'); lookup.className = 'function-lookup';
+  const input = document.createElement('input'); input.placeholder = 'Exact function name or address'; input.setAttribute('aria-label', 'Function name or address');
+  const select = document.createElement('button'); select.textContent = 'Select'; select.type = 'submit';
+  lookup.append(input, select);
+  lookup.addEventListener('submit', async event => {
+    event.preventDefault();
+    try {
+      const selected = await api(`/api/sessions/${state.sessionId}/select-function`, {method:'POST', body:JSON.stringify({function:input.value.trim()})});
+      updateSelectedFunction(selected.selected_function);
+      toast(`Selected ${selected.selected_function.current_name}`);
+    } catch (error) { toast(error.message); }
+  });
+  list.appendChild(lookup);
   for (const item of result.data.items) {
     const f = item.function;
     const row = infoRow(`<strong>${escapeHtml(f.current_name)}</strong><div class="tool-meta">${escapeHtml(f.address)} · ${escapeHtml(f.signature || 'signature unavailable')}</div>`, true);
@@ -405,6 +423,8 @@ async function showFunctions() {
     });
     list.appendChild(row);
   }
+  if (offset > 0) { const prev = infoRow('Previous 40 functions', true); prev.addEventListener('click', () => showFunctions(Math.max(0, offset-40))); list.appendChild(prev); }
+  if (result.data.items.length === 40) { const next = infoRow('Next 40 functions', true); next.addEventListener('click', () => showFunctions(offset+40)); list.appendChild(next); }
   openToolResult('Functions', list);
 }
 
@@ -454,12 +474,39 @@ async function showFindings() {
   openToolResult('Findings', list);
 }
 
+async function showCrypto() {
+  // Deterministic crypto API evidence: exact callsites, identifier strings, callers.
+  const result = await runTool('crypto_evidence', {limit:50});
+  if (!result.ok) return;
+  const data = result.data, list = rowsContainer();
+  list.appendChild(infoRow(`<strong>${data.summary.functions_with_crypto_calls} function(s) with crypto API calls</strong><div class="tool-meta">${data.summary.crypto_api_imports_called}/${data.summary.crypto_api_imports} crypto imports called · families: ${escapeHtml(data.summary.families.join(', ') || 'none')}</div>`));
+  for (const f of data.functions) {
+    const calls = f.callsites.map(c => `${escapeHtml(c.address)} → ${escapeHtml(c.api)} (${escapeHtml(c.operation)})`).join('<br>');
+    const ids = f.identifier_strings.map(s => `${escapeHtml(s.address)} → "${escapeHtml(s.value)}" (${escapeHtml(s.meaning)})`).join('<br>');
+    const callers = f.callers.map(c => `${escapeHtml(c.name)} @ ${escapeHtml(c.callsite)}`).join(', ');
+    const row = infoRow(`<strong>${escapeHtml(f.name)} · ${escapeHtml(f.address)} · ${escapeHtml(f.primary_operations.join(', ') || f.operations.join(', '))}</strong>`
+      + `<div class="tool-meta">${calls}${ids ? '<br>Identifiers:<br>' + ids : ''}${callers ? '<br>Called by: ' + callers : ''}</div>`, true);
+    row.addEventListener('click', async () => {
+      try {
+        const selected = await api(`/api/sessions/${state.sessionId}/select-function`, {method:'POST', body:JSON.stringify({function:f.function_id})});
+        updateSelectedFunction(selected.selected_function);
+        toast(`Selected ${selected.selected_function.current_name}`);
+      } catch (error) { toast(error.message); }
+    });
+    list.appendChild(row);
+  }
+  if (!data.functions.length) list.appendChild(infoRow('No stored crypto API callsites. Absence covers only recognized imported APIs.'));
+  list.appendChild(infoRow(`<div class="tool-meta">${data.limitations.map(escapeHtml).join('<br>')}</div>`));
+  openToolResult('Crypto evidence', list);
+}
+
 async function showDecompiled() {
   if (!state.currentFunctionId) { toast('Select a function from Functions first.'); return showFunctions(); }
   const result = await runTool('get_decompiled_text', {function:'it', max_chars:8000});
   if (!result.ok) return;
   updateSelectedFunction(result.data.function);
-  const pre = document.createElement('pre'); pre.className = 'code-view'; pre.textContent = result.data.text || 'Decompiled text unavailable in the stored analysis.';
+  const missing = result.data.incomplete ? `Decompilation INCOMPLETE for this function (${result.data.incomplete.reason}): ${result.data.incomplete.message}` : 'Decompiled text unavailable in the stored analysis.';
+  const pre = document.createElement('pre'); pre.className = 'code-view'; pre.textContent = result.data.text || missing;
   openToolResult(`Decompiled · ${result.data.function.current_name}`, pre);
 }
 
@@ -470,7 +517,154 @@ async function showToolView(name) {
   if (name === 'imports') return showArtifacts('IMPORT', 'Imports');
   if (name === 'callgraph') return showCallGraph();
   if (name === 'findings') return showFindings();
+  if (name === 'crypto') return showCrypto();
   if (name === 'decompiled') return showDecompiled();
+  if (['assembly', 'xrefs', 'thunks', 'crosscheck'].includes(name)) {
+    if (!state.currentFunctionId) { toast('Select a function first.'); return showFunctions(); }
+    const tool = {assembly:'get_assembly', xrefs:'get_xrefs', thunks:'get_thunk_target', crosscheck:'crosscheck_function'}[name];
+    const result = await runTool(tool, {function:'it'});
+    if (!result.ok) return;
+    if (name === 'crosscheck') {
+      const root = document.createElement('div');
+      const report = result.data;
+      const families = {integer_multiplication:'Integer multiplication', scalar_double_multiplication:'Scalar double-precision floating-point multiplication', scalar_float_multiplication:'Scalar single-precision floating-point multiplication'};
+      const observations = report.assembly_observations.filter(row => row.same_operand && families[row.operation_family]);
+      for (const row of observations) {
+        const p = document.createElement('p');
+        p.textContent = `${families[row.operation_family]} of a locally tracked value by itself (likely squaring), at ${row.address}.`;
+        root.appendChild(p);
+      }
+      const note = document.createElement('p');
+      note.textContent = `${report.cross_check_status}: ${observations.length ? 'Local arithmetic observation only.' : 'No same-value multiplication established by the local recognizer.'} Original source parameter types and full function equivalence are not established.`;
+      root.appendChild(note);
+      const source = document.createElement('small'); source.textContent = `Evidence: ${report.provenance.source_table} · ${report.provenance.source_id}`;
+      root.appendChild(source);
+      const raw = document.createElement('details'); const summary = document.createElement('summary'); summary.textContent = 'Full instruction / decompiler report';
+      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(report, null, 2); raw.append(summary, pre); root.appendChild(raw);
+      openToolResult('Arithmetic evidence', root);
+      return;
+    }
+    const pre = document.createElement('pre'); pre.className = 'code-view';
+    pre.textContent = name === 'assembly' ? result.data.text : JSON.stringify(result.data, null, 2);
+    if (name === 'xrefs') {
+      const strings = await runTool('get_function_strings', {function:'it'});
+      pre.textContent += '\n\nFunction-owned string references:\n' + JSON.stringify(strings.data || strings.error, null, 2);
+    }
+    openToolResult(name, pre);
+  }
+}
+
+async function loadLibrary() {
+  try {
+    const data = await api('/api/library');
+    const root = $('#fixtureList'); root.innerHTML = '';
+    const analyzer = data.analyzer || {};
+    const analyzerText = {ready: `Analyzer ready (pre-warmed in ${(analyzer.seconds || 0).toFixed(1)} s)`, warming: 'Analyzer warming up in the background…', running: 'Analyzer running', failed: `Analyzer pre-warm failed (${analyzer.error || 'unknown'}); it will start on the first analysis`, not_started: 'Analyzer starts on the first analysis', stopped: 'Analyzer stopped; it restarts on the next analysis'}[analyzer.status];
+    if (analyzerText) { const note = document.createElement('p'); note.className = 'tool-meta'; note.textContent = analyzerText; root.appendChild(note); }
+    for (const fixture of data.fixtures) {
+      const row = document.createElement('div'); row.className = 'fixture-row';
+      const text = document.createElement('div');
+      const name = document.createElement('strong'); name.textContent = fixture.name;
+      const detail = document.createElement('p');
+      detail.textContent = `${fixture.collection} · ${fixture.format || 'unknown'} · ${fixture.architecture || 'unknown'} ${fixture.bits || ''} · ${fixture.cached ? 'Cached' : fixture.indexed ? 'Indexed; refresh required' : 'Not indexed'}${fixture.negative_fixture ? ' · Negative fixture' : ''}`;
+      const level = fixture.analysis_level || fixture.validation?.analysis_level;
+      if (level) detail.textContent += ` · ${{full: 'Structure valid', partial: 'Damaged: partial analysis', none: 'Invalid: rejected'}[level] || level}`;
+      const path = document.createElement('small'); path.textContent = fixture.error || fixture.binary_path;
+      text.append(name, detail, path);
+      const report = fixture.validation || (level && level !== 'full' ? fixture : null);
+      if (report) {
+        const more = document.createElement('details'); more.className = 'structure-report';
+        const summary = document.createElement('summary'); summary.textContent = `${report.structure_issue_count || 0} structure issue(s)`;
+        const body = document.createElement('pre'); body.textContent = structureText(report);
+        more.append(summary, body); text.appendChild(more);
+      }
+      row.appendChild(text);
+      const button = document.createElement('button'); button.textContent = !fixture.available ? 'Unavailable' : fixture.cached ? 'Open cached analysis' : 'Analyze & open';
+      button.disabled = !fixture.available || !!state.analysisJob;
+      button.addEventListener('click', () => startAnalysis({fixture_id:fixture.fixture_id})); row.appendChild(button);
+      root.appendChild(row);
+    }
+  } catch (error) { toast(error.message); }
+}
+
+function structureText(report) {
+  // Static PE/ELF structure report from the server; never inferred client-side.
+  if (!report || !report.analysis_level) return '';
+  const level = {full: 'Full analysis possible', partial: 'Partial analysis only', none: 'No analysis possible'}[report.analysis_level] || report.analysis_level;
+  const validity = report.pe_valid === null || report.pe_valid === undefined ? '' : ` · PE structure ${report.pe_valid ? 'valid' : 'INVALID'}`;
+  const lines = [`Structure: ${report.structure_summary || ''}${validity} · ${level}`];
+  for (const issue of report.structure_issues || []) {
+    lines.push(`  [${issue.severity}] ${issue.code}: ${issue.message}${issue.offset === null || issue.offset === undefined ? '' : ` (file offset 0x${issue.offset.toString(16)})`}`);
+  }
+  const hidden = (report.structure_issue_count || 0) - (report.structure_issues || []).length;
+  if (hidden > 0) lines.push(`  … ${hidden} more issue(s)`);
+  return lines.join('\n');
+}
+
+async function validateUpload() {
+  const file = $('#binaryFile').files[0];
+  state.uploadId = null; $('#analyzeUpload').disabled = true;
+  if (!file) return;
+  $('#uploadDetails').textContent = `${file.name} · ${file.size} bytes · validating…`;
+  try {
+    if (!file.size || file.size > 32*1024*1024) throw new Error('Select a nonempty binary up to 32 MiB.');
+    const response = await fetch(`/api/uploads?filename=${encodeURIComponent(file.name)}`, {method:'POST', headers:{'Content-Type':'application/octet-stream'}, body:file});
+    let data;
+    try { data = await response.json(); } catch { throw new Error(`Upload failed (HTTP ${response.status})`); }
+    if (!response.ok) {
+      const failure = new Error(data.message || 'Upload failed');
+      failure.validation = data.validation;
+      throw failure;
+    }
+    if ($('#binaryFile').files[0] !== file) return;
+    state.uploadId = data.upload_id;
+    $('#uploadDetails').textContent = `${data.filename} · ${data.format} · ${data.architecture} ${data.bits}-bit · ${data.size} bytes\nSHA-256 ${data.sha256}\n${structureText(data)}`;
+    $('#analyzeUpload').disabled = !!state.analysisJob;
+  } catch (error) {
+    const report = error.validation;
+    const known = report && (report.format || report.architecture) ? `\nDetected: ${report.format || 'unknown format'} · ${report.architecture || 'unknown architecture'}${report.bits ? ` ${report.bits}-bit` : ''}` : '';
+    $('#uploadDetails').textContent = `Validation failed: ${error.message}${known}${report ? '\n' + structureText(report) : ''}\nThe file was not analyzed or executed. Choose another binary.`;
+  }
+}
+
+async function startAnalysis(selection) {
+  if (state.analysisJob) return;
+  try {
+    const job = await api('/api/analysis', {method:'POST', body:JSON.stringify(selection)});
+    state.analysisJob = job.job_id;
+    $('#analyzeUpload').disabled = true;
+    $('#binaryFile').disabled = true;
+    await loadLibrary();
+    await pollAnalysis(job.job_id);
+  } catch (error) { $('#analysisStatus').textContent = `Analysis failed: ${error.message}`; }
+  finally {
+    state.analysisJob = null;
+    $('#binaryFile').disabled = false;
+    $('#analyzeUpload').disabled = !state.uploadId;
+    await loadLibrary();
+  }
+}
+
+async function pollAnalysis(id) {
+  for (;;) {
+    const job = await api(`/api/analysis/${id}`);
+    $('#analysisStatus').textContent = `${job.filename} · ${job.status} · ${job.phase} · ${job.elapsed_seconds.toFixed(2)} s elapsed\n` +
+      job.events.map(event => `${event.seconds.toFixed(2)} s · ${event.phase}`).join('\n');
+    if (job.status === 'failed') throw new Error(job.error);
+    if (job.status === 'completed') {
+      $('#analysisStatus').textContent += `\n${job.cache_hit ? 'Persisted cache reused' : 'Fresh static analysis'} · processing ${job.analysis_seconds.toFixed(3)} s · queue ${job.queue_seconds.toFixed(3)} s · total ${job.total_seconds.toFixed(3)} s · SHA-256 ${job.sha256}`;
+      const warningCount = job.warning_count ?? job.warnings?.length ?? 0;
+      if (warningCount) $('#analysisStatus').textContent += `\n${warningCount} analyzer warnings recorded.`;
+      if (job.decompile_retry?.retried) $('#analysisStatus').textContent += `\n${job.decompile_retry.retried} decompilation timeout(s) retried serially; ${job.decompile_retry.recovered} recovered.`;
+      if (job.decompilation_incomplete_count) $('#analysisStatus').textContent += `\nINCOMPLETE: ${job.decompilation_incomplete_count} function(s) have no decompiled text (see Decompiled View for the reason). Evidence for them is limited to assembly and references.`;
+      if (job.analysis_level === 'partial') $('#analysisStatus').textContent += `\n${structureText(job)}\nEvidence may be incomplete: damaged regions could not be analyzed.`;
+      await switchBinary(job.binary_id, true);
+      await ensureSession(); showView('chat'); await showFunctions();
+      toast(`${job.cache_hit ? 'Cached analysis opened' : 'Analysis completed'} in ${job.analysis_seconds.toFixed(3)} s`);
+      return;
+    }
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
 }
 
 function toggleTools() {
@@ -481,8 +675,8 @@ function toggleTools() {
   $('#collapseToolsTop').setAttribute('aria-expanded', String(!state.toolsCollapsed));
 }
 
-async function switchBinary(binaryId) {
-  if (!binaryId || binaryId === state.binaryId) return;
+async function switchBinary(binaryId, force = false) {
+  if (!binaryId || (binaryId === state.binaryId && !force)) return;
   try {
     const data = await api(`/api/bootstrap?binary_id=${encodeURIComponent(binaryId)}`);
     state.bootstrap = data;
@@ -514,6 +708,12 @@ function wireEvents() {
     if (target === 'home') resetChat(); else showView(target);
   }));
   $('#newChatBtn').addEventListener('click', resetChat);
+  $('#binaryFile').addEventListener('change', validateUpload);
+  $('#uploadForm').addEventListener('submit', event => { event.preventDefault(); if (state.uploadId) startAnalysis({upload_id:state.uploadId}); });
+  $('#refreshLibrary').addEventListener('click', loadLibrary);
+  $('#investigateBtn').addEventListener('click', async () => {
+    try { await ensureSession(); showView('chat'); await showFunctions(); } catch (error) { toast(error.message); showView('library'); }
+  });
   $('#binarySelect').addEventListener('change', event => switchBinary(event.target.value));
   $$('.prompt-card').forEach(card => card.addEventListener('click', () => {
     $('#homeInput').value = card.dataset.prompt;
@@ -544,7 +744,7 @@ async function init() {
     renderBinaryContext(data.binary_metadata);
     $('#modelName').textContent = data.model ? `Ollama · ${data.model}` : 'Ollama · model not selected';
     renderRecent(data.sessions || []);
-    showView('home');
+    showView(state.binaryId ? 'home' : 'library');
   } catch (error) {
     document.body.innerHTML = `<main style="max-width:760px;margin:80px auto;padding:24px;font-family:system-ui;color:#fff"><h1>A.I.R.E. could not start</h1><p style="color:#9aa9ba">${escapeHtml(error.message)}</p><p>Verify that the selected analysis database exists and contains a persisted binary index.</p></main>`;
   }

@@ -136,12 +136,15 @@ class AnalysisProfilingTests(unittest.TestCase):
         self.assertEqual(len(warnings), 1)
 
     def test_profiled_cache_save_and_load_preserve_complete_snapshot(self):
+        from aire.analysis.versions import analyzer_versions
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'target'
             path.write_bytes(b'fixture; never execute')
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             original = ProgramIndex(BinaryRecord(digest, str(path), digest, None, None, '0', None),
                                     warnings=['original'], metadata={'options': asdict(IndexOptions()),
+                                    'analyzer_versions': analyzer_versions(),
+                                    'ghidra_version': analyzer_versions()['ghidra'],
                                     'reference_facts_version': REFERENCE_FACTS_VERSION})
             with BinaryKnowledgeStore(Path(directory) / 'analysis.sqlite') as store:
                 with patch('aire.analysis.cache.index_binary', return_value=original):

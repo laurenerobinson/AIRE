@@ -190,6 +190,21 @@ def render_tool_facts(results):
                              f"[{item['provenance']['source_id']}]")
             if data['truncations']:
                 lines.append('Artifact or diagnostic results were bounded.')
+        elif name == 'crypto_evidence':
+            summary = data['summary']
+            lines = [f"Crypto API evidence (static call sites only): {summary['functions_with_crypto_calls']} "
+                     f"function(s), {summary['crypto_api_imports_called']}/{summary['crypto_api_imports']} "
+                     'crypto imports called.']
+            for row in data['functions']:
+                ops = ', '.join(row['operations'])
+                algs = ('; identifiers ' + ', '.join(row['algorithm_identifiers'])) if row['algorithm_identifiers'] else ''
+                lines.append(f"- {row['name']} at {row['address']}: {ops}{algs} [{row['provenance']['source_id']}]")
+                for call in row['callsites'][:8]:
+                    lines.append(f"  - {call['address']} calls {call['api']} ({call['operation']}) "
+                                 f"[{call['source_table']}:{call['source_id']}]")
+                for item in row['callers'][:4]:
+                    lines.append(f"  - called by {item['name']} at {item['callsite']}")
+            lines.append('Limits: ' + ' '.join(data['limitations'][:2]))
         elif name == 'security_findings':
             lines = ['Deterministic security rule evaluations (static signals only):']
             for item in data['evaluations']:

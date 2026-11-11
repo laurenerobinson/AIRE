@@ -45,6 +45,7 @@ COUNTERS = (
     'decompile_attempts', 'decompile_successes', 'xref_collection_calls',
     'database_saves', 'sha256_reads',
     'xrefs_collected', 'thunks_collected',
+    'decompile_timeouts', 'decompile_retries', 'decompile_retry_recovered',
 )
 
 

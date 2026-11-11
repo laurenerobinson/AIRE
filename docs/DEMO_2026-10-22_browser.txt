@@ -1,0 +1,160 @@
+GREETING {'applicationType': 'gecko', 'marionetteProtocol': 3}
+SESSION {'sessionId': '52b27140-07bd-4b2e-a150-b8e40071730c', 'capabilities': {'acceptInsecureCerts': False, 'browserName': 'firefox', 'browserVersion': '155.0.1', 'platformName': 'linux', 'setWindowRect': True, 'unhandledPromptBehavior': 'dismiss and notify', 'userAgent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:155.0) Gecko/20100101 Firefox/155.0', 'moz:buildID': '20260904071051', 'moz:headless': True, 'moz:platformVersion': '7.0.0-38-generic', 'moz:processID': 11152, 'moz:profile': '/home/laurene/aire/demo_artifacts/oct22/firefox-profile', 'moz:shutdownTimeout': 60000, 'pageLoadStrategy': 'normal', 'timeouts': {'implicit': 0, 'pageLoad': 300000, 'script': 30000}, 'strictFileInteractability': False, 'moz:accessibilityChecks': False, 'moz:webdriverClick': True, 'moz:windowless': False, 'capabilities': {'alwaysMatch': {'acceptInsecureCerts': True}}, 'proxy': {}}}
+LIBRARY brancher
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/brancher/brancher
+Analyze & open
+argc_decide
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/argc_decide/argc_decide
+Analyze & open
+cpp_classes
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/cpp_classes/cpp_classes
+Analyze & open
+basic_buffer_overflows
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/basic_buffer_overflows/basic_buffer_overflows
+Analyze & open
+bindiff_a
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/bindiff_a/bindiff_a
+Analyze & open
+bindiff_b
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/bindiff_b/bindiff_b
+Analyze & open
+datadep_test
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/datadep_test/datadep_test
+Analyze & open
+langdetect_gcc_stripped_dyn
+
+Imported benchmarks · ELF · x86_64 64 · Not indexed
+
+tests/fixtures/external/angr/langdetect_gcc_stripped_dyn/langdetect_gcc_stripped_dyn
+Analyze & open
+windows_getprocaddress
+
+Imported benchmarks · PE · x86_64 64 · Cached
+
+tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe
+Open cached analysis
+windows_tls_x86
+
+Imported benchmarks · PE · x86 32 · Cached
+
+tests/fixtures/external/angr/windows_tls_x86/TLS.exe
+Open cached analysis
+windows_invalid_export_forwarder
+
+Imported benchmarks · PE · x86_64 64 · Not indexed · Negative fixture
+
+tests/fixtures/external/angr/windows_invalid_export_forwarder/invalid_export_forwarder.dll
+Analyze & open
+FunctionOverloading.exe
+
+Local demo · PE · x86 32 · Cached
+
+professor_samples/function_overloading/original/FunctionOverloading.exe
+Open cached analysis
+aire_test_binary
+
+Local demo · ELF · x86_64 64 · Cached
+
+tests/fixtures/simple_elf/aire_test_binary
+Open cached analysis
+INVALID Validation failed: Select an ELF executable/shared object or Windows PE binary; file extensions are not trusted
+VALIDATED brancher · ELF · x86_64 64-bit · 8430 bytes
+SHA-256 2ecad01a776415f64653de5ca89514d79a2bae68f7ffb4b1ef606f6f4e799541
+FIRST brancher · completed · Static analysis completed · 11.73 s elapsed
+0.09 s · Checking SHA-256 and persisted analysis compatibility
+0.09 s · Starting or reusing PyGhidra/JVM
+4.69 s · Importing binary into disposable Ghidra project
+7.42 s · Running Ghidra static auto-analysis
+10.98 s · Extracting functions, decompilation and assembly
+11.54 s · Extracting strings, imports and exports
+11.59 s · Extracting call relationships, references and thunks
+11.66 s · Saving analysis to SQLite
+11.72 s · Static analysis completed
+Fresh static analysis · processing 11.635 s · queue 0.001 s · total 11.726 s · SHA-256 2ecad01a776415f64653de5ca89514d79a2bae68f7ffb4b1ef606f6f4e799541
+8 analyzer warnings recorded.
+CACHE brancher · completed · Reused persisted analysis · 0.02 s elapsed
+0.00 s · Checking SHA-256 and persisted analysis compatibility
+0.01 s · Reused persisted analysis
+Persisted cache reused · processing 0.005 s · queue 0.006 s · total 0.016 s · SHA-256 2ecad01a776415f64653de5ca89514d79a2bae68f7ffb4b1ef606f6f4e799541
+8 analyzer warnings recorded.
+ASSEMBLY assembly
+×
+00412620: PUSH EBP
+00412621: MOV EBP,ESP
+00412623: SUB ESP,0xc0
+00412629: PUSH EBX
+0041262a: PUSH ESI
+0041262b: PUSH EDI
+0041262c: LEA EDI,[EBP + 0xffffff40]
+00412632: MOV ECX,0x30
+00412637: MOV EAX,0xcccccccc
+0041263c: STOSD.REP ES:EDI
+0041263e: MOV ECX,0x41f027
+00412643: CALL 0x0041128a
+00412648: PUSH 0x419b30
+0041264d: MOV ESI,ESP
+0041264f: MOV EAX,dword ptr [EBP + 0x8]
+00412652: PUSH EAX
+00412653: PUSH 0x419b38
+00412658: MOV ECX,dword ptr [0x0041d0dc]
+0041265e: PUSH ECX
+0041265f: CALL 0x0041121c
+00412664: ADD ESP,0x8
+00412667: MOV ECX,EAX
+00412669: CALL dword ptr [0x0041d0a4]
+0041266f: CMP ESI,ESP
+00412671: CALL 0x00411294
+00412676: PUSH EAX
+00412677: CALL 0x0041121c
+0041267c: ADD ESP,0x8
+0041267f: MOV EAX,dword ptr [EBP + 0x8]
+00412682: IMUL EAX,dword ptr [EBP + 0x8]
+00412686: POP EDI
+00412687: POP ESI
+00412688: POP EBX
+00412689: ADD ESP,0xc0
+0041268f: CMP EBP,ESP
+00412691: CALL 0x00411294
+00412696: MOV ESP,EBP
+00412698: POP EBP
+00412699: RET
+INTEGER CHECK Arithmetic evidence
+×
+
+Integer multiplication of a locally tracked value by itself (likely squaring), at 00412682.
+
+PARTIAL_AGREEMENT: Local arithmetic observation only. Original source parameter types and full function equivalence are not established.
+
+Evidence: functions · cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07:00412620
+Full instruction / decompiler report
+DOUBLE CHECK Arithmetic evidence
+×
+
+Scalar double-precision floating-point multiplication of a locally tracked value by itself (likely squaring), at 0041272c.
+
+PARTIAL_AGREEMENT: Local arithmetic observation only. Original source parameter types and full function equivalence are not established.
+
+Evidence: functions · cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07:004126c0
+Full instruction / decompiler report
+BROWSER PASS

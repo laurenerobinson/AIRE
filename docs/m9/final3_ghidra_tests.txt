@@ -1,0 +1,600 @@
+test_interactive_activity_and_persisted_follow_up (test_agent_cli.CliTests.test_interactive_activity_and_persisted_follow_up) ... ok
+test_missing_database_and_bad_binary (test_agent_cli.CliTests.test_missing_database_and_bad_binary) ... ok
+test_renderer_escapes_controls (test_agent_cli.CliTests.test_renderer_escapes_controls) ... ok
+test_private_metadata_rejected (test_agent_events.EventTests.test_private_metadata_rejected) ... ok
+test_serialization_and_immediate_delivery (test_agent_events.EventTests.test_serialization_and_immediate_delivery) ... ok
+test_debug_and_stripped_deterministic (test_agent_integration.AgentIntegrationTests.test_debug_and_stripped_deterministic) ... ok
+test_live_demo (test_agent_integration.AgentIntegrationTests.test_live_demo) ... skipped 'Opt-in agent Ollama validation'
+test_action_grammar_matches_catalog_and_tool_facts (test_agent_runner.RunnerTests.test_action_grammar_matches_catalog_and_tool_facts) ... ok
+test_behavior_claim_cannot_use_metadata_only_grounding (test_agent_runner.RunnerTests.test_behavior_claim_cannot_use_metadata_only_grounding) ... ok
+test_binary_isolation (test_agent_runner.RunnerTests.test_binary_isolation) ... ok
+test_binary_overview_collects_structure_before_synthesis (test_agent_runner.RunnerTests.test_binary_overview_collects_structure_before_synthesis) ... ok
+test_cancellation_and_deadline (test_agent_runner.RunnerTests.test_cancellation_and_deadline) ... ok
+test_code_retained_when_synthesis_fails (test_agent_runner.RunnerTests.test_code_retained_when_synthesis_fails) ... ok
+test_current_function_follow_up (test_agent_runner.RunnerTests.test_current_function_follow_up) ... ok
+test_existing_chat_accepts_same_bundle_and_rejects_foreign (test_agent_runner.RunnerTests.test_existing_chat_accepts_same_bundle_and_rejects_foreign) ... ok
+test_explicit_symbol_resolves_without_model_guess (test_agent_runner.RunnerTests.test_explicit_symbol_resolves_without_model_guess) ... ok
+test_iterations_and_tool_budget (test_agent_runner.RunnerTests.test_iterations_and_tool_budget) ... ok
+test_limit_validation (test_agent_runner.RunnerTests.test_limit_validation) ... ok
+test_malformed_model_actions (test_agent_runner.RunnerTests.test_malformed_model_actions) ... ok
+test_missing_pronoun_selection_and_required_query_budget (test_agent_runner.RunnerTests.test_missing_pronoun_selection_and_required_query_budget) ... ok
+test_model_exception (test_agent_runner.RunnerTests.test_model_exception) ... ok
+test_no_partial_facts_when_planning_fails_before_retrieval (test_agent_runner.RunnerTests.test_no_partial_facts_when_planning_fails_before_retrieval) ... ok
+test_overview_preflight_respects_tool_call_limit (test_agent_runner.RunnerTests.test_overview_preflight_respects_tool_call_limit) ... ok
+test_overview_without_code_or_calls_fails_before_model (test_agent_runner.RunnerTests.test_overview_without_code_or_calls_fails_before_model) ... ok
+test_requested_code_modalities_rendered_from_final_evidence (test_agent_runner.RunnerTests.test_requested_code_modalities_rendered_from_final_evidence) ... ok
+test_required_graph_queries_when_model_stops_early (test_agent_runner.RunnerTests.test_required_graph_queries_when_model_stops_early) ... ok
+test_stripped_lookup (test_agent_runner.RunnerTests.test_stripped_lookup) ... ok
+test_stripped_overview_uses_ranked_stored_function (test_agent_runner.RunnerTests.test_stripped_overview_uses_ranked_stored_function) ... ok
+test_termination_grounding_and_events (test_agent_runner.RunnerTests.test_termination_grounding_and_events) ... ok
+test_tool_exception (test_agent_runner.RunnerTests.test_tool_exception) ... ok
+test_unknown_tool_and_invalid_arguments (test_agent_runner.RunnerTests.test_unknown_tool_and_invalid_arguments) ... ok
+test_bounds_persistence_and_isolation (test_agent_session.SessionTests.test_bounds_persistence_and_isolation) ... ok
+test_pronoun_and_missing_selection (test_agent_session.SessionTests.test_pronoun_and_missing_selection) ... ok
+test_callers_callees_and_path (test_agent_tools.AgentToolTests.test_callers_callees_and_path) ... ok
+test_clean_failures_and_scope (test_agent_tools.AgentToolTests.test_clean_failures_and_scope) ... ok
+test_evidence_and_text (test_agent_tools.AgentToolTests.test_evidence_and_text) ... ok
+test_lookup_metadata_and_lists (test_agent_tools.AgentToolTests.test_lookup_metadata_and_lists) ... ok
+test_ranking (test_agent_tools.AgentToolTests.test_ranking) ... ok
+test_registration (test_agent_tools.AgentToolTests.test_registration) ... ok
+test_security_artifacts_and_read_only (test_agent_tools.AgentToolTests.test_security_artifacts_and_read_only) ... ok
+test_stripped_names_do_not_gain_semantics (test_agent_tools.AgentToolTests.test_stripped_names_do_not_gain_semantics) ... ok
+test_validation (test_agent_tools.AgentToolTests.test_validation) ... ok
+test_cache_hit_without_pyghidra_installed (test_analysis_cache.AnalysisCacheTests.test_cache_hit_without_pyghidra_installed) ... ok
+test_changed_bytes_at_same_path_miss (test_analysis_cache.AnalysisCacheTests.test_changed_bytes_at_same_path_miss) ... ok
+test_every_different_option_is_a_miss_and_replaces_options (test_analysis_cache.AnalysisCacheTests.test_every_different_option_is_a_miss_and_replaces_options) ... ok
+test_failed_forced_index_does_not_replace_snapshot (test_analysis_cache.AnalysisCacheTests.test_failed_forced_index_does_not_replace_snapshot) ... ok
+test_first_miss_persists_then_reopened_store_hits (test_analysis_cache.AnalysisCacheTests.test_first_miss_persists_then_reopened_store_hits) ... ok
+test_force_reruns_and_replaces_snapshot (test_analysis_cache.AnalysisCacheTests.test_force_reruns_and_replaces_snapshot) ... ok
+test_hash_change_during_cache_load_rejected (test_analysis_cache.AnalysisCacheTests.test_hash_change_during_cache_load_rejected) ... ok
+test_hash_change_during_indexing_rejected_before_save (test_analysis_cache.AnalysisCacheTests.test_hash_change_during_indexing_rejected_before_save) ... ok
+test_identical_bytes_at_another_path_hit (test_analysis_cache.AnalysisCacheTests.test_identical_bytes_at_another_path_hit) ... ok
+test_integrity_checked_even_when_indexing_fails (test_analysis_cache.AnalysisCacheTests.test_integrity_checked_even_when_indexing_fails) ... ok
+test_invalid_files_fail_before_cache_lookup (test_analysis_cache.AnalysisCacheTests.test_invalid_files_fail_before_cache_lookup) ... ok
+test_invalid_options_fail_before_indexing (test_analysis_cache.AnalysisCacheTests.test_invalid_options_fail_before_indexing) ... ok
+test_mismatched_cached_sha256_is_rejected (test_analysis_cache.AnalysisCacheTests.test_mismatched_cached_sha256_is_rejected) ... ok
+test_mismatched_index_identity_rejected_before_save (test_analysis_cache.AnalysisCacheTests.test_mismatched_index_identity_rejected_before_save) ... ok
+test_missing_incomplete_extra_or_malformed_options_are_misses (test_analysis_cache.AnalysisCacheTests.test_missing_incomplete_extra_or_malformed_options_are_misses) ... ok
+test_missing_or_different_analyzer_versions_are_cache_misses (test_analysis_cache.AnalysisCacheTests.test_missing_or_different_analyzer_versions_are_cache_misses) ... ok
+test_old_or_missing_reference_format_is_a_cache_miss (test_analysis_cache.AnalysisCacheTests.test_old_or_missing_reference_format_is_a_cache_miss) ... ok
+test_store_failures_propagate (test_analysis_cache.AnalysisCacheTests.test_store_failures_propagate) ... ok
+test_unreadable_file_fails_before_indexing (test_analysis_cache.AnalysisCacheTests.test_unreadable_file_fails_before_indexing) ... ok
+test_unverifiable_input_after_load_rejected (test_analysis_cache.AnalysisCacheTests.test_unverifiable_input_after_load_rejected) ... ok
+test_real_miss_then_reopened_cache_hit (test_analysis_cache_integration.AnalysisCacheIntegrationTests.test_real_miss_then_reopened_cache_hit) ... ok
+test_decompile_attempts_successes_and_duplicates_are_observable (test_analysis_profiling.AnalysisProfilingTests.test_decompile_attempts_successes_and_duplicates_are_observable) ... ok
+test_failed_resource_entry_is_timed (test_analysis_profiling.AnalysisProfilingTests.test_failed_resource_entry_is_timed) ... ok
+test_failure_resets_request_context_and_records_stage (test_analysis_profiling.AnalysisProfilingTests.test_failure_resets_request_context_and_records_stage) ... ok
+test_import_starts_no_optional_runtime (test_analysis_profiling.AnalysisProfilingTests.test_import_starts_no_optional_runtime) ... ok
+test_inactive_profiling_reads_no_clock_and_preserves_return_value (test_analysis_profiling.AnalysisProfilingTests.test_inactive_profiling_reads_no_clock_and_preserves_return_value) ... ok
+test_nested_stages_are_exclusive_and_sum_to_total (test_analysis_profiling.AnalysisProfilingTests.test_nested_stages_are_exclusive_and_sum_to_total) ... ok
+test_profile_cannot_nest_or_be_reused (test_analysis_profiling.AnalysisProfilingTests.test_profile_cannot_nest_or_be_reused) ... ok
+test_profiled_cache_save_and_load_preserve_complete_snapshot (test_analysis_profiling.AnalysisProfilingTests.test_profiled_cache_save_and_load_preserve_complete_snapshot) ... ok
+test_repeated_nested_stage_names_do_not_double_count (test_analysis_profiling.AnalysisProfilingTests.test_repeated_nested_stage_names_do_not_double_count) ... ok
+test_timed_resource_cleanup_runs_on_unsuppressed_failure (test_analysis_profiling.AnalysisProfilingTests.test_timed_resource_cleanup_runs_on_unsuppressed_failure) ... ok
+test_timed_resource_preserves_exception_suppression_and_exit_arguments (test_analysis_profiling.AnalysisProfilingTests.test_timed_resource_preserves_exception_suppression_and_exit_arguments) ... ok
+test_bounded_overview_excerpt_keeps_declarations_and_final_operation (test_application_relevance.RelevanceTests.test_bounded_overview_excerpt_keeps_declarations_and_final_operation) ... ok
+test_depth_cycle_and_missing_path_are_bounded (test_application_relevance.RelevanceTests.test_depth_cycle_and_missing_path_are_bounded) ... ok
+test_explicit_target_preserved_and_runtime_seed_hint_cannot_override (test_application_relevance.RelevanceTests.test_explicit_target_preserved_and_runtime_seed_hint_cannot_override) ... ok
+test_external_and_thunk_cannot_dominate (test_application_relevance.RelevanceTests.test_external_and_thunk_cannot_dominate) ... ok
+test_indirect_or_multi_instruction_thunks_are_not_guessed (test_application_relevance.RelevanceTests.test_indirect_or_multi_instruction_thunks_are_not_guessed) ... ok
+test_large_graph_traversal_output_and_body_loading_are_bounded (test_application_relevance.RelevanceTests.test_large_graph_traversal_output_and_body_loading_are_bounded) ... ok
+test_literal_thunk_jump_is_traversal_only_not_call_edge (test_application_relevance.RelevanceTests.test_literal_thunk_jump_is_traversal_only_not_call_edge) ... ok
+test_numeric_address_tie_break (test_application_relevance.RelevanceTests.test_numeric_address_tie_break) ... ok
+test_order_and_reasons_are_independent_of_insert_order (test_application_relevance.RelevanceTests.test_order_and_reasons_are_independent_of_insert_order) ... ok
+test_runtime_bridge_promotes_first_application_descendant (test_application_relevance.RelevanceTests.test_runtime_bridge_promotes_first_application_descendant) ... ok
+test_runtime_connectivity_wins_m3_and_loses_application_ranking (test_application_relevance.RelevanceTests.test_runtime_connectivity_wins_m3_and_loses_application_ranking) ... ok
+test_stripped_elf_and_double_underscore_user_functions_stay_eligible (test_application_relevance.RelevanceTests.test_stripped_elf_and_double_underscore_user_functions_stay_eligible) ... ok
+test_symbol_families_namespace_and_unreliable_library_flag (test_application_relevance.RelevanceTests.test_symbol_families_namespace_and_unreliable_library_flag) ... ok
+test_three_priority_functions_keep_both_code_types_in_compact_budget (test_application_relevance.RelevanceTests.test_three_priority_functions_keep_both_code_types_in_compact_budget) ... ok
+test_tool_provenance_json_and_validation (test_application_relevance.RelevanceTests.test_tool_provenance_json_and_validation) ... ok
+test_01_simple_elf (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_01_simple_elf) ... ok
+test_02_professor_pe (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_02_professor_pe) ... ok
+test_03_professor_elf (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_03_professor_elf) ... ok
+test_04_shared_runtime_format_isolation (test_binary_formats_integration.BinaryFormatsIntegrationTests.test_04_shared_runtime_format_isolation) ... ok
+test_cached_requests_reuse_child_process_and_exit_cleanly (test_binary_library.BinaryLibraryTests.test_cached_requests_reuse_child_process_and_exit_cleanly) ... ok
+test_empty_database_http_upload_and_origin_boundary (test_binary_library.BinaryLibraryTests.test_empty_database_http_upload_and_origin_boundary) ... 127.0.0.1 - - [11/Nov/2026 15:41:51] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:41:51] "POST /api/uploads?filename=demo.exe HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 15:41:51] "POST /api/uploads?filename=demo.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 15:41:51] "POST /api/uploads HTTP/1.1" 403 -
+ok
+test_failed_job_recovers_and_writer_uses_worker_thread (test_binary_library.BinaryLibraryTests.test_failed_job_recovers_and_writer_uses_worker_thread) ... ok
+test_fixture_manifest_hash_change_is_rejected (test_binary_library.BinaryLibraryTests.test_fixture_manifest_hash_change_is_rejected) ... ok
+test_malformed_optional_demo_binary_does_not_abort_startup (test_binary_library.BinaryLibraryTests.test_malformed_optional_demo_binary_does_not_abort_startup) ... ok
+test_queue_coalesces_and_serializes_requests (test_binary_library.BinaryLibraryTests.test_queue_coalesces_and_serializes_requests) ... ok
+test_real_headers_and_fake_or_truncated_inputs (test_binary_library.BinaryLibraryTests.test_real_headers_and_fake_or_truncated_inputs) ... ok
+test_symlink_storage_escape_is_rejected (test_binary_library.BinaryLibraryTests.test_symlink_storage_escape_is_rejected) ... ok
+test_upload_hash_paths_and_bytes_preserved (test_binary_library.BinaryLibraryTests.test_upload_hash_paths_and_bytes_preserved) ... ok
+test_ambiguous_no_model_calls (test_chat.ChatTests.test_ambiguous_no_model_calls) ... ok
+test_binary_overview_bounded_and_all_artifact_types (test_chat.ChatTests.test_binary_overview_bounded_and_all_artifact_types) ... ok
+test_citations_stable_and_deterministic_prompt (test_chat.ChatTests.test_citations_stable_and_deterministic_prompt) ... ok
+test_confidence_validation (test_chat.ChatTests.test_confidence_validation) ... ok
+test_debug_retains_invalid_raw (test_chat.ChatTests.test_debug_retains_invalid_raw) ... ok
+test_duplicate_keys_and_nonfinite_json (test_chat.ChatTests.test_duplicate_keys_and_nonfinite_json) ... ok
+test_fact_interpretation_separation (test_chat.ChatTests.test_fact_interpretation_separation) ... ok
+test_malformed_retries_once (test_chat.ChatTests.test_malformed_retries_once) ... ok
+test_model_cannot_write_facts (test_chat.ChatTests.test_model_cannot_write_facts) ... ok
+test_model_name_raw_and_sizes (test_chat.ChatTests.test_model_name_raw_and_sizes) ... ok
+test_no_binary_reads_writes_or_other_network (test_chat.ChatTests.test_no_binary_reads_writes_or_other_network) ... ok
+test_nonexistent_citation (test_chat.ChatTests.test_nonexistent_citation) ... ok
+test_omitted_items_have_no_citations (test_chat.ChatTests.test_omitted_items_have_no_citations) ... ok
+test_prompt_evidence_only_and_untrusted_system (test_chat.ChatTests.test_prompt_evidence_only_and_untrusted_system) ... ok
+test_question_does_not_trigger_implicit_retrieval (test_chat.ChatTests.test_question_does_not_trigger_implicit_retrieval) ... ok
+test_request_bounds (test_chat.ChatTests.test_request_bounds) ... ok
+test_second_malformed_fails_without_raw_by_default (test_chat.ChatTests.test_second_malformed_fails_without_raw_by_default) ... ok
+test_stripped_names_explicitly_not_semantic (test_chat.ChatTests.test_stripped_names_explicitly_not_semantic) ... ok
+test_targeted_evidence_request (test_chat.ChatTests.test_targeted_evidence_request) ... ok
+test_terminal_control_characters_escaped (test_chat.ChatTests.test_terminal_control_characters_escaped) ... ok
+test_tiny_budget_fails_before_model (test_chat.ChatTests.test_tiny_budget_fails_before_model) ... ok
+test_transport_failure_not_retried (test_chat.ChatTests.test_transport_failure_not_retried) ... ok
+test_truncation_propagated_and_budgeted (test_chat.ChatTests.test_truncation_propagated_and_budgeted) ... ok
+test_uncited_claim_rejected (test_chat.ChatTests.test_uncited_claim_rejected) ... ok
+test_unknown_no_model_calls (test_chat.ChatTests.test_unknown_no_model_calls) ... ok
+test_valid_json_whitespace (test_chat.ChatTests.test_valid_json_whitespace) ... ok
+test_debug_deterministic_pipeline (test_chat_integration.ChatIntegrationTests.test_debug_deterministic_pipeline) ... 
+M5: {"citation_count": 17, "citations_valid": true, "context_truncated": true, "facts": ["\"process_input\" (004012f8) contains a stored resolved CALL to \"validate_input\" (004011bc) at callsite 00401316.", "\"process_input\" (004012f8) contains a stored resolved CALL to \"transform_input\" (00401269) at callsite 00401334.", "\"main\" (0040148d) contains a stored resolved CALL to \"process_input\" (004012f8) at callsite 00401545."], "ground_truth_direct_callee_matches": 2, "interpretations": ["The function may coordinate the shown callees."], "mode": "real static evidence + fake model; NOT live inference", "model": "fake-local-test", "question": "What functions does this function interact with? Select the direct call relationships as facts.", "sha256_after": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "sha256_before": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "sizes": {"context_characters": 23874, "eval_count": null, "last_prompt_characters": 26811, "m4_rendered_characters": 23949, "prompt_characters": 26811, "prompt_eval_count": null, "response_characters": 491, "total_response_characters": 491}, "summary": "The selected evidence describes stored function relationships.", "target_address": "004012f8", "target_name": "process_input", "timing_seconds": {"context_build_seconds": 0.006108581001171842, "inference_seconds": 0.00022965700190979987, "parsing_seconds": 9.777399827726185e-05, "prompt_build_seconds": 0.002603926001029322, "total_chat_seconds": 0.00918244900094578}}
+ok
+test_debug_live_ollama (test_chat_integration.ChatIntegrationTests.test_debug_live_ollama) ... skipped 'Opt-in local Ollama inference'
+test_stripped_deterministic_pipeline (test_chat_integration.ChatIntegrationTests.test_stripped_deterministic_pipeline) ... 
+M5: {"citation_count": 17, "citations_valid": true, "context_truncated": true, "facts": ["\"FUN_004012f8\" (004012f8) contains a stored resolved CALL to \"FUN_004011bc\" (004011bc) at callsite 00401316.", "\"FUN_004012f8\" (004012f8) contains a stored resolved CALL to \"FUN_00401269\" (00401269) at callsite 00401334.", "\"FUN_0040148d\" (0040148d) contains a stored resolved CALL to \"FUN_004012f8\" (004012f8) at callsite 00401545."], "ground_truth_direct_callee_matches": 2, "interpretations": ["The function may coordinate the shown callees."], "mode": "real static evidence + fake model; NOT live inference", "model": "fake-local-test", "question": "What functions does this function interact with? Select the direct call relationships as facts.", "sha256_after": "08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188", "sha256_before": "08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188", "sizes": {"context_characters": 23853, "eval_count": null, "last_prompt_characters": 26790, "m4_rendered_characters": 23948, "prompt_characters": 26790, "prompt_eval_count": null, "response_characters": 491, "total_response_characters": 491}, "summary": "The selected evidence describes stored function relationships.", "target_address": "004012f8", "target_name": "FUN_004012f8", "timing_seconds": {"context_build_seconds": 0.003652536001027329, "inference_seconds": 0.00036840999746345915, "parsing_seconds": 7.206299778772518e-05, "prompt_build_seconds": 0.0034882229992945213, "total_chat_seconds": 0.007587992000480881}}
+ok
+test_stripped_live_ollama (test_chat_integration.ChatIntegrationTests.test_stripped_live_ollama) ... skipped 'Opt-in local Ollama inference'
+test_all_zero_disabled (test_context_builder.ContextBuilderTests.test_all_zero_disabled) ... ok
+test_ambiguous_target (test_context_builder.ContextBuilderTests.test_ambiguous_target) ... ok
+test_artifact_limit_and_binary_scope (test_context_builder.ContextBuilderTests.test_artifact_limit_and_binary_scope) ... ok
+test_assembly_limit (test_context_builder.ContextBuilderTests.test_assembly_limit) ... ok
+test_binary_isolation (test_context_builder.ContextBuilderTests.test_binary_isolation) ... ok
+test_decompiled_limit_unicode (test_context_builder.ContextBuilderTests.test_decompiled_limit_unicode) ... ok
+test_deterministic_order_independent_of_rows (test_context_builder.ContextBuilderTests.test_deterministic_order_independent_of_rows) ... ok
+test_direct_callees (test_context_builder.ContextBuilderTests.test_direct_callees) ... ok
+test_direct_callers (test_context_builder.ContextBuilderTests.test_direct_callers) ... ok
+test_edge_limit (test_context_builder.ContextBuilderTests.test_edge_limit) ... ok
+test_embedded_nul_preserved (test_context_builder.ContextBuilderTests.test_embedded_nul_preserved) ... ok
+test_exact_target_only (test_context_builder.ContextBuilderTests.test_exact_target_only) ... ok
+test_external_import_address_association (test_context_builder.ContextBuilderTests.test_external_import_address_association) ... ok
+test_forward_depth_two (test_context_builder.ContextBuilderTests.test_forward_depth_two) ... ok
+test_function_limit (test_context_builder.ContextBuilderTests.test_function_limit) ... ok
+test_global_warning_handling (test_context_builder.ContextBuilderTests.test_global_warning_handling) ... ok
+test_json_safe_and_timing_independent (test_context_builder.ContextBuilderTests.test_json_safe_and_timing_independent) ... ok
+test_no_duplicate_evidence_and_cycle_safety (test_context_builder.ContextBuilderTests.test_no_duplicate_evidence_and_cycle_safety) ... ok
+test_no_jvm_import (test_context_builder.ContextBuilderTests.test_no_jvm_import) ... ok
+test_partial_text_budget_records_retained_size (test_context_builder.ContextBuilderTests.test_partial_text_budget_records_retained_size) ... ok
+test_provenance_for_every_item (test_context_builder.ContextBuilderTests.test_provenance_for_every_item) ... ok
+test_reads_only_and_m3_reuse (test_context_builder.ContextBuilderTests.test_reads_only_and_m3_reuse) ... ok
+test_request_validation (test_context_builder.ContextBuilderTests.test_request_validation) ... ok
+test_reverse_traversal (test_context_builder.ContextBuilderTests.test_reverse_traversal) ... ok
+test_target_none_binary_overview (test_context_builder.ContextBuilderTests.test_target_none_binary_overview) ... ok
+test_thunk_does_not_invent_import_linkage (test_context_builder.ContextBuilderTests.test_thunk_does_not_invent_import_linkage) ... ok
+test_total_budget_including_escaping_and_labels (test_context_builder.ContextBuilderTests.test_total_budget_including_escaping_and_labels) ... ok
+test_unknown_target_and_binary (test_context_builder.ContextBuilderTests.test_unknown_target_and_binary) ... ok
+test_upstream_assembly_truncation (test_context_builder.ContextBuilderTests.test_upstream_assembly_truncation) ... ok
+test_real_context (test_context_builder_integration.ContextIntegrationTests.test_real_context) ... 
+M4 context: {"build_timings_seconds": {"artifact_selection_seconds": 0.00337541000044439, "graph_selection_seconds": 0.0009257719975721557, "rendering_seconds": 0.004406460000609513, "target_resolution_seconds": 6.641599975409918e-05, "total_context_seconds": 0.008967178000602871}, "mean_build_ms_10_repeats": {"depth_3": 5.501955799991265, "direct_neighbors": 5.821703300171066, "target_only": 5.0195479998365045}, "omitted_warnings": 25, "rendered_chars": 59951, "selected_artifacts": 8, "selected_edges": 16, "selected_functions": 12, "selected_warnings": 1, "sha256_after": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "sha256_before": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "small_bundle_chars": 1914, "socket_edge": {"callee": "socket", "callee_address": "00101060", "caller": "FUN_00101efe", "callsite": "00101f39"}, "target": "FUN_00101efe", "truncations": {"artifact_value": 8, "artifacts": 1, "assembly": 11, "decompiled_text": 11, "references": 1, "render_block": 23, "total_chars": 1, "warning_text": 1, "warnings": 1}}
+ok
+test_close_and_context_manager (test_database.DatabaseTests.test_close_and_context_manager) ... ok
+test_complete_round_trip_after_reopen (test_database.DatabaseTests.test_complete_round_trip_after_reopen) ... ok
+test_delete_cascades_but_does_not_delete_file (test_database.DatabaseTests.test_delete_cascades_but_does_not_delete_file) ... ok
+test_duplicate_edges_preserve_input_order (test_database.DatabaseTests.test_duplicate_edges_preserve_input_order) ... ok
+test_duplicate_record_id_rolls_back (test_database.DatabaseTests.test_duplicate_record_id_rolls_back) ... ok
+test_duplicate_save (test_database.DatabaseTests.test_duplicate_save) ... ok
+test_foreign_keys_enabled_and_enforced (test_database.DatabaseTests.test_foreign_keys_enabled_and_enforced) ... ok
+test_has_and_missing_load (test_database.DatabaseTests.test_has_and_missing_load) ... ok
+test_import_does_not_load_ghidra (test_database.DatabaseTests.test_import_does_not_load_ghidra) ... ok
+test_initialize_version_and_indexes (test_database.DatabaseTests.test_initialize_version_and_indexes) ... ok
+test_invalid_and_cross_binary_edges_roll_back (test_database.DatabaseTests.test_invalid_and_cross_binary_edges_roll_back) ... ok
+test_invalid_metadata_does_not_replace (test_database.DatabaseTests.test_invalid_metadata_does_not_replace) ... ok
+test_late_failure_rolls_back_replacement_and_new_binary (test_database.DatabaseTests.test_late_failure_rolls_back_replacement_and_new_binary) ... ok
+test_list_is_metadata_only (test_database.DatabaseTests.test_list_is_metadata_only) ... ok
+test_malformed_datetime (test_database.DatabaseTests.test_malformed_datetime) ... ok
+test_malformed_persisted_json (test_database.DatabaseTests.test_malformed_persisted_json) ... ok
+test_metadata_json_normalization (test_database.DatabaseTests.test_metadata_json_normalization) ... ok
+test_minimal_round_trip (test_database.DatabaseTests.test_minimal_round_trip) ... ok
+test_mismatched_owner_and_conflicting_id (test_database.DatabaseTests.test_mismatched_owner_and_conflicting_id) ... ok
+test_missing_version_or_tables_rejected (test_database.DatabaseTests.test_missing_version_or_tables_rejected) ... ok
+test_open_failure (test_database.DatabaseTests.test_open_failure) ... ok
+test_reanalysis_replaces_all_previous_facts (test_database.DatabaseTests.test_reanalysis_replaces_all_previous_facts) ... ok
+test_sql_strings_are_data (test_database.DatabaseTests.test_sql_strings_are_data) ... ok
+test_unsupported_schema_is_not_modified (test_database.DatabaseTests.test_unsupported_schema_is_not_modified) ... ok
+test_unversioned_database_rejected (test_database.DatabaseTests.test_unversioned_database_rejected) ... ok
+test_real_round_trip (test_database_integration.DatabaseIntegrationTests.test_real_round_trip) ... 
+M2 round-trip: {"database_bytes": 1708032, "load_seconds": 0.014125090001471108, "loaded": {"call_edges": 134, "decompiled_functions": 81, "exports": 8, "functions": 106, "imports": 25, "strings": 132, "warnings": 26}, "original": {"call_edges": 134, "decompiled_functions": 81, "exports": 8, "functions": 106, "imports": 25, "strings": 132, "warnings": 26}, "save_seconds": 0.046146893000695854, "sha256_after": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "sha256_before": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de"}
+ok
+test_corpus_integrity_and_all_formats (test_external_fixtures.ExternalFixtureTests.test_corpus_integrity_and_all_formats) ... ok
+test_detect_modified_original_source (test_external_fixtures.ExternalFixtureTests.test_detect_modified_original_source) ... ok
+test_intentional_non_utf8_forwarder_is_structurally_valid_pe (test_external_fixtures.ExternalFixtureTests.test_intentional_non_utf8_forwarder_is_structurally_valid_pe) ... ok
+test_reject_download_pages_and_lfs_pointers (test_external_fixtures.ExternalFixtureTests.test_reject_download_pages_and_lfs_pointers) ... ok
+test_reject_elf_program_range_beyond_file (test_external_fixtures.ExternalFixtureTests.test_reject_elf_program_range_beyond_file) ... ok
+test_reject_manifest_path_traversal (test_external_fixtures.ExternalFixtureTests.test_reject_manifest_path_traversal) ... ok
+test_reject_mz_without_pe_signature (test_external_fixtures.ExternalFixtureTests.test_reject_mz_without_pe_signature) ... ok
+test_reject_truncated_pe_section (test_external_fixtures.ExternalFixtureTests.test_reject_truncated_pe_section) ... ok
+test_absent_multiply_register_rejected_in_cited_function (test_function_crosscheck.CrosscheckIntegrationTests.test_absent_multiply_register_rejected_in_cited_function) ... ok
+test_agent_semantic_route_no_planning (test_function_crosscheck.CrosscheckIntegrationTests.test_agent_semantic_route_no_planning) ... ok
+test_bad_register_interpretation_omitted_without_extra_inference (test_function_crosscheck.CrosscheckIntegrationTests.test_bad_register_interpretation_omitted_without_extra_inference) ... ok
+test_compare_two_functions (test_function_crosscheck.CrosscheckIntegrationTests.test_compare_two_functions) ... ok
+test_contradiction_guard_disabled_for_helper_calls (test_function_crosscheck.CrosscheckIntegrationTests.test_contradiction_guard_disabled_for_helper_calls) ... ok
+test_crosscheck_metadata_cannot_create_code_grounding (test_function_crosscheck.CrosscheckIntegrationTests.test_crosscheck_metadata_cannot_create_code_grounding) ... ok
+test_deterministic_database_order_and_provenance (test_function_crosscheck.CrosscheckIntegrationTests.test_deterministic_database_order_and_provenance) ... ok
+test_exact_selectors_scope_and_read_only (test_function_crosscheck.CrosscheckIntegrationTests.test_exact_selectors_scope_and_read_only) ... ok
+test_model_contradiction_sanitized_without_extra_inference (test_function_crosscheck.CrosscheckIntegrationTests.test_model_contradiction_sanitized_without_extra_inference) ... ok
+test_narrow_model_contradiction_warning (test_function_crosscheck.CrosscheckIntegrationTests.test_narrow_model_contradiction_warning) ... ok
+test_prompt_citations_and_fact_separation (test_function_crosscheck.CrosscheckIntegrationTests.test_prompt_citations_and_fact_separation) ... ok
+test_register_guard_defers_implicit_operands_and_incomplete_code (test_function_crosscheck.CrosscheckIntegrationTests.test_register_guard_defers_implicit_operands_and_incomplete_code) ... ok
+test_selected_body_only (test_function_crosscheck.CrosscheckIntegrationTests.test_selected_body_only) ... ok
+test_source_code_and_calls_survive_large_derived_report (test_function_crosscheck.CrosscheckIntegrationTests.test_source_code_and_calls_survive_large_derived_report) ... ok
+test_tool_schema_count_and_validation (test_function_crosscheck.CrosscheckIntegrationTests.test_tool_schema_count_and_validation) ... ok
+test_tool_transport_compact_audit_report_complete (test_function_crosscheck.CrosscheckIntegrationTests.test_tool_transport_compact_audit_report_complete) ... ok
+test_all_supported_families (test_function_crosscheck.SemanticsTests.test_all_supported_families) ... ok
+test_ambiguous_callsite_not_selected (test_function_crosscheck.SemanticsTests.test_ambiguous_callsite_not_selected) ... ok
+test_arbitrary_multiplication_not_square (test_function_crosscheck.SemanticsTests.test_arbitrary_multiplication_not_square) ... ok
+test_base_register_changes_break_memory_identity (test_function_crosscheck.SemanticsTests.test_base_register_changes_break_memory_identity) ... ok
+test_bounded_long_inputs (test_function_crosscheck.SemanticsTests.test_bounded_long_inputs) ... ok
+test_call_and_store_barriers (test_function_crosscheck.SemanticsTests.test_call_and_store_barriers) ... ok
+test_condition_loop_return_counts (test_function_crosscheck.SemanticsTests.test_condition_loop_return_counts) ... ok
+test_conflicting_sqrt_decompiler (test_function_crosscheck.SemanticsTests.test_conflicting_sqrt_decompiler) ... ok
+test_decompiler_calls_not_assumed_pure (test_function_crosscheck.SemanticsTests.test_decompiler_calls_not_assumed_pure) ... ok
+test_decompiler_comments_strings_and_names_ignored (test_function_crosscheck.SemanticsTests.test_decompiler_comments_strings_and_names_ignored) ... ok
+test_decompiler_constants_and_conditions (test_function_crosscheck.SemanticsTests.test_decompiler_constants_and_conditions) ... ok
+test_decompiler_parentheses_casts_and_concat (test_function_crosscheck.SemanticsTests.test_decompiler_parentheses_casts_and_concat) ... ok
+test_direct_and_indirect_calls (test_function_crosscheck.SemanticsTests.test_direct_and_indirect_calls) ... ok
+test_double_square_agreement (test_function_crosscheck.SemanticsTests.test_double_square_agreement) ... ok
+test_float_and_double_multiply_distinct_from_sqrt (test_function_crosscheck.SemanticsTests.test_float_and_double_multiply_distinct_from_sqrt) ... ok
+test_generic_name_independent (test_function_crosscheck.SemanticsTests.test_generic_name_independent) ... ok
+test_integer_square_agreement (test_function_crosscheck.SemanticsTests.test_integer_square_agreement) ... ok
+test_malformed_line_breaks_identity (test_function_crosscheck.SemanticsTests.test_malformed_line_breaks_identity) ... ok
+test_missing_and_truncated_assembly (test_function_crosscheck.SemanticsTests.test_missing_and_truncated_assembly) ... ok
+test_missing_decompiler (test_function_crosscheck.SemanticsTests.test_missing_decompiler) ... ok
+test_reverse_conflict (test_function_crosscheck.SemanticsTests.test_reverse_conflict) ... ok
+test_scalar_width_change_breaks_identity (test_function_crosscheck.SemanticsTests.test_scalar_width_change_breaks_identity) ... ok
+test_three_operand_multiply_not_square (test_function_crosscheck.SemanticsTests.test_three_operand_multiply_not_square) ... ok
+test_thunk_no_false_conflict (test_function_crosscheck.SemanticsTests.test_thunk_no_false_conflict) ... ok
+test_unresolved_call_does_not_exclude_sqrt (test_function_crosscheck.SemanticsTests.test_unresolved_call_does_not_exclude_sqrt) ... ok
+test_unsupported_architecture (test_function_crosscheck.SemanticsTests.test_unsupported_architecture) ... ok
+test_unsupported_instruction_clears_tracking (test_function_crosscheck.SemanticsTests.test_unsupported_instruction_clears_tracking) ... ok
+test_window_expiration (test_function_crosscheck.SemanticsTests.test_window_expiration) ... ok
+test_binary_selection_preserves_cli_identity_name_and_hash_resolution (test_gui_server.GuiServerTests.test_binary_selection_preserves_cli_identity_name_and_hash_resolution) ... ok
+test_bootstrap_sessions_tools_and_chat_use_existing_backend (test_gui_server.GuiServerTests.test_bootstrap_sessions_tools_and_chat_use_existing_backend) ... ok
+test_cli_gui_dispatch_keeps_session_and_model_options (test_gui_server.GuiServerTests.test_cli_gui_dispatch_keeps_session_and_model_options) ... ok
+test_http_serves_static_frontend_and_json_api (test_gui_server.GuiServerTests.test_http_serves_static_frontend_and_json_api) ... /home/laurene/aire/aire-server/src/aire/knowledge/database.py:287: ResourceWarning: unclosed file <_io.FileIO name='/tmp/tmp8v3ato8o/.aire-uploads/index-worker.log' mode='ab' closefd=True>
+  (tuple(edge[c] for c in _COLUMNS['function_edges']) + (identity, ordinal)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 35790 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/laurene/aire/aire-server/src/aire/knowledge/database.py:287: ResourceWarning: unclosed file <_io.FileIO name=168 mode='wb' closefd=True>
+  (tuple(edge[c] for c in _COLUMNS['function_edges']) + (identity, ordinal)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/laurene/aire/aire-server/src/aire/knowledge/database.py:287: ResourceWarning: unclosed file <_io.FileIO name=173 mode='rb' closefd=True>
+  (tuple(edge[c] for c in _COLUMNS['function_edges']) + (identity, ordinal)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+127.0.0.1 - - [11/Nov/2026 15:42:18] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "GET /app.css HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "GET /app.js HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "POST /api/sessions HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "POST /api/sessions/88f71354fde5401dae7e459678350c6a/select-function HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "GET /api/sessions/88f71354fde5401dae7e459678350c6a HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "POST /api/sessions HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "POST /api/chat HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:42:18] "GET /api/sessions?binary_id=b HTTP/1.1" 200 -
+ok
+test_missing_database_is_never_created (test_gui_server.GuiServerTests.test_missing_database_is_never_created) ... ok
+test_non_loopback_bind_is_rejected (test_gui_server.GuiServerTests.test_non_loopback_bind_is_rejected) ... ok
+test_tools_preserve_binary_scope_and_reject_mutations (test_gui_server.GuiServerTests.test_tools_preserve_binary_scope_and_reject_mutations) ... ok
+test_cache_is_bounded (test_gui_workspace.WorkspaceTests.test_cache_is_bounded) ... ok
+test_cached_tools_preserve_agent_tools_results_and_errors (test_gui_workspace.WorkspaceTests.test_cached_tools_preserve_agent_tools_results_and_errors) ... ok
+test_compact_named_call_and_absence_assertions_are_checked (test_gui_workspace.WorkspaceTests.test_compact_named_call_and_absence_assertions_are_checked) ... ok
+test_compact_prompt_preserves_behavior_and_artifact_grounding (test_gui_workspace.WorkspaceTests.test_compact_prompt_preserves_behavior_and_artifact_grounding) ... ok
+test_concise_response_preserves_full_audit_and_security_details (test_gui_workspace.WorkspaceTests.test_concise_response_preserves_full_audit_and_security_details) ... ok
+test_creation_defers_expensive_overview_until_requested (test_gui_workspace.WorkspaceTests.test_creation_defers_expensive_overview_until_requested) ... ok
+test_crosscheck_cache_identity_and_policy_invalidation (test_gui_workspace.WorkspaceTests.test_crosscheck_cache_identity_and_policy_invalidation) ... ok
+test_crosscheck_explanation_is_separate_from_stored_facts (test_gui_workspace.WorkspaceTests.test_crosscheck_explanation_is_separate_from_stored_facts) ... ok
+test_database_changes_invalidate_tools_and_overview_answers (test_gui_workspace.WorkspaceTests.test_database_changes_invalidate_tools_and_overview_answers) ... ok
+test_function_cards_require_selection_and_use_selected_evidence (test_gui_workspace.WorkspaceTests.test_function_cards_require_selection_and_use_selected_evidence) ... ok
+test_function_prompt_sends_code_only_for_the_target (test_gui_workspace.WorkspaceTests.test_function_prompt_sends_code_only_for_the_target) ... ok
+test_function_reply_has_prose_bounds_without_extending_deadline (test_gui_workspace.WorkspaceTests.test_function_reply_has_prose_bounds_without_extending_deadline) ... ok
+test_immediate_overview_preview_and_performance_are_separate_from_answer (test_gui_workspace.WorkspaceTests.test_immediate_overview_preview_and_performance_are_separate_from_answer) ... ok
+test_normalized_defaults_copy_isolation_and_lazy_code (test_gui_workspace.WorkspaceTests.test_normalized_defaults_copy_isolation_and_lazy_code) ... ok
+test_overview_retains_assembly_when_requested (test_gui_workspace.WorkspaceTests.test_overview_retains_assembly_when_requested) ... ok
+test_relevance_policy_version_invalidates_evidence_and_answer_cache (test_gui_workspace.WorkspaceTests.test_relevance_policy_version_invalidates_evidence_and_answer_cache) ... ok
+test_session_selection_and_overview_cache_reuse (test_gui_workspace.WorkspaceTests.test_session_selection_and_overview_cache_reuse) ... ok
+test_summary_preview_handles_escaped_partial_text_and_hides_other_fields (test_gui_workspace.WorkspaceTests.test_summary_preview_handles_escaped_partial_text_and_hides_other_fields) ... ok
+test_suspicious_card_uses_deterministic_checks_without_model_guess (test_gui_workspace.WorkspaceTests.test_suspicious_card_uses_deterministic_checks_without_model_guess) ... ok
+test_wal_updates_invalidate_workspace (test_gui_workspace.WorkspaceTests.test_wal_updates_invalidate_workspace) ... ok
+test_workspace_chat_is_read_only_and_never_executes_target (test_gui_workspace.WorkspaceTests.test_workspace_chat_is_read_only_and_never_executes_target) ... ok
+test_workspaces_are_isolated_between_binaries (test_gui_workspace.WorkspaceTests.test_workspaces_are_isolated_between_binaries) ... ok
+test_artifact_ids (test_indexer.IndexerTests.test_artifact_ids) ... ok
+test_assembly_bounds (test_indexer.IndexerTests.test_assembly_bounds) ... ok
+test_construction_and_serialization (test_indexer.IndexerTests.test_construction_and_serialization) ... ok
+test_decompilation_failure_continues (test_indexer.IndexerTests.test_decompilation_failure_continues) ... ok
+test_direct_call_graph (test_indexer.IndexerTests.test_direct_call_graph) ... ok
+test_import_does_not_load_pyghidra (test_indexer.IndexerTests.test_import_does_not_load_pyghidra) ... ok
+test_invalid_paths (test_indexer.IndexerTests.test_invalid_paths) ... ok
+test_options (test_indexer.IndexerTests.test_options) ... ok
+test_setup_error_checks_integrity (test_indexer.IndexerTests.test_setup_error_checks_integrity) ... ok
+test_stable_ids (test_indexer.IndexerTests.test_stable_ids) ... ok
+test_warning_accumulation (test_indexer.IndexerTests.test_warning_accumulation) ... ok
+test_controlled_binary (test_indexer_integration.GhidraIntegrationTests.test_controlled_binary) ... ok
+test_agent_evidence_bounds_relationship_transport_without_cutting_records (test_investigation.InvestigationTests.test_agent_evidence_bounds_relationship_transport_without_cutting_records) ... ok
+test_chain_depth_cycle_ambiguity_and_unresolved (test_investigation.InvestigationTests.test_chain_depth_cycle_ambiguity_and_unresolved) ... ok
+test_classification_keeps_custom_cpp_eligible_and_labels_loader_entries (test_investigation.InvestigationTests.test_classification_keeps_custom_cpp_eligible_and_labels_loader_entries) ... ok
+test_computed_call_does_not_assert_a_callee (test_investigation.InvestigationTests.test_computed_call_does_not_assert_a_callee) ... ok
+test_demo_views_accept_old_and_current_reference_formats (test_investigation.InvestigationTests.test_demo_views_accept_old_and_current_reference_formats) ... ok
+test_entry_and_import_classification_sources (test_investigation.InvestigationTests.test_entry_and_import_classification_sources) ... ok
+test_indirect_binding_not_labeled_verified_jump (test_investigation.InvestigationTests.test_indirect_binding_not_labeled_verified_jump) ... ok
+test_legacy_computed_jump_is_normalized_without_database_write (test_investigation.InvestigationTests.test_legacy_computed_jump_is_normalized_without_database_write) ... ok
+test_legacy_read_only_queries_do_not_migrate (test_investigation.InvestigationTests.test_legacy_read_only_queries_do_not_migrate) ... ok
+test_local_strings_precede_globals_with_exact_reference_evidence (test_investigation.InvestigationTests.test_local_strings_precede_globals_with_exact_reference_evidence) ... ok
+test_prompt_cites_reference_and_thunk_as_separate_facts (test_investigation.InvestigationTests.test_prompt_cites_reference_and_thunk_as_separate_facts) ... ok
+test_queries_and_tools_are_offline_read_only (test_investigation.InvestigationTests.test_queries_and_tools_are_offline_read_only) ... ok
+test_ranking_uses_persisted_thunk_binding_without_assembly_guess (test_investigation.InvestigationTests.test_ranking_uses_persisted_thunk_binding_without_assembly_guess) ... ok
+test_reference_limits_do_not_imply_unseen_local_links (test_investigation.InvestigationTests.test_reference_limits_do_not_imply_unseen_local_links) ... ok
+test_reference_questions_route_without_model_inference (test_investigation.InvestigationTests.test_reference_questions_route_without_model_inference) ... ok
+test_reference_routing_reports_insufficient_tool_budget (test_investigation.InvestigationTests.test_reference_routing_reports_insufficient_tool_budget) ... ok
+test_repeat_save_and_reload_is_deterministic (test_investigation.InvestigationTests.test_repeat_save_and_reload_is_deterministic) ... ok
+test_scope_bounds_and_unknown_function (test_investigation.InvestigationTests.test_scope_bounds_and_unknown_function) ... ok
+test_string_pages_preserve_instruction_operand_and_artifact_identity (test_investigation.InvestigationTests.test_string_pages_preserve_instruction_operand_and_artifact_identity) ... ok
+test_thunk_chain_never_changes_call_graph (test_investigation.InvestigationTests.test_thunk_chain_never_changes_call_graph) ... ok
+test_tool_string_truncation_disclosed (test_investigation.InvestigationTests.test_tool_string_truncation_disclosed) ... ok
+test_existing_debug_and_stripped_elf_static_evidence (test_investigation_integration.InvestigationIntegrationTests.test_existing_debug_and_stripped_elf_static_evidence) ... ok
+test_algorithm_identifiers_require_exact_owned_strings (test_m9_crypto_evidence.CryptoEvidenceTests.test_algorithm_identifiers_require_exact_owned_strings) ... ok
+test_classify_api (test_m9_crypto_evidence.CryptoEvidenceTests.test_classify_api) ... ok
+test_exact_callsites_with_provenance (test_m9_crypto_evidence.CryptoEvidenceTests.test_exact_callsites_with_provenance) ... ok
+test_no_crypto_binary_reports_empty (test_m9_crypto_evidence.CryptoEvidenceTests.test_no_crypto_binary_reports_empty) ... ok
+test_operations_attributed_from_callsites_not_names (test_m9_crypto_evidence.CryptoEvidenceTests.test_operations_attributed_from_callsites_not_names) ... ok
+test_registered_agent_tool (test_m9_crypto_evidence.CryptoEvidenceTests.test_registered_agent_tool) ... ok
+test_relationships_and_summary (test_m9_crypto_evidence.CryptoEvidenceTests.test_relationships_and_summary) ... ok
+test_crypto_evidence_matches_ground_truth (test_m9_integration.M9GhidraIntegrationTests.test_crypto_evidence_matches_ground_truth) ... ok
+test_injected_decompiler_freeze_is_retried_and_recovered (test_m9_integration.M9GhidraIntegrationTests.test_injected_decompiler_freeze_is_retried_and_recovered) ... ok
+test_parallel_decompilation_equals_serial_on_real_binary (test_m9_integration.M9GhidraIntegrationTests.test_parallel_decompilation_equals_serial_on_real_binary) ... ok
+test_partial_corrupt_pes_index_without_crashing (test_m9_integration.M9GhidraIntegrationTests.test_partial_corrupt_pes_index_without_crashing) ... ok
+test_prewarmed_worker_serves_first_job_without_jvm_start (test_m9_integration.M9GhidraIntegrationTests.test_prewarmed_worker_serves_first_job_without_jvm_start) ... ok
+test_architecture_determined_when_headers_allow (test_m9_pe_validation.CorruptFixtureExpectationTests.test_architecture_determined_when_headers_allow) ... ok
+test_every_fixture_matches_documented_outcome (test_m9_pe_validation.CorruptFixtureExpectationTests.test_every_fixture_matches_documented_outcome) ... ok
+test_generator_is_deterministic_and_originals_unchanged (test_m9_pe_validation.CorruptFixtureExpectationTests.test_generator_is_deterministic_and_originals_unchanged) ... ok
+test_parser_never_raises_on_fuzzed_input (test_m9_pe_validation.CorruptFixtureExpectationTests.test_parser_never_raises_on_fuzzed_input) ... ok
+test_real_pes_have_no_false_positives (test_m9_pe_validation.CorruptFixtureExpectationTests.test_real_pes_have_no_false_positives) ... ok
+test_required_corruption_classes_are_covered (test_m9_pe_validation.CorruptFixtureExpectationTests.test_required_corruption_classes_are_covered) ... ok
+test_every_fixture_upload_matches_expectation_and_leaves_no_partial_files (test_m9_pe_validation.IntakeTests.test_every_fixture_upload_matches_expectation_and_leaves_no_partial_files) ... ok
+test_http_rejection_carries_validation_and_server_stays_usable (test_m9_pe_validation.IntakeTests.test_http_rejection_carries_validation_and_server_stays_usable) ... 127.0.0.1 - - [11/Nov/2026 15:46:48] "POST /api/uploads?filename=corrupt_dos_signature_invalid.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 15:46:48] "POST /api/uploads?filename=corrupt_truncated_section_table.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 15:46:48] "POST /api/uploads?filename=corrupt_e_lfanew_out_of_range.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 15:46:48] "POST /api/uploads?filename=corrupt_section_offset_beyond_eof.exe HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 15:46:48] "GET /api/library HTTP/1.1" 200 -
+ok
+test_inspect_accepts_partial_with_issues (test_m9_pe_validation.IntakeTests.test_inspect_accepts_partial_with_issues) ... ok
+test_inspect_rejects_fatal_with_specific_report (test_m9_pe_validation.IntakeTests.test_inspect_rejects_fatal_with_specific_report) ... ok
+test_library_lists_m9_fixtures_with_status (test_m9_pe_validation.IntakeTests.test_library_lists_m9_fixtures_with_status) ... ok
+test_non_binary_is_rejected_with_report (test_m9_pe_validation.IntakeTests.test_non_binary_is_rejected_with_report) ... ok
+test_start_rejects_fatal_and_allows_partial (test_m9_pe_validation.IntakeTests.test_start_rejects_fatal_and_allows_partial) ... ok
+test_valid_and_elf_inputs_report_full (test_m9_pe_validation.IntakeTests.test_valid_and_elf_inputs_report_full) ... ok
+test_hung_worker_is_killed_and_next_job_recovers (test_m9_pe_validation.WatchdogTests.test_hung_worker_is_killed_and_next_job_recovers) ... /usr/lib/python3.12/unittest/case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=162 encoding='UTF-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/unittest/case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=168 encoding='UTF-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_env_var_wins_then_lastrun_fallback (test_m9_performance.GhidraVersionResolutionTests.test_env_var_wins_then_lastrun_fallback) ... ok
+test_import_does_not_load_jpype (test_m9_performance.GhidraVersionResolutionTests.test_import_does_not_load_jpype) ... ok
+test_in_place_upgrade_is_noticed (test_m9_performance.GhidraVersionResolutionTests.test_in_place_upgrade_is_noticed) ... ok
+test_missing_install_and_lastrun_yield_none (test_m9_performance.GhidraVersionResolutionTests.test_missing_install_and_lastrun_yield_none) ... ok
+test_compatible_hit_loads_full_snapshot_by_default (test_m9_performance.MetadataFirstCacheTests.test_compatible_hit_loads_full_snapshot_by_default) ... ok
+test_lightweight_hit_skips_snapshot_and_bounds_warnings (test_m9_performance.MetadataFirstCacheTests.test_lightweight_hit_skips_snapshot_and_bounds_warnings) ... ok
+test_lightweight_miss_still_returns_full_fresh_result (test_m9_performance.MetadataFirstCacheTests.test_lightweight_miss_still_returns_full_fresh_result) ... ok
+test_metadata_and_warning_queries (test_m9_performance.MetadataFirstCacheTests.test_metadata_and_warning_queries) ... ok
+test_stale_snapshot_is_not_fully_loaded (test_m9_performance.MetadataFirstCacheTests.test_stale_snapshot_is_not_fully_loaded) ... ok
+test_worker_payload_is_bounded (test_m9_performance.MetadataFirstCacheTests.test_worker_payload_is_bounded) ... ok
+test_decompile_disabled_opens_no_decompiler (test_m9_performance.ParallelDecompilationTests.test_decompile_disabled_opens_no_decompiler) ... ok
+test_open_failure_matches_serial_warnings (test_m9_performance.ParallelDecompilationTests.test_open_failure_matches_serial_warnings) ... ok
+test_parallel_output_is_identical_to_serial (test_m9_performance.ParallelDecompilationTests.test_parallel_output_is_identical_to_serial) ... ok
+test_parallel_really_runs_concurrently_and_disposes_everything (test_m9_performance.ParallelDecompilationTests.test_parallel_really_runs_concurrently_and_disposes_everything) ... ok
+test_profile_counters_are_recorded_on_the_request_thread (test_m9_performance.ParallelDecompilationTests.test_profile_counters_are_recorded_on_the_request_thread) ... ok
+test_serial_uses_one_instance (test_m9_performance.ParallelDecompilationTests.test_serial_uses_one_instance) ... ok
+test_worker_count_configuration (test_m9_performance.ParallelDecompilationTests.test_worker_count_configuration) ... ok
+test_worker_count_is_not_cache_identity (test_m9_performance.ParallelDecompilationTests.test_worker_count_is_not_cache_identity) ... ok
+test_library_prewarm_spawns_worker_with_flag_once (test_m9_prewarm.PrewarmTests.test_library_prewarm_spawns_worker_with_flag_once) ... ok
+test_normal_spawn_has_no_prewarm_flag (test_m9_prewarm.PrewarmTests.test_normal_spawn_has_no_prewarm_flag) ... ok
+test_spawn_failure_falls_back (test_m9_prewarm.PrewarmTests.test_spawn_failure_falls_back) ... ok
+test_worker_prewarm_failure_is_not_fatal (test_m9_prewarm.PrewarmTests.test_worker_prewarm_failure_is_not_fatal) ... ok
+test_worker_prewarm_success_records_steps (test_m9_prewarm.PrewarmTests.test_worker_prewarm_success_records_steps) ... ok
+test_tools_report_incomplete_functions (test_m9_retry.IncompleteSurfaceTests.test_tools_report_incomplete_functions) ... ok
+test_clean_run_reports_nothing_and_matches_serial (test_m9_retry.RetryTests.test_clean_run_reports_nothing_and_matches_serial) ... ok
+test_deterministic_errors_are_not_retried_but_are_listed (test_m9_retry.RetryTests.test_deterministic_errors_are_not_retried_but_are_listed) ... ok
+test_output_is_deterministic_across_runs_with_timeouts (test_m9_retry.RetryTests.test_output_is_deterministic_across_runs_with_timeouts) ... ok
+test_recovered_timeouts_yield_evidence_identical_to_clean_run (test_m9_retry.RetryTests.test_recovered_timeouts_yield_evidence_identical_to_clean_run) ... ok
+test_retry_counters (test_m9_retry.RetryTests.test_retry_counters) ... ok
+test_successful_functions_are_never_redecompiled (test_m9_retry.RetryTests.test_successful_functions_are_never_redecompiled) ... ok
+test_unavailable_decompiler_is_listed_per_function (test_m9_retry.RetryTests.test_unavailable_decompiler_is_listed_per_function) ... ok
+test_unrecovered_timeout_is_explicitly_incomplete (test_m9_retry.RetryTests.test_unrecovered_timeout_is_explicitly_incomplete) ... ok
+test_behavior_evidence_is_independent (test_models.EvidenceIsolationTests.test_behavior_evidence_is_independent) ... ok
+test_finding_evidence_is_independent (test_models.EvidenceIsolationTests.test_finding_evidence_is_independent) ... ok
+test_abstention (test_naming.NamingTests.test_abstention) ... ok
+test_batch_isolates_invalid_output (test_naming.NamingTests.test_batch_isolates_invalid_output) ... ok
+test_batch_stops_on_transport_failure (test_naming.NamingTests.test_batch_stops_on_transport_failure) ... ok
+test_binary_isolation (test_naming.NamingTests.test_binary_isolation) ... ok
+test_cli_candidates_no_model (test_naming.NamingTests.test_cli_candidates_no_model) ... ok
+test_cli_has_no_apply_flags (test_naming.NamingTests.test_cli_has_no_apply_flags) ... ok
+test_cli_never_initializes_empty_database (test_naming.NamingTests.test_cli_never_initializes_empty_database) ... ok
+test_dedup_highest_confidence (test_naming.NamingTests.test_dedup_highest_confidence) ... ok
+test_deterministic_renderer_and_json (test_naming.NamingTests.test_deterministic_renderer_and_json) ... ok
+test_external_excluded (test_naming.NamingTests.test_external_excluded) ... ok
+test_generic_detection (test_naming.NamingTests.test_generic_detection) ... ok
+test_generic_rejected (test_naming.NamingTests.test_generic_rejected) ... ok
+test_invalid_citation (test_naming.NamingTests.test_invalid_citation) ... ok
+test_invalid_confidence (test_naming.NamingTests.test_invalid_confidence) ... ok
+test_invalid_json_retried_once_without_echo (test_naming.NamingTests.test_invalid_json_retried_once_without_echo) ... ok
+test_invalid_twice_rejected (test_naming.NamingTests.test_invalid_twice_rejected) ... ok
+test_library_and_runtime_excluded (test_naming.NamingTests.test_library_and_runtime_excluded) ... ok
+test_max_candidates (test_naming.NamingTests.test_max_candidates) ... ok
+test_max_suggestions_before_dedup (test_naming.NamingTests.test_max_suggestions_before_dedup) ... ok
+test_meaningful_excluded_and_explicit_override (test_naming.NamingTests.test_meaningful_excluded_and_explicit_override) ... ok
+test_metadata_alone_cannot_ground_name (test_naming.NamingTests.test_metadata_alone_cannot_ground_name) ... ok
+test_min_confidence (test_naming.NamingTests.test_min_confidence) ... ok
+test_no_mutation_or_execution (test_naming.NamingTests.test_no_mutation_or_execution) ... ok
+test_options_validation (test_naming.NamingTests.test_options_validation) ... ok
+test_ordering_and_duplicates (test_naming.NamingTests.test_ordering_and_duplicates) ... ok
+test_separate_interpretation (test_naming.NamingTests.test_separate_interpretation) ... ok
+test_service_store_mismatch (test_naming.NamingTests.test_service_store_mismatch) ... ok
+test_strict_json_fields (test_naming.NamingTests.test_strict_json_fields) ... ok
+test_thunk_excluded (test_naming.NamingTests.test_thunk_excluded) ... ok
+test_truncation_and_omissions (test_naming.NamingTests.test_truncation_and_omissions) ... ok
+test_unsafe_and_address_names (test_naming.NamingTests.test_unsafe_and_address_names) ... ok
+test_untrusted_prompt_and_schema (test_naming.NamingTests.test_untrusted_prompt_and_schema) ... ok
+test_valid_suggestion (test_naming.NamingTests.test_valid_suggestion) ... ok
+test_rejected_output_leaves_analysis_unchanged (test_naming_integration.NamingIntegrationTests.test_rejected_output_leaves_analysis_unchanged) ... Naming preflight: prompt=7387 characters, num_ctx=fake
+Naming preflight: prompt=7565 characters, num_ctx=fake
+ok
+test_stripped_fake_naming (test_naming_integration.NamingIntegrationTests.test_stripped_fake_naming) ... Naming preflight: prompt=7387 characters, num_ctx=fake
+ok
+test_stripped_live_naming (test_naming_integration.NamingIntegrationTests.test_stripped_live_naming) ... skipped 'Opt-in one-function Ollama naming'
+test_configurable_host_model (test_ollama_client.OllamaClientTests.test_configurable_host_model) ... ok
+test_connection_failure (test_ollama_client.OllamaClientTests.test_connection_failure) ... ok
+test_empty_and_malformed_model_lists (test_ollama_client.OllamaClientTests.test_empty_and_malformed_model_lists) ... ok
+test_explicit_remote_opt_in (test_ollama_client.OllamaClientTests.test_explicit_remote_opt_in) ... ok
+test_explicit_warmup_has_no_binary_evidence_and_keeps_model_loaded (test_ollama_client.OllamaClientTests.test_explicit_warmup_has_no_binary_evidence_and_keeps_model_loaded) ... ok
+test_health_and_discovery (test_ollama_client.OllamaClientTests.test_health_and_discovery) ... ok
+test_http_missing_model (test_ollama_client.OllamaClientTests.test_http_missing_model) ... ok
+test_http_server_error (test_ollama_client.OllamaClientTests.test_http_server_error) ... ok
+test_incomplete_http_body (test_ollama_client.OllamaClientTests.test_incomplete_http_body) ... ok
+test_incomplete_response (test_ollama_client.OllamaClientTests.test_incomplete_response) ... ok
+test_limits (test_ollama_client.OllamaClientTests.test_limits) ... ok
+test_loopback_ipv6 (test_ollama_client.OllamaClientTests.test_loopback_ipv6) ... ok
+test_malformed_json (test_ollama_client.OllamaClientTests.test_malformed_json) ... ok
+test_mapped_ipv6_policy_independent_of_python_loopback_classification (test_ollama_client.OllamaClientTests.test_mapped_ipv6_policy_independent_of_python_loopback_classification) ... ok
+test_missing_or_invalid_response_field (test_ollama_client.OllamaClientTests.test_missing_or_invalid_response_field) ... ok
+test_model_error (test_ollama_client.OllamaClientTests.test_model_error) ... ok
+test_no_default_model_or_automatic_requests (test_ollama_client.OllamaClientTests.test_no_default_model_or_automatic_requests) ... ok
+test_num_ctx_default (test_ollama_client.OllamaClientTests.test_num_ctx_default) ... ok
+test_num_ctx_environment_reaches_request (test_ollama_client.OllamaClientTests.test_num_ctx_environment_reaches_request) ... ok
+test_num_ctx_explicit_invalid (test_ollama_client.OllamaClientTests.test_num_ctx_explicit_invalid) ... ok
+test_num_ctx_explicit_override (test_ollama_client.OllamaClientTests.test_num_ctx_explicit_override) ... ok
+test_num_ctx_invalid_environment_string (test_ollama_client.OllamaClientTests.test_num_ctx_invalid_environment_string) ... ok
+test_num_ctx_negative_environment_rejected (test_ollama_client.OllamaClientTests.test_num_ctx_negative_environment_rejected) ... ok
+test_num_ctx_zero_environment_rejected (test_ollama_client.OllamaClientTests.test_num_ctx_zero_environment_rejected) ... ok
+test_proxies_disabled (test_ollama_client.OllamaClientTests.test_proxies_disabled) ... ok
+test_redirect_disabled (test_ollama_client.OllamaClientTests.test_redirect_disabled) ... ok
+test_remote_hosts_rejected_without_dns (test_ollama_client.OllamaClientTests.test_remote_hosts_rejected_without_dns) ... ok
+test_stream_rejects_invalid_and_incomplete_records (test_ollama_client.OllamaClientTests.test_stream_rejects_invalid_and_incomplete_records) ... ok
+test_stream_rejects_malformed_oversized_and_model_errors (test_ollama_client.OllamaClientTests.test_stream_rejects_malformed_oversized_and_model_errors) ... ok
+test_streaming_preserves_schema_and_records_timings (test_ollama_client.OllamaClientTests.test_streaming_preserves_schema_and_records_timings) ... ok
+test_success_and_request (test_ollama_client.OllamaClientTests.test_success_and_request) ... ok
+test_timeout (test_ollama_client.OllamaClientTests.test_timeout) ... ok
+test_unsafe_url_shapes (test_ollama_client.OllamaClientTests.test_unsafe_url_shapes) ... ok
+test_computed_jump_preserves_raw_destination_without_resolving_function (test_references.ReferenceExtractionTests.test_computed_jump_preserves_raw_destination_without_resolving_function) ... ok
+test_direct_thunks_and_indirect_external_bindings_remain_distinct (test_references.ReferenceExtractionTests.test_direct_thunks_and_indirect_external_bindings_remain_distinct) ... ok
+test_existing_direct_call_graph_does_not_resolve_indirect_reference (test_references.ReferenceExtractionTests.test_existing_direct_call_graph_does_not_resolve_indirect_reference) ... ok
+test_extracts_only_from_supplied_program_without_optional_runtime (test_references.ReferenceExtractionTests.test_extracts_only_from_supplied_program_without_optional_runtime) ... ok
+test_reference_failure_warns_without_losing_other_facts (test_references.ReferenceExtractionTests.test_reference_failure_warns_without_losing_other_facts) ... ok
+test_string_ownership_read_bytes_and_unknown_data_sources (test_references.ReferenceExtractionTests.test_string_ownership_read_bytes_and_unknown_data_sources) ... ok
+test_cache_hit_preserves_reference_facts_and_legacy_options_miss (test_references.ReferencePersistenceTests.test_cache_hit_preserves_reference_facts_and_legacy_options_miss) ... ok
+test_failed_migration_rolls_back_all_schema_changes (test_references.ReferencePersistenceTests.test_failed_migration_rolls_back_all_schema_changes) ... ok
+test_reference_ordinals_and_missing_owners_are_validated_on_load (test_references.ReferencePersistenceTests.test_reference_ordinals_and_missing_owners_are_validated_on_load) ... ok
+test_replacement_delete_and_foreign_key_integrity (test_references.ReferencePersistenceTests.test_replacement_delete_and_foreign_key_integrity) ... ok
+test_serialization_reopen_queries_and_read_only_access (test_references.ReferencePersistenceTests.test_serialization_reopen_queries_and_read_only_access) ... ok
+test_v1_read_only_load_does_not_migrate_and_writable_migration_preserves_snapshot (test_references.ReferencePersistenceTests.test_v1_read_only_load_does_not_migrate_and_writable_migration_preserves_snapshot) ... ok
+test_views_and_demo_helpers_need_no_runtime_or_target (test_references.ReferencePersistenceTests.test_views_and_demo_helpers_need_no_runtime_or_target) ... ok
+test_same_analyzed_program_pe_and_elf_with_one_import_each (test_references_integration.ReferenceIntegrationTests.test_same_analyzed_program_pe_and_elf_with_one_import_each) ... ok
+test_ambiguous_name (test_retrieval.RetrievalTests.test_ambiguous_name) ... ok
+test_binary_isolation (test_retrieval.RetrievalTests.test_binary_isolation) ... ok
+test_callsites_between_functions (test_retrieval.RetrievalTests.test_callsites_between_functions) ... ok
+test_closed_store (test_retrieval.RetrievalTests.test_closed_store) ... ok
+test_cycles_and_self_calls (test_retrieval.RetrievalTests.test_cycles_and_self_calls) ... ok
+test_direct_callees_numeric_order (test_retrieval.RetrievalTests.test_direct_callees_numeric_order) ... ok
+test_direct_callers (test_retrieval.RetrievalTests.test_direct_callers) ... ok
+test_exact_address_resolution (test_retrieval.RetrievalTests.test_exact_address_resolution) ... ok
+test_external_and_thunk (test_retrieval.RetrievalTests.test_external_and_thunk) ... ok
+test_forward_depth_one (test_retrieval.RetrievalTests.test_forward_depth_one) ... ok
+test_forward_depth_two_and_provenance (test_retrieval.RetrievalTests.test_forward_depth_two_and_provenance) ... ok
+test_id_and_record_resolution (test_retrieval.RetrievalTests.test_id_and_record_resolution) ... ok
+test_import_does_not_load_ghidra (test_retrieval.RetrievalTests.test_import_does_not_load_ghidra) ... ok
+test_invalid_depth_and_options (test_retrieval.RetrievalTests.test_invalid_depth_and_options) ... ok
+test_no_whole_index_load_or_writes (test_retrieval.RetrievalTests.test_no_whole_index_load_or_writes) ... ok
+test_order_independent_of_persisted_row_order (test_retrieval.RetrievalTests.test_order_independent_of_persisted_row_order) ... ok
+test_path_not_found_within_bound (test_retrieval.RetrievalTests.test_path_not_found_within_bound) ... ok
+test_ranking_callees (test_retrieval.RetrievalTests.test_ranking_callees) ... ok
+test_ranking_callers (test_retrieval.RetrievalTests.test_ranking_callers) ... ok
+test_ranking_callsite_counts (test_retrieval.RetrievalTests.test_ranking_callsite_counts) ... ok
+test_reverse (test_retrieval.RetrievalTests.test_reverse) ... ok
+test_selector_kind_collision_is_ambiguous (test_retrieval.RetrievalTests.test_selector_kind_collision_is_ambiguous) ... ok
+test_shortest_path_and_tie_break (test_retrieval.RetrievalTests.test_shortest_path_and_tie_break) ... ok
+test_sql_input_is_data (test_retrieval.RetrievalTests.test_sql_input_is_data) ... ok
+test_summary_counts_distinct_callsites (test_retrieval.RetrievalTests.test_summary_counts_distinct_callsites) ... ok
+test_unknown_binary (test_retrieval.RetrievalTests.test_unknown_binary) ... ok
+test_unknown_function (test_retrieval.RetrievalTests.test_unknown_function) ... ok
+test_zero_depth_and_identity_path (test_retrieval.RetrievalTests.test_zero_depth_and_identity_path) ... ok
+test_real_queries (test_retrieval_integration.RetrievalIntegrationTests.test_real_queries) ... 
+M3 queries: {"depth_3_nodes": 10, "example": {"callee": {"address": "00101060", "is_external": false, "is_thunk": true, "name": "socket"}, "caller": {"address": "00101efe", "is_external": false, "is_thunk": false, "name": "FUN_00101efe"}, "callsite_address": "00101f39"}, "mean_query_ms_20_repeats": {"callees": 0.46168679982656613, "callers": 0.06551804999617161, "depth_3": 0.7101983001120971, "top_unique_callers": 0.7677467499888735}, "outgoing_relationships": 14, "resolutions": {"memset": [{"address": "00101090", "caller_callsites": 10, "is_external": false, "is_thunk": true, "name": "memset"}, {"address": "00107030", "caller_callsites": 0, "is_external": false, "is_thunk": true, "name": "memset"}, {"address": "EXTERNAL:00000007", "caller_callsites": 0, "is_external": true, "is_thunk": false, "name": "memset"}], "socket": [{"address": "00101060", "caller_callsites": 1, "is_external": false, "is_thunk": true, "name": "socket"}, {"address": "00107018", "caller_callsites": 0, "is_external": false, "is_thunk": true, "name": "socket"}, {"address": "EXTERNAL:00000004", "caller_callsites": 0, "is_external": true, "is_thunk": false, "name": "socket"}], "write": [{"address": "00101070", "caller_callsites": 1, "is_external": false, "is_thunk": true, "name": "write"}, {"address": "00107020", "caller_callsites": 0, "is_external": false, "is_thunk": true, "name": "write"}, {"address": "EXTERNAL:00000005", "caller_callsites": 0, "is_external": true, "is_thunk": false, "name": "write"}]}, "reverse_depth_3_nodes": 2, "sha256_after": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "sha256_before": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "top_unique_callers": [{"address": "00101269", "incoming_callsites": 48, "is_external": false, "is_thunk": false, "name": "FUN_00101269", "unique_callers": 14}, {"address": "0010129a", "incoming_callsites": 9, "is_external": false, "is_thunk": false, "name": "FUN_0010129a", "unique_callers": 7}, {"address": "00101090", "incoming_callsites": 10, "is_external": false, "is_thunk": true, "name": "memset", "unique_callers": 4}, {"address": "001012cb", "incoming_callsites": 4, "is_external": false, "is_thunk": false, "name": "FUN_001012cb", "unique_callers": 3}, {"address": "001010e0", "incoming_callsites": 2, "is_external": false, "is_thunk": true, "name": "memcpy", "unique_callers": 2}]}
+ok
+test_bad_identity_and_probability_rejected (test_rule_engine.RuleEngineTests.test_bad_identity_and_probability_rejected) ... ok
+test_bad_metadata_rejected (test_rule_engine.RuleEngineTests.test_bad_metadata_rejected) ... ok
+test_candidate_contract_without_builtin_escalation (test_rule_engine.RuleEngineTests.test_candidate_contract_without_builtin_escalation) ... ok
+test_cli_does_not_create_database (test_rule_engine.RuleEngineTests.test_cli_does_not_create_database) ... ok
+test_cli_read_only_json_selection (test_rule_engine.RuleEngineTests.test_cli_read_only_json_selection) ... ok
+test_contradicting_evidence_supported_without_inventing_it (test_rule_engine.RuleEngineTests.test_contradicting_evidence_supported_without_inventing_it) ... ok
+test_cross_binary_evidence_rejected (test_rule_engine.RuleEngineTests.test_cross_binary_evidence_rejected) ... ok
+test_facts_are_immutable_without_model_text_or_handles (test_rule_engine.RuleEngineTests.test_facts_are_immutable_without_model_text_or_handles) ... ok
+test_forged_evidence_description_rejected (test_rule_engine.RuleEngineTests.test_forged_evidence_description_rejected) ... ok
+test_invalid_aggregate_state_rejected (test_rule_engine.RuleEngineTests.test_invalid_aggregate_state_rejected) ... ok
+test_invalid_evaluation_identity_and_type (test_rule_engine.RuleEngineTests.test_invalid_evaluation_identity_and_type) ... ok
+test_metadata_and_versions (test_rule_engine.RuleEngineTests.test_metadata_and_versions) ... ok
+test_no_ai_ghidra_or_ollama_import_dependency (test_rule_engine.RuleEngineTests.test_no_ai_ghidra_or_ollama_import_dependency) ... ok
+test_registry_duplicates_and_order (test_rule_engine.RuleEngineTests.test_registry_duplicates_and_order) ... ok
+test_renderer_escapes_binary_control_characters (test_rule_engine.RuleEngineTests.test_renderer_escapes_binary_control_characters) ... ok
+test_repeat_serialization_and_renderer (test_rule_engine.RuleEngineTests.test_repeat_serialization_and_renderer) ... ok
+test_rule_failure_preserves_completed_results (test_rule_engine.RuleEngineTests.test_rule_failure_preserves_completed_results) ... ok
+test_scan_no_database_file_process_or_network_mutation (test_rule_engine.RuleEngineTests.test_scan_no_database_file_process_or_network_mutation) ... ok
+test_selection (test_rule_engine.RuleEngineTests.test_selection) ... ok
+test_stable_identity_is_version_and_binary_scoped (test_rule_engine.RuleEngineTests.test_stable_identity_is_version_and_binary_scoped) ... ok
+/usr/bin/ld: /tmp/ccCe6K62.o: in function `read_input':
+/home/laurene/aire/tests/fixtures/security_rules/dangerous_gets.c:9:(.text+0x23): warning: the `gets' function is dangerous and should not be used.
+test_negative_bounded_copy (test_security_integration.SecurityIntegrationTests.test_negative_bounded_copy) ... ok
+test_positive_gets (test_security_integration.SecurityIntegrationTests.test_positive_gets) ... ok
+test_positive_strcpy (test_security_integration.SecurityIntegrationTests.test_positive_strcpy) ... ok
+test_absent_or_disabled_coverage_insufficient (test_security_rules.SecurityRuleTests.test_absent_or_disabled_coverage_insufficient) ... ok
+test_assumptions_limitations_and_no_invented_contradictions (test_security_rules.SecurityRuleTests.test_assumptions_limitations_and_no_invented_contradictions) ... ok
+test_binary_isolation (test_security_rules.SecurityRuleTests.test_binary_isolation) ... ok
+test_direct_external_signal (test_security_rules.SecurityRuleTests.test_direct_external_signal) ... ok
+test_exact_api_match_no_substrings_or_alias_guess (test_security_rules.SecurityRuleTests.test_exact_api_match_no_substrings_or_alias_guess) ... ok
+test_external_or_thunk_caller_not_application_signal (test_security_rules.SecurityRuleTests.test_external_or_thunk_caller_not_application_signal) ... ok
+test_gets_independent_rule (test_security_rules.SecurityRuleTests.test_gets_independent_rule) ... ok
+test_import_label_without_function_insufficient (test_security_rules.SecurityRuleTests.test_import_label_without_function_insufficient) ... ok
+test_import_without_call_insufficient (test_security_rules.SecurityRuleTests.test_import_without_call_insufficient) ... ok
+test_import_wrong_address_or_namespace (test_security_rules.SecurityRuleTests.test_import_wrong_address_or_namespace) ... ok
+test_memcpy_negative_not_a_vulnerability_rule (test_security_rules.SecurityRuleTests.test_memcpy_negative_not_a_vulnerability_rule) ... ok
+test_missing_import_corroboration (test_security_rules.SecurityRuleTests.test_missing_import_corroboration) ... ok
+test_named_thunk_signal_is_explicitly_weaker (test_security_rules.SecurityRuleTests.test_named_thunk_signal_is_explicitly_weaker) ... ok
+test_ordinary_same_named_internal_not_api (test_security_rules.SecurityRuleTests.test_ordinary_same_named_internal_not_api) ... ok
+test_reference_or_computed_edge_not_direct_call (test_security_rules.SecurityRuleTests.test_reference_or_computed_edge_not_direct_call) ... ok
+test_stable_ids_and_duplicate_edges (test_security_rules.SecurityRuleTests.test_stable_ids_and_duplicate_edges) ... ok
+test_strings_and_decompilation_do_not_create_prerequisites (test_security_rules.SecurityRuleTests.test_strings_and_decompilation_do_not_create_prerequisites) ... ok
+test_thunk_namespace_mismatch_not_binding (test_security_rules.SecurityRuleTests.test_thunk_namespace_mismatch_not_binding) ... ok
+test_unresolved_warning_not_evidence (test_security_rules.SecurityRuleTests.test_unresolved_warning_not_evidence) ... ok
+
+----------------------------------------------------------------------
+Ran 518 tests in 459.286s
+
+OK (skipped=4)
+	Command being timed: "aire-server/.venv/bin/python -m unittest discover -s aire-server/tests -v"
+	User time (seconds): 423.33
+	System time (seconds): 228.51
+	Percent of CPU this job got: 141%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:40.55
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2964752
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 2
+	Minor (reclaiming a frame) page faults: 2850934
+	Voluntary context switches: 2324126
+	Involuntary context switches: 872244
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1716208
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

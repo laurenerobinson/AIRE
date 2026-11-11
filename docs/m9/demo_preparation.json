@@ -1,0 +1,68 @@
+{
+ "professor:overloading:first": {
+  "status": "completed",
+  "error": null,
+  "cache_hit": false,
+  "analysis_seconds": 74.68280900999889,
+  "total_seconds": 74.77833845600071,
+  "warning_count": 127,
+  "decompile_workers": 4,
+  "original_index_seconds": 74.40306120399873,
+  "sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07"
+ },
+ "professor:overloading:repeat": {
+  "status": "completed",
+  "error": null,
+  "cache_hit": true,
+  "analysis_seconds": 0.0009266029992431868,
+  "total_seconds": 0.0033713070006342605,
+  "warning_count": 127,
+  "decompile_workers": 4,
+  "original_index_seconds": 74.40306120399873,
+  "sha256": "cfc8c5f031587c721d680d3dd9bd94bbc690667acf8651403fb8c7e70f2fab07"
+ },
+ "m9:large_pe_sleigh:first": {
+  "status": "completed",
+  "error": null,
+  "cache_hit": false,
+  "analysis_seconds": 115.38878217099955,
+  "total_seconds": 115.40470635800011,
+  "warning_count": 1569,
+  "decompile_workers": 4,
+  "original_index_seconds": 112.22647284300001,
+  "sha256": "83926858607571056109df50ae75b3304e0f075a51e20e8ccfeee6a4ec7b6cec"
+ },
+ "m9:large_pe_sleigh:repeat": {
+  "status": "completed",
+  "error": null,
+  "cache_hit": true,
+  "analysis_seconds": 0.0020153050008957507,
+  "total_seconds": 0.004970779000359471,
+  "warning_count": 1569,
+  "decompile_workers": 4,
+  "original_index_seconds": 112.22647284300001,
+  "sha256": "83926858607571056109df50ae75b3304e0f075a51e20e8ccfeee6a4ec7b6cec"
+ },
+ "local:simple-elf:first": {
+  "status": "completed",
+  "error": null,
+  "cache_hit": true,
+  "analysis_seconds": 0.0008389750000787899,
+  "total_seconds": 0.0033079280001402367,
+  "warning_count": 6,
+  "decompile_workers": 4,
+  "original_index_seconds": 5.939935778999825,
+  "sha256": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e"
+ },
+ "local:simple-elf:repeat": {
+  "status": "completed",
+  "error": null,
+  "cache_hit": true,
+  "analysis_seconds": 0.001116592000471428,
+  "total_seconds": 0.0041045069992833305,
+  "warning_count": 6,
+  "decompile_workers": 4,
+  "original_index_seconds": 5.939935778999825,
+  "sha256": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e"
+ }
+}

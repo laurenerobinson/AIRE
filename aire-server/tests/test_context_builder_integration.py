@@ -56,7 +56,22 @@ class ContextIntegrationTests(unittest.TestCase):
                             retained = getattr(item.function, field)
                             if retained is not None:
                                 self.assertTrue((getattr(original, field) or '').startswith(retained))
-                    self.assertTrue(all(a.scope == 'binary' for a in bundle.artifacts if a.artifact.type == 'STRING'))
+                    strings = [a for a in bundle.artifacts if a.artifact.type == 'STRING']
+                    self.assertTrue(any(a.scope == 'function-reference' for a in strings))
+                    for artifact in strings:
+                        if artifact.scope == 'function-reference':
+                            refs = [r.reference for r in bundle.references
+                                    if r.reference.target_artifact_id == artifact.artifact.artifact_id
+                                    and not r.reference.is_call and not r.reference.is_indirect]
+                            self.assertTrue(refs)
+                            self.assertEqual(set(artifact.provenance.related_function_ids),
+                                             {r.source_function_id for r in refs})
+                            for ref in refs:
+                                self.assertIn(ref, index.references)
+                                self.assertIn(ref.reference_id, artifact.inclusion_reason)
+                        else:
+                            self.assertEqual(artifact.scope, 'binary')
+                            self.assertFalse(artifact.provenance.related_function_ids)
                     self.assertLess(len(bundle.warnings), len(index.warnings))
                     self.assertEqual(bundle.metadata['omitted_warning_count'], len(index.warnings) - len(bundle.warnings))
                     again = builder.build(request)

@@ -36,6 +36,23 @@ class BinaryWorkspace:
         self.metadata = tools.registry.run('binary_metadata', {})['data']
         self.sha256 = self.metadata['binary']['sha256']
         self.preloaded = []
+        self.seed_ids = []
+        self._overview_prepared = False
+
+    def prepare_overview(self, store):
+        with self.lock:
+            if self._overview_prepared:
+                return
+            self._overview_prepared = True
+            try:
+                self._prepare_overview(store)
+            except Exception:
+                self._overview_prepared = False
+                raise
+
+    def _prepare_overview(self, store):
+        tools = self.tools(store)
+        self.preloaded = []
         for name, args in (
             ('list_functions', {'limit': 100}),
             ('rank_functions', {'metric': 'unique_callees', 'limit': 10}),
@@ -107,6 +124,10 @@ class CachedAgentTools(AgentTools):
         for name, tool in original._tools.items():
             def execute(_name=name, **values):
                 tick = time.perf_counter()
+                if _name == 'retrieve_evidence' and not values.get('function'):
+                    workspace.prepare_overview(store)
+                    if not self.overview_seeds:
+                        self.overview_seeds = tuple(workspace.seed_ids)
                 if _name == 'crosscheck_function':
                     # Equivalent exact selectors share a stable function identity.
                     selected = self.registry.run('get_function', {'function': values['function']})

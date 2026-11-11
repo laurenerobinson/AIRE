@@ -21,6 +21,8 @@
 
       <nav class="nav-list">
         <button class="nav-item active" data-nav="home"><span class="nav-icon">⌂</span><span>Home</span></button>
+        <button class="nav-item" data-nav="library"><span class="nav-icon">▤</span><span>Binary Library / Upload</span></button>
+        <button id="investigateBtn" class="nav-item"><span class="nav-icon">⌕</span><span>Investigate binary</span></button>
         <button class="nav-item" data-nav="recent"><span class="nav-icon">◷</span><span>Recent Chats</span></button>
         <button class="nav-item" data-nav="about"><span class="nav-icon">ⓘ</span><span>About</span></button>
       </nav>
@@ -118,11 +120,31 @@
               <button class="tool-card" data-tool-view="imports"><span>◇</span><div><strong>Imports</strong><small>Imported APIs and libraries</small></div><b>›</b></button>
               <button class="tool-card" data-tool-view="callgraph"><span>⌘</span><div><strong>Call Graph</strong><small>Caller and callee relationships</small></div><b>›</b></button>
               <button class="tool-card" data-tool-view="findings"><span>△</span><div><strong>Findings</strong><small>Deterministic security signals</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="crypto"><span>⚿</span><div><strong>Crypto evidence</strong><small>Crypto API callsites and identifiers</small></div><b>›</b></button>
               <button class="tool-card" data-tool-view="decompiled"><span>▤</span><div><strong>Decompiled View</strong><small>Stored decompiled source</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="assembly"><span>≣</span><div><strong>Assembly</strong><small>Exact stored instruction addresses</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="crosscheck"><span>✓</span><div><strong>Arithmetic evidence</strong><small>Local instruction / decompiler checks</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="xrefs"><span>↗</span><div><strong>Cross-references</strong><small>Observed references and string links</small></div><b>›</b></button>
+              <button class="tool-card" data-tool-view="thunks"><span>→</span><div><strong>Thunk / Jump target</strong><small>Resolve stored jump chains</small></div><b>›</b></button>
             </div>
             <div id="toolResult" class="tool-result hidden"></div>
           </aside>
         </div>
+      </section>
+
+      <section id="libraryView" class="view secondary-view hidden">
+        <div class="secondary-header"><span class="eyebrow">Static analysis</span><h1>Binary Library &amp; Upload</h1><p>Select an ELF or Windows PE binary. Targets are read for static analysis and never executed. Maximum upload: 32 MiB.</p></div>
+        <form id="uploadForm" class="intake-form">
+          <label for="binaryFile">Local binary</label>
+          <input id="binaryFile" type="file" accept=".exe,.dll,.elf,.so,application/octet-stream">
+          <div id="uploadDetails" aria-live="polite">Choose a binary to validate its format and SHA-256.</div>
+          <button id="analyzeUpload" type="submit" disabled>Start static analysis</button>
+        </form>
+        <div id="analysisStatus" class="analysis-status" role="status" aria-live="polite"></div>
+        <h2>Repository benchmarks</h2>
+        <p>Local fixtures from the repository manifest. Original source and ground truth stay outside analysis inputs. “Cached” requires matching SHA-256, options and analyzer versions.</p>
+        <button id="refreshLibrary" type="button">Refresh library</button>
+        <div id="fixtureList" class="fixture-list"></div>
       </section>
 
       <section id="recentView" class="view secondary-view hidden">

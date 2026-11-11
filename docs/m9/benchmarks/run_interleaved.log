@@ -1,0 +1,111 @@
+[i-before] aire_test_binary rep 0: cold 20.524s warm 8.175s cached 0.0180s facts bebeb2cd4051
+[i-before] TLS.exe rep 0: cold 34.006s warm 15.845s cached 0.0323s facts 2bc83376c6e2
+[i-before] FunctionOverloading.exe rep 0: cold 37.652s warm 19.493s cached 0.0392s facts 07fa8fdc3cc3
+aire_test_binary: cold median 20.524s (min 20.524, max 20.524); warm median 8.175s; cached median 0.0180s; facts digests 1
+TLS.exe: cold median 34.006s (min 34.006, max 34.006); warm median 15.845s; cached median 0.0323s; facts digests 1
+FunctionOverloading.exe: cold median 37.652s (min 37.652, max 37.652); warm median 19.493s; cached median 0.0392s; facts digests 1
+[i-after] aire_test_binary rep 0: cold 19.725s warm 8.499s cached 0.0113s facts bebeb2cd4051
+[i-after] TLS.exe rep 0: cold 96.239s warm 9.808s cached 0.0302s facts 2bc83376c6e2
+[i-after] FunctionOverloading.exe rep 0: cold 33.211s warm 11.062s cached 0.0349s facts 07fa8fdc3cc3
+aire_test_binary: cold median 19.725s (min 19.725, max 19.725); warm median 8.499s; cached median 0.0113s; facts digests 1
+TLS.exe: cold median 96.239s (min 96.239, max 96.239); warm median 9.808s; cached median 0.0302s; facts digests 1
+FunctionOverloading.exe: cold median 33.211s (min 33.211, max 33.211); warm median 11.062s; cached median 0.0349s; facts digests 1
+[i-after-w1] aire_test_binary rep 0: cold 17.584s warm 6.771s cached 0.0057s facts bebeb2cd4051
+[i-after-w1] TLS.exe rep 0: cold 22.325s warm 11.189s cached 0.0182s facts 2bc83376c6e2
+[i-after-w1] FunctionOverloading.exe rep 0: cold 62.435s warm 68.373s cached 0.0387s facts 07fa8fdc3cc3
+aire_test_binary: cold median 17.584s (min 17.584, max 17.584); warm median 6.771s; cached median 0.0057s; facts digests 1
+TLS.exe: cold median 22.325s (min 22.325, max 22.325); warm median 11.189s; cached median 0.0182s; facts digests 1
+FunctionOverloading.exe: cold median 62.435s (min 62.435, max 62.435); warm median 68.373s; cached median 0.0387s; facts digests 1
+[i-after] aire_test_binary rep 0: cold 17.415s warm 5.848s cached 0.0127s facts bebeb2cd4051
+[i-after] TLS.exe rep 0: cold 26.448s warm 10.862s cached 0.0271s facts 2bc83376c6e2
+[i-after] FunctionOverloading.exe rep 0: cold 32.612s warm 15.341s cached 0.0926s facts 07fa8fdc3cc3
+aire_test_binary: cold median 17.415s (min 17.415, max 17.415); warm median 5.848s; cached median 0.0127s; facts digests 1
+TLS.exe: cold median 26.448s (min 26.448, max 26.448); warm median 10.862s; cached median 0.0271s; facts digests 1
+FunctionOverloading.exe: cold median 32.612s (min 32.612, max 32.612); warm median 15.341s; cached median 0.0926s; facts digests 1
+[i-after-w1] aire_test_binary rep 0: cold 25.012s warm 8.257s cached 0.0133s facts bebeb2cd4051
+[i-after-w1] TLS.exe rep 0: cold 81.677s warm 15.874s cached 0.0274s facts 2bc83376c6e2
+[i-after-w1] FunctionOverloading.exe rep 0: cold 35.683s warm 74.418s cached 0.0190s facts 07fa8fdc3cc3
+aire_test_binary: cold median 25.012s (min 25.012, max 25.012); warm median 8.257s; cached median 0.0133s; facts digests 1
+TLS.exe: cold median 81.677s (min 81.677, max 81.677); warm median 15.874s; cached median 0.0274s; facts digests 1
+FunctionOverloading.exe: cold median 35.683s (min 35.683, max 35.683); warm median 74.418s; cached median 0.0190s; facts digests 1
+[i-before] aire_test_binary rep 0: cold 14.840s warm 4.849s cached 0.0094s facts bebeb2cd4051
+[i-before] TLS.exe rep 0: cold 128.685s warm 12.583s cached 0.0278s facts 2bc83376c6e2
+[i-before] FunctionOverloading.exe rep 0: cold 29.224s warm 15.176s cached 0.0356s facts 07fa8fdc3cc3
+aire_test_binary: cold median 14.840s (min 14.840, max 14.840); warm median 4.849s; cached median 0.0094s; facts digests 1
+TLS.exe: cold median 128.685s (min 128.685, max 128.685); warm median 12.583s; cached median 0.0278s; facts digests 1
+FunctionOverloading.exe: cold median 29.224s (min 29.224, max 29.224); warm median 15.176s; cached median 0.0356s; facts digests 1
+[i-after-w1] aire_test_binary rep 0: cold 18.435s warm 7.356s cached 0.0045s facts bebeb2cd4051
+[i-after-w1] TLS.exe rep 0: cold 23.402s warm 10.328s cached 0.0176s facts 2bc83376c6e2
+[i-after-w1] FunctionOverloading.exe rep 0: cold 30.539s warm 11.400s cached 0.0191s facts 07fa8fdc3cc3
+aire_test_binary: cold median 18.435s (min 18.435, max 18.435); warm median 7.356s; cached median 0.0045s; facts digests 1
+TLS.exe: cold median 23.402s (min 23.402, max 23.402); warm median 10.328s; cached median 0.0176s; facts digests 1
+FunctionOverloading.exe: cold median 30.539s (min 30.539, max 30.539); warm median 11.400s; cached median 0.0191s; facts digests 1
+[i-before] aire_test_binary rep 0: cold 11.499s warm 4.711s cached 0.0053s facts bebeb2cd4051
+[i-before] TLS.exe rep 0: cold 23.688s warm 9.537s cached 0.0168s facts 2bc83376c6e2
+[i-before] FunctionOverloading.exe rep 0: cold 82.999s warm 408.297s cached 0.0184s facts 7b437fcec51b
+aire_test_binary: cold median 11.499s (min 11.499, max 11.499); warm median 4.711s; cached median 0.0053s; facts digests 1
+TLS.exe: cold median 23.688s (min 23.688, max 23.688); warm median 9.537s; cached median 0.0168s; facts digests 1
+FunctionOverloading.exe: cold median 82.999s (min 82.999, max 82.999); warm median 408.297s; cached median 0.0184s; facts digests 2
+[i-after] aire_test_binary rep 0: cold 14.901s warm 6.113s cached 0.0043s facts bebeb2cd4051
+[i-after] TLS.exe rep 0: cold 22.352s warm 8.705s cached 0.0206s facts 2bc83376c6e2
+[i-after] FunctionOverloading.exe rep 0: cold 25.734s warm 10.186s cached 0.0219s facts 07fa8fdc3cc3
+aire_test_binary: cold median 14.901s (min 14.901, max 14.901); warm median 6.113s; cached median 0.0043s; facts digests 1
+TLS.exe: cold median 22.352s (min 22.352, max 22.352); warm median 8.705s; cached median 0.0206s; facts digests 1
+FunctionOverloading.exe: cold median 25.734s (min 25.734, max 25.734); warm median 10.186s; cached median 0.0219s; facts digests 1
+[i-before] aire_test_binary rep 0: cold 14.237s warm 6.632s cached 0.0048s facts bebeb2cd4051
+[i-before] TLS.exe rep 0: cold 21.652s warm 44.236s cached 0.0215s facts 2bc83376c6e2
+[i-before] FunctionOverloading.exe rep 0: cold 21.507s warm 11.286s cached 0.0195s facts 07fa8fdc3cc3
+aire_test_binary: cold median 14.237s (min 14.237, max 14.237); warm median 6.632s; cached median 0.0048s; facts digests 1
+TLS.exe: cold median 21.652s (min 21.652, max 21.652); warm median 44.236s; cached median 0.0215s; facts digests 1
+FunctionOverloading.exe: cold median 21.507s (min 21.507, max 21.507); warm median 11.286s; cached median 0.0195s; facts digests 1
+[i-after] aire_test_binary rep 0: cold 240.664s warm 4.747s cached 0.0047s facts bebeb2cd4051
+[i-after] TLS.exe rep 0: cold 21.036s warm 7.718s cached 0.0168s facts 2bc83376c6e2
+[i-after] FunctionOverloading.exe rep 0: cold 73.157s warm 10.927s cached 0.0184s facts 07fa8fdc3cc3
+aire_test_binary: cold median 240.664s (min 240.664, max 240.664); warm median 4.747s; cached median 0.0047s; facts digests 1
+TLS.exe: cold median 21.036s (min 21.036, max 21.036); warm median 7.718s; cached median 0.0168s; facts digests 1
+FunctionOverloading.exe: cold median 73.157s (min 73.157, max 73.157); warm median 10.927s; cached median 0.0184s; facts digests 1
+[i-after-w1] aire_test_binary rep 0: cold 14.163s warm 6.361s cached 0.0047s facts bebeb2cd4051
+[i-after-w1] TLS.exe rep 0: cold 24.483s warm 15.825s cached 0.0317s facts 2bc83376c6e2
+[i-after-w1] FunctionOverloading.exe rep 0: cold 184.950s warm 23.625s cached 0.0261s facts 07fa8fdc3cc3
+aire_test_binary: cold median 14.163s (min 14.163, max 14.163); warm median 6.361s; cached median 0.0047s; facts digests 1
+TLS.exe: cold median 24.483s (min 24.483, max 24.483); warm median 15.825s; cached median 0.0317s; facts digests 1
+FunctionOverloading.exe: cold median 184.950s (min 184.950, max 184.950); warm median 23.625s; cached median 0.0261s; facts digests 1
+[i-after] aire_test_binary rep 0: cold 22.157s warm 9.111s cached 0.0079s facts bebeb2cd4051
+[i-after] TLS.exe rep 0: cold 28.101s warm 84.040s cached 0.0176s facts 2bc83376c6e2
+[i-after] FunctionOverloading.exe rep 0: cold 227.192s warm 297.128s cached 0.0239s facts 07fa8fdc3cc3
+aire_test_binary: cold median 22.157s (min 22.157, max 22.157); warm median 9.111s; cached median 0.0079s; facts digests 1
+TLS.exe: cold median 28.101s (min 28.101, max 28.101); warm median 84.040s; cached median 0.0176s; facts digests 1
+FunctionOverloading.exe: cold median 227.192s (min 227.192, max 227.192); warm median 297.128s; cached median 0.0239s; facts digests 1
+[i-after-w1] aire_test_binary rep 0: cold 14.340s warm 5.083s cached 0.0074s facts bebeb2cd4051
+[i-after-w1] TLS.exe rep 0: cold 21.663s warm 8.349s cached 0.0203s facts 2bc83376c6e2
+[i-after-w1] FunctionOverloading.exe rep 0: cold 271.268s warm 179.440s cached 0.0304s facts 07fa8fdc3cc3
+aire_test_binary: cold median 14.340s (min 14.340, max 14.340); warm median 5.083s; cached median 0.0074s; facts digests 1
+TLS.exe: cold median 21.663s (min 21.663, max 21.663); warm median 8.349s; cached median 0.0203s; facts digests 1
+FunctionOverloading.exe: cold median 271.268s (min 271.268, max 271.268); warm median 179.440s; cached median 0.0304s; facts digests 1
+[i-before] aire_test_binary rep 0: cold 15.109s warm 4.818s cached 0.0061s facts bebeb2cd4051
+[i-before] TLS.exe rep 0: cold 80.149s warm 13.227s cached 0.0268s facts 2bc83376c6e2
+[i-before] FunctionOverloading.exe rep 0: cold 25.389s warm 10.940s cached 0.0289s facts 07fa8fdc3cc3
+aire_test_binary: cold median 15.109s (min 15.109, max 15.109); warm median 4.818s; cached median 0.0061s; facts digests 1
+TLS.exe: cold median 80.149s (min 80.149, max 80.149); warm median 13.227s; cached median 0.0268s; facts digests 1
+FunctionOverloading.exe: cold median 25.389s (min 25.389, max 25.389); warm median 10.940s; cached median 0.0289s; facts digests 1
+[i-before] sleigh.exe rep 0: cold 214.838s cached 0.5773s facts 01e5949d4f19
+sleigh.exe: cold median 214.838s (min 214.838, max 214.838); cached median 0.5773s; facts digests 1
+[i-after] sleigh.exe rep 0: cold 227.842s cached 0.5452s facts 01e5949d4f19
+sleigh.exe: cold median 227.842s (min 227.842, max 227.842); cached median 0.5452s; facts digests 1
+[i-after] sleigh.exe rep 0: cold 148.163s cached 0.5717s facts 01e5949d4f19
+sleigh.exe: cold median 148.163s (min 148.163, max 148.163); cached median 0.5717s; facts digests 1
+[i-before] sleigh.exe rep 0: cold 205.425s cached 0.6969s facts 01e5949d4f19
+sleigh.exe: cold median 205.425s (min 205.425, max 205.425); cached median 0.6969s; facts digests 1
+[i-before] sleigh.exe rep 0: cold 220.125s cached 0.5061s facts 01e5949d4f19
+sleigh.exe: cold median 220.125s (min 220.125, max 220.125); cached median 0.5061s; facts digests 1
+[i-after] sleigh.exe rep 0: cold 138.334s cached 0.5345s facts 01e5949d4f19
+sleigh.exe: cold median 138.334s (min 138.334, max 138.334); cached median 0.5345s; facts digests 1
+[i-after] sleigh.exe rep 0: cold 247.924s cached 0.6284s facts 01e5949d4f19
+sleigh.exe: cold median 247.924s (min 247.924, max 247.924); cached median 0.6284s; facts digests 1
+[i-before] sleigh.exe rep 0: cold 594.553s cached 0.7486s facts ce933df534dd
+sleigh.exe: cold median 594.553s (min 594.553, max 594.553); cached median 0.7486s; facts digests 1
+[i-before] sleigh.exe rep 0: cold 252.048s cached 1.2867s facts 01e5949d4f19
+sleigh.exe: cold median 252.048s (min 252.048, max 252.048); cached median 1.2867s; facts digests 1
+[i-after] sleigh.exe rep 0: cold 229.294s cached 0.5009s facts 01e5949d4f19
+sleigh.exe: cold median 229.294s (min 229.294, max 229.294); cached median 0.5009s; facts digests 1
+EXIT 0

@@ -378,6 +378,38 @@ class BinaryKnowledgeStore:
         except (sqlite3.Error, TypeError, ValueError) as exc:
             raise PersistedDataError(f'Cannot load analysis {binary_id!r}: {exc}') from exc
 
+    def load_analysis_metadata(self, binary_id: str) -> dict:
+        """Return only one snapshot's analysis_metadata (no functions/bodies).
+
+        Used for cheap cache-compatibility checks before a full snapshot load.
+        Missing analyses raise BinaryNotFoundError; malformed JSON raises
+        PersistedDataError, exactly like load_program_index.
+        """
+        try:
+            with self._transaction() as db:
+                if db.execute('SELECT 1 FROM binaries WHERE binary_id = ?', (binary_id,)).fetchone() is None:
+                    raise BinaryNotFoundError(f'No stored analysis for binary_id {binary_id!r}')
+                metadata = {}
+                for item in db.execute('SELECT key, value FROM analysis_metadata WHERE binary_id = ?', (binary_id,)):
+                    try:
+                        metadata[item['key']] = json.loads(item['value'], parse_constant=_reject_json_constant)
+                    except (TypeError, ValueError) as exc:
+                        raise ValueError(f'Malformed metadata JSON for key {item["key"]!r}: {exc}') from exc
+                return metadata
+        except (sqlite3.Error, TypeError, ValueError) as exc:
+            raise PersistedDataError(f'Cannot load analysis metadata {binary_id!r}: {exc}') from exc
+
+    def load_warnings(self, binary_id: str, limit: int | None = None) -> tuple[int, list[str]]:
+        """Return (total warning count, first `limit` warnings in stored order)."""
+        try:
+            db = self._db
+            total = db.execute('SELECT COUNT(*) FROM warnings WHERE binary_id = ?', (binary_id,)).fetchone()[0]
+            rows = db.execute('SELECT warning_text FROM warnings WHERE binary_id = ? ORDER BY ordinal LIMIT ?',
+                              (binary_id, -1 if limit is None else int(limit)))
+            return total, [row[0] for row in rows]
+        except sqlite3.Error as exc:
+            raise PersistedDataError(f'Cannot load warnings {binary_id!r}: {exc}') from exc
+
     def has_binary(self, binary_id: str) -> bool:
         try:
             return self._db.execute('SELECT 1 FROM binaries WHERE binary_id = ?', (binary_id,)).fetchone() is not None

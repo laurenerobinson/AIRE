@@ -1,0 +1,27 @@
+[before] aire_test_binary rep 0: cold 19.698s warm 5.286s cached 0.0065s facts bebeb2cd4051
+[before] aire_test_binary rep 1: cold 20.342s warm 5.280s cached 0.0199s facts bebeb2cd4051
+[before] aire_test_binary rep 2: cold 17.584s warm 5.250s cached 0.0107s facts bebeb2cd4051
+[before] aire_test_binary rep 3: cold 18.672s warm 5.623s cached 0.0052s facts bebeb2cd4051
+[before] aire_test_binary rep 4: cold 13.498s warm 4.313s cached 0.0051s facts bebeb2cd4051
+[before] TLS.exe rep 0: cold 26.232s warm 11.324s cached 0.0570s facts 2bc83376c6e2
+[before] TLS.exe rep 1: cold 27.172s warm 10.070s cached 0.0172s facts 2bc83376c6e2
+[before] TLS.exe rep 2: cold 27.508s warm 7.320s cached 0.0163s facts 2bc83376c6e2
+[before] TLS.exe rep 3: cold 30.352s warm 10.647s cached 0.0307s facts 2bc83376c6e2
+[before] TLS.exe rep 4: cold 33.408s warm 11.859s cached 0.0191s facts 2bc83376c6e2
+[before] FunctionOverloading.exe rep 0: cold 32.097s warm 15.102s cached 0.0292s facts 07fa8fdc3cc3
+[before] FunctionOverloading.exe rep 1: cold 32.074s warm 12.451s cached 0.0474s facts 07fa8fdc3cc3
+[before] FunctionOverloading.exe rep 2: cold 33.866s warm 12.180s cached 0.0282s facts 07fa8fdc3cc3
+[before] FunctionOverloading.exe rep 3: cold 31.887s warm 15.242s cached 0.0237s facts 07fa8fdc3cc3
+[before] FunctionOverloading.exe rep 4: cold 31.580s warm 13.726s cached 0.0176s facts 07fa8fdc3cc3
+[before] sleigh.exe rep 0: cold 227.695s cached 0.3937s facts 01e5949d4f19
+[before] sleigh.exe rep 1: cold 238.096s cached 0.8914s facts 01e5949d4f19
+[before] sleigh.exe rep 2: cold 286.664s cached 1.1938s facts 01e5949d4f19
+[before] sleigh.exe rep 3: cold 305.276s cached 0.8199s facts 01e5949d4f19
+[before] sleigh.exe rep 4: cold 282.386s cached 0.8821s facts 01e5949d4f19
+aire_test_binary: cold median 18.672s (min 13.498, max 20.342); warm median 5.280s; cached median 0.0065s; facts digests 1
+TLS.exe: cold median 27.508s (min 26.232, max 33.408); warm median 10.647s; cached median 0.0191s; facts digests 1
+FunctionOverloading.exe: cold median 32.074s (min 31.580, max 33.866); warm median 13.726s; cached median 0.0282s; facts digests 1
+sleigh.exe: cold median 282.386s (min 227.695, max 305.276); cached median 0.8821s; facts digests 1
+[after] aire_test_binary rep 0: cold 23.271s warm 7.461s cached 0.0165s facts bebeb2cd4051
+[after] aire_test_binary rep 1: cold 30.729s warm 6.113s cached 0.0086s facts bebeb2cd4051
+[after] aire_test_binary rep 2: cold 14.526s warm 6.267s cached 0.0119s facts bebeb2cd4051

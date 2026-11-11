@@ -1,0 +1,981 @@
+{
+ "started": "2026-11-11T15:48:17-0600",
+ "corrupt": {
+  "corrupt_dos_signature_invalid": {
+   "outcome": "rejected_at_intake",
+   "message": "Select an ELF executable/shared object or Windows PE binary; file extensions are not trusted",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "dos_signature",
+      "message": "Invalid DOS signature b'ZM'; expected b\"MZ\"",
+      "offset": 0
+     }
+    ],
+    "format": null,
+    "size": 36864
+   },
+   "seconds": 0.0002394680013821926,
+   "expected_analysis": "none"
+  },
+  "corrupt_pe_signature_invalid": {
+   "outcome": "rejected_at_intake",
+   "message": "Malformed or truncated PE binary: Invalid PE signature b'PX\\x00\\x00' at 0x80; expected b\"PE\\0\\0\"",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "pe_signature",
+      "message": "Invalid PE signature b'PX\\x00\\x00' at 0x80; expected b\"PE\\0\\0\"",
+      "offset": 128
+     }
+    ],
+    "format": "PE?",
+    "architecture": null,
+    "bits": null,
+    "size": 14848
+   },
+   "seconds": 0.00012712799798464403,
+   "expected_analysis": "none"
+  },
+  "corrupt_e_lfanew_out_of_range": {
+   "outcome": "rejected_at_intake",
+   "message": "Malformed or truncated PE binary: e_lfanew 0xa000 points outside the 36864-byte file",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "pe_header_offset",
+      "message": "e_lfanew 0xa000 points outside the 36864-byte file",
+      "offset": 60
+     }
+    ],
+    "format": "PE?",
+    "architecture": null,
+    "bits": null,
+    "size": 36864
+   },
+   "seconds": 9.662500087870285e-05,
+   "expected_analysis": "none"
+  },
+  "corrupt_optional_magic_invalid": {
+   "outcome": "rejected_at_intake",
+   "message": "Malformed or truncated PE binary: Invalid optional header magic 0x999",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "optional_magic",
+      "message": "Invalid optional header magic 0x999",
+      "offset": 152
+     }
+    ],
+    "format": "PE",
+    "architecture": "x86_64",
+    "bits": null,
+    "size": 14848
+   },
+   "seconds": 0.0004146129977016244,
+   "expected_analysis": "none"
+  },
+  "corrupt_zero_sections": {
+   "outcome": "rejected_at_intake",
+   "message": "Malformed or truncated PE binary: COFF header declares zero sections",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "no_sections",
+      "message": "COFF header declares zero sections",
+      "offset": 246
+     }
+    ],
+    "format": "PE",
+    "architecture": "x86",
+    "bits": null,
+    "size": 36864
+   },
+   "seconds": 4.3610001739580184e-05,
+   "expected_analysis": "none"
+  },
+  "corrupt_truncated_in_optional_header": {
+   "outcome": "rejected_at_intake",
+   "message": "Malformed or truncated PE binary: Optional header is 40 bytes; needs 112",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "truncated_optional_header",
+      "message": "Optional header is 40 bytes; needs 112",
+      "offset": 152
+     }
+    ],
+    "format": "PE",
+    "architecture": "x86_64",
+    "bits": 64,
+    "size": 192
+   },
+   "seconds": 0.00015017300029285252,
+   "expected_analysis": "none"
+  },
+  "corrupt_truncated_section_table": {
+   "outcome": "rejected_at_intake",
+   "message": "Malformed or truncated PE binary: Section table needs 360 bytes at 0x1e8; only 1 complete header(s) present",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "truncated_section_table",
+      "message": "Section table needs 360 bytes at 0x1e8; only 1 complete header(s) present",
+      "offset": 488
+     }
+    ],
+    "format": "PE",
+    "architecture": "x86",
+    "bits": 32,
+    "size": 540
+   },
+   "seconds": 4.557899956125766e-05,
+   "expected_analysis": "none"
+  },
+  "corrupt_truncated_tiny": {
+   "outcome": "rejected_at_intake",
+   "message": "Malformed or truncated PE binary: File is 40 bytes; DOS header needs 64",
+   "validation": {
+    "pe_valid": false,
+    "analysis_level": "none",
+    "structure_summary": "PE structure is invalid; static analysis is not possible",
+    "structure_issue_count": 1,
+    "structure_issues": [
+     {
+      "severity": "fatal",
+      "code": "truncated_dos_header",
+      "message": "File is 40 bytes; DOS header needs 64",
+      "offset": 0
+     }
+    ],
+    "format": "PE?",
+    "architecture": null,
+    "bits": null,
+    "size": 40
+   },
+   "seconds": 2.6375000743428245e-05,
+   "expected_analysis": "none"
+  },
+  "corrupt_truncated_half": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": false,
+   "structure_issue_count": 9,
+   "cache_hit": false,
+   "analysis_seconds": 30.44345115500255,
+   "total_seconds": 30.590905058001226,
+   "warning_count": 69,
+   "binary_id": "5ac984aae26fc5b653df54247214c12aec5b78644187581e3194d3f62ecb35e3",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "import_directory",
+    "section_beyond_eof",
+    "section_truncated"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_section_offset_beyond_eof": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": false,
+   "structure_issue_count": 1,
+   "cache_hit": false,
+   "analysis_seconds": 4.3157554879981035,
+   "total_seconds": 4.319663283000409,
+   "warning_count": 2,
+   "binary_id": "b2d2656dfb344f94a13d078229d72dd6ba58c9c7f13470d02bc655f5d423700b",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "section_beyond_eof"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_section_size_oversized": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": true,
+   "structure_issue_count": 1,
+   "cache_hit": false,
+   "analysis_seconds": 6.970019969998248,
+   "total_seconds": 6.973878516997502,
+   "warning_count": 69,
+   "binary_id": "e5e5cee6a61799deab7fa1a91792e1cd1cf161421560f0b87ab693052ee00710",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "section_truncated"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_section_offset_into_headers": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": false,
+   "structure_issue_count": 1,
+   "cache_hit": false,
+   "analysis_seconds": 3.493565156000841,
+   "total_seconds": 3.4967907769969315,
+   "warning_count": 2,
+   "binary_id": "0e65ff0932e296f0394a3d4fe4b6a6d10bf442236f452b7aa3227c012503e29b",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "section_raw_offset"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_section_overlap": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": false,
+   "structure_issue_count": 2,
+   "cache_hit": false,
+   "analysis_seconds": 7.456558623001911,
+   "total_seconds": 7.459553488999518,
+   "warning_count": 69,
+   "binary_id": "11656f41723c1049992cdd2c927bacbba1d51ea486b8d4e439db06598ea3039f",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "entry_point",
+    "section_overlap"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_import_directory_invalid": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": false,
+   "structure_issue_count": 1,
+   "cache_hit": false,
+   "analysis_seconds": 7.602722558000096,
+   "total_seconds": 7.606164389999321,
+   "warning_count": 30,
+   "binary_id": "0d5ff7f2c499edff428f444eca07fcdc83106f4158bddbdaa76134fb53493eb7",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "import_directory"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_import_dll_name_invalid": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": false,
+   "structure_issue_count": 1,
+   "cache_hit": false,
+   "analysis_seconds": 5.975528998998925,
+   "total_seconds": 5.97905966899998,
+   "warning_count": 69,
+   "binary_id": "c4d03503b52285a8cc2f56b32a7ee07c852ba2d96b42135e4486bbeeda86431f",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "import_dll_name"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_import_thunks_invalid": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "partial",
+   "pe_valid": false,
+   "structure_issue_count": 1,
+   "cache_hit": false,
+   "analysis_seconds": 7.905320222998853,
+   "total_seconds": 7.909445579000021,
+   "warning_count": 30,
+   "binary_id": "fe3b693e7decdec64837b22687293180beefc55e598ad14ad87c55bf58855977",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "import_thunks"
+   ],
+   "expected_analysis": "partial"
+  },
+  "corrupt_valid_overlay_appended": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "full",
+   "pe_valid": true,
+   "structure_issue_count": 1,
+   "cache_hit": false,
+   "analysis_seconds": 6.4133794930021395,
+   "total_seconds": 6.4164070560000255,
+   "warning_count": 29,
+   "binary_id": "4dc8db2bcec78dfeb757fe2eaeacefa5782e85c6ee64e1b0fdf9e333747b3428",
+   "decompile_workers": 4,
+   "issue_codes": [
+    "overlay"
+   ],
+   "expected_analysis": "full"
+  },
+  "corrupt_valid_renamed_sections": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "full",
+   "pe_valid": true,
+   "structure_issue_count": 0,
+   "cache_hit": false,
+   "analysis_seconds": 5.477573670003039,
+   "total_seconds": 5.481841328000883,
+   "warning_count": 69,
+   "binary_id": "448c50b3bdb289852624136f9a498a163794673b04abfdf2ae1c1bd1596ebfde",
+   "decompile_workers": 4,
+   "issue_codes": [],
+   "expected_analysis": "full"
+  }
+ },
+ "crypto": {
+  "crypto_aes_gcm": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "full",
+   "pe_valid": true,
+   "structure_issue_count": 0,
+   "cache_hit": false,
+   "analysis_seconds": 13.803242308000335,
+   "total_seconds": 13.80733294500169,
+   "warning_count": 23,
+   "binary_id": "90e403baf7bc7e0faef7258b140a28742436a63ee73bb468b8ed60131b6a0db5",
+   "decompile_workers": 4,
+   "issue_codes": [],
+   "expected_analysis": "full",
+   "evidence_check": {
+    "functions": [
+     {
+      "function": "create_aes_gcm_key",
+      "address": "0041d080",
+      "expected_role": "key_handling",
+      "found_operations": [
+       "key_handling",
+       "configuration",
+       "provider"
+      ],
+      "found_apis": [
+       "BCryptGenerateSymmetricKey",
+       "BCryptOpenAlgorithmProvider",
+       "BCryptSetProperty"
+      ],
+      "callsites": [
+       [
+        "0041d099",
+        "BCryptOpenAlgorithmProvider"
+       ],
+       [
+        "0041d0c1",
+        "BCryptSetProperty"
+       ],
+       [
+        "0041d0f2",
+        "BCryptGenerateSymmetricKey"
+       ]
+      ],
+      "identifier_strings": [
+       "ChainingMode",
+       "ChainingModeGCM"
+      ],
+      "missing_apis": [],
+      "missing_identifier_strings": [
+       "AES"
+      ]
+     },
+     {
+      "function": "aes_gcm_encrypt",
+      "address": "0041d160",
+      "expected_role": "encryption",
+      "found_operations": [
+       "encryption"
+      ],
+      "found_apis": [
+       "BCryptEncrypt"
+      ],
+      "callsites": [
+       [
+        "0041d1c3",
+        "BCryptEncrypt"
+       ]
+      ],
+      "identifier_strings": [],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "aes_gcm_decrypt",
+      "address": "0041d1e0",
+      "expected_role": "decryption",
+      "found_operations": [
+       "decryption"
+      ],
+      "found_apis": [
+       "BCryptDecrypt"
+      ],
+      "callsites": [
+       [
+        "0041d24c",
+        "BCryptDecrypt"
+       ]
+      ],
+      "identifier_strings": [],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "destroy_aes_key",
+      "address": "0041d270",
+      "expected_role": "key_cleanup",
+      "found_operations": [
+       "cleanup"
+      ],
+      "found_apis": [
+       "BCryptCloseAlgorithmProvider",
+       "BCryptDestroyKey"
+      ],
+      "callsites": [
+       [
+        "0041d280",
+        "BCryptDestroyKey"
+       ],
+       [
+        "0041d294",
+        "BCryptCloseAlgorithmProvider"
+       ]
+      ],
+      "identifier_strings": [],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     }
+    ],
+    "problems": [],
+    "summary": {
+     "crypto_api_imports": 7,
+     "crypto_api_imports_called": 7,
+     "functions_with_crypto_calls": 4,
+     "operations": {
+      "cleanup": [
+       "0041d270"
+      ],
+      "configuration": [
+       "0041d080"
+      ],
+      "decryption": [
+       "0041d1e0"
+      ],
+      "encryption": [
+       "0041d160"
+      ],
+      "key_handling": [
+       "0041d080"
+      ],
+      "provider": [
+       "0041d080"
+      ]
+     },
+     "families": [
+      "cng"
+     ]
+    },
+    "relationships": [
+     {
+      "caller": "main",
+      "callee": "create_aes_gcm_key",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "aes_gcm_encrypt",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "aes_gcm_decrypt",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "destroy_aes_key",
+      "found": true
+     }
+    ],
+    "orchestrators": [
+     {
+      "function_id": "90e403baf7bc7e0faef7258b140a28742436a63ee73bb468b8ed60131b6a0db5:0041d2a0",
+      "address": "0041d2a0",
+      "name": "FUN_0041d2a0",
+      "calls": [
+       "0041d080",
+       "0041d160",
+       "0041d1e0",
+       "0041d270"
+      ]
+     }
+    ]
+   }
+  },
+  "crypto_sha256_hash": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "full",
+   "pe_valid": true,
+   "structure_issue_count": 0,
+   "cache_hit": false,
+   "analysis_seconds": 13.067060818997561,
+   "total_seconds": 13.07197910999821,
+   "warning_count": 23,
+   "binary_id": "9c5ac9cd5a76d14515f2558a82c2b103c581ed483e38bc6a96f4742257f438a6",
+   "decompile_workers": 4,
+   "issue_codes": [],
+   "expected_analysis": "full",
+   "evidence_check": {
+    "functions": [
+     {
+      "function": "sha256_digest",
+      "address": "0041d0a0",
+      "expected_role": "hashing",
+      "found_operations": [
+       "hashing",
+       "cleanup",
+       "provider"
+      ],
+      "found_apis": [
+       "BCryptCloseAlgorithmProvider",
+       "BCryptCreateHash",
+       "BCryptDestroyHash",
+       "BCryptFinishHash",
+       "BCryptHashData",
+       "BCryptOpenAlgorithmProvider"
+      ],
+      "callsites": [
+       [
+        "0041d0d3",
+        "BCryptOpenAlgorithmProvider"
+       ],
+       [
+        "0041d109",
+        "BCryptCreateHash"
+       ],
+       [
+        "0041d139",
+        "BCryptHashData"
+       ],
+       [
+        "0041d167",
+        "BCryptFinishHash"
+       ],
+       [
+        "0041d178",
+        "BCryptDestroyHash"
+       ],
+       [
+        "0041d184",
+        "BCryptCloseAlgorithmProvider"
+       ]
+      ],
+      "identifier_strings": [
+       "SHA256"
+      ],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     }
+    ],
+    "problems": [],
+    "summary": {
+     "crypto_api_imports": 6,
+     "crypto_api_imports_called": 6,
+     "functions_with_crypto_calls": 1,
+     "operations": {
+      "cleanup": [
+       "0041d0a0"
+      ],
+      "hashing": [
+       "0041d0a0"
+      ],
+      "provider": [
+       "0041d0a0"
+      ]
+     },
+     "families": [
+      "cng"
+     ]
+    },
+    "relationships": [
+     {
+      "caller": "main",
+      "callee": "sha256_digest",
+      "found": true
+     }
+    ],
+    "orchestrators": [
+     {
+      "function_id": "9c5ac9cd5a76d14515f2558a82c2b103c581ed483e38bc6a96f4742257f438a6:0041d350",
+      "address": "0041d350",
+      "name": "FUN_0041d350",
+      "calls": [
+       "0041d0a0"
+      ]
+     }
+    ]
+   }
+  },
+  "crypto_ecdsa_sign": {
+   "outcome": "analyzed",
+   "status": "completed",
+   "error": null,
+   "analysis_level": "full",
+   "pe_valid": true,
+   "structure_issue_count": 0,
+   "cache_hit": false,
+   "analysis_seconds": 14.139073055001063,
+   "total_seconds": 14.143122018998838,
+   "warning_count": 23,
+   "binary_id": "d52ad9d02868e6dd532dcb5feb35a855659c9a3044bc86ed9d32ccd47f649c36",
+   "decompile_workers": 4,
+   "issue_codes": [],
+   "expected_analysis": "full",
+   "evidence_check": {
+    "functions": [
+     {
+      "function": "generate_signing_key",
+      "address": "0041d020",
+      "expected_role": "key_handling",
+      "found_operations": [
+       "key_handling",
+       "provider"
+      ],
+      "found_apis": [
+       "BCryptFinalizeKeyPair",
+       "BCryptGenerateKeyPair",
+       "BCryptOpenAlgorithmProvider"
+      ],
+      "callsites": [
+       [
+        "0041d039",
+        "BCryptOpenAlgorithmProvider"
+       ],
+       [
+        "0041d051",
+        "BCryptGenerateKeyPair"
+       ],
+       [
+        "0041d065",
+        "BCryptFinalizeKeyPair"
+       ]
+      ],
+      "identifier_strings": [
+       "ECDSA_P256"
+      ],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "export_public_key",
+      "address": "0041d080",
+      "expected_role": "key_handling",
+      "found_operations": [
+       "key_handling"
+      ],
+      "found_apis": [
+       "BCryptExportKey"
+      ],
+      "callsites": [
+       [
+        "0041d0a5",
+        "BCryptExportKey"
+       ]
+      ],
+      "identifier_strings": [
+       "ECCPUBLICBLOB"
+      ],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "import_verification_key",
+      "address": "0041d0b0",
+      "expected_role": "key_handling",
+      "found_operations": [
+       "key_handling"
+      ],
+      "found_apis": [
+       "BCryptImportKeyPair"
+      ],
+      "callsites": [
+       [
+        "0041d0cf",
+        "BCryptImportKeyPair"
+       ]
+      ],
+      "identifier_strings": [
+       "ECCPUBLICBLOB"
+      ],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "hash_message",
+      "address": "0041d0e0",
+      "expected_role": "hashing",
+      "found_operations": [
+       "hashing",
+       "cleanup",
+       "provider"
+      ],
+      "found_apis": [
+       "BCryptCloseAlgorithmProvider",
+       "BCryptCreateHash",
+       "BCryptDestroyHash",
+       "BCryptFinishHash",
+       "BCryptHashData",
+       "BCryptOpenAlgorithmProvider"
+      ],
+      "callsites": [
+       [
+        "0041d10c",
+        "BCryptOpenAlgorithmProvider"
+       ],
+       [
+        "0041d142",
+        "BCryptCreateHash"
+       ],
+       [
+        "0041d160",
+        "BCryptHashData"
+       ],
+       [
+        "0041d17a",
+        "BCryptFinishHash"
+       ],
+       [
+        "0041d18b",
+        "BCryptDestroyHash"
+       ],
+       [
+        "0041d197",
+        "BCryptCloseAlgorithmProvider"
+       ]
+      ],
+      "identifier_strings": [
+       "SHA256"
+      ],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "sign_digest",
+      "address": "0041d1b0",
+      "expected_role": "signing",
+      "found_operations": [
+       "signing"
+      ],
+      "found_apis": [
+       "BCryptSignHash"
+      ],
+      "callsites": [
+       [
+        "0041d1dc",
+        "BCryptSignHash"
+       ]
+      ],
+      "identifier_strings": [],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "verify_signature",
+      "address": "0041d1f0",
+      "expected_role": "verification",
+      "found_operations": [
+       "verification"
+      ],
+      "found_apis": [
+       "BCryptVerifySignature"
+      ],
+      "callsites": [
+       [
+        "0041d214",
+        "BCryptVerifySignature"
+       ]
+      ],
+      "identifier_strings": [],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     },
+     {
+      "function": "main",
+      "address": "0041d230",
+      "expected_role": "driver_and_cleanup",
+      "found_operations": [
+       "cleanup"
+      ],
+      "found_apis": [
+       "BCryptCloseAlgorithmProvider",
+       "BCryptDestroyKey"
+      ],
+      "callsites": [
+       [
+        "0041d37a",
+        "BCryptDestroyKey"
+       ],
+       [
+        "0041d388",
+        "BCryptDestroyKey"
+       ],
+       [
+        "0041d398",
+        "BCryptCloseAlgorithmProvider"
+       ]
+      ],
+      "identifier_strings": [],
+      "missing_apis": [],
+      "missing_identifier_strings": []
+     }
+    ],
+    "problems": [],
+    "summary": {
+     "crypto_api_imports": 13,
+     "crypto_api_imports_called": 13,
+     "functions_with_crypto_calls": 7,
+     "operations": {
+      "cleanup": [
+       "0041d0e0",
+       "0041d230"
+      ],
+      "hashing": [
+       "0041d0e0"
+      ],
+      "key_handling": [
+       "0041d020",
+       "0041d080",
+       "0041d0b0"
+      ],
+      "provider": [
+       "0041d020",
+       "0041d0e0"
+      ],
+      "signing": [
+       "0041d1b0"
+      ],
+      "verification": [
+       "0041d1f0"
+      ]
+     },
+     "families": [
+      "cng"
+     ]
+    },
+    "relationships": [
+     {
+      "caller": "main",
+      "callee": "generate_signing_key",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "export_public_key",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "import_verification_key",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "hash_message",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "sign_digest",
+      "found": true
+     },
+     {
+      "caller": "main",
+      "callee": "verify_signature",
+      "found": true
+     }
+    ],
+    "orchestrators": [
+     {
+      "function_id": "d52ad9d02868e6dd532dcb5feb35a855659c9a3044bc86ed9d32ccd47f649c36:00401160",
+      "address": "00401160",
+      "name": "FUN_00401160",
+      "calls": [
+       "0041d230"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "post_corruption_valid_analysis": {
+  "outcome": "analyzed",
+  "status": "completed",
+  "error": null,
+  "analysis_level": "full",
+  "pe_valid": null,
+  "structure_issue_count": 0,
+  "cache_hit": false,
+  "analysis_seconds": 4.6823667630014825,
+  "total_seconds": 4.6851034319988685,
+  "warning_count": 6,
+  "binary_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e",
+  "decompile_workers": 4,
+  "issue_codes": []
+ },
+ "library_rows_after": 36,
+ "worker_exit_code": 0,
+ "fixture_hashes_unchanged": true,
+ "failures": [],
+ "passed": true,
+ "finished": "2026-11-11T15:50:31-0600"
+}

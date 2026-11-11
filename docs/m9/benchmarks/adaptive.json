@@ -1,0 +1,767 @@
+{
+ "rows": [
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 0,
+   "internal_functions": 29,
+   "extraction_seconds": 0.46829445099319855,
+   "stages": {
+    "decompiler_setup": 0.23481756199907977,
+    "decompilation": 0.20208553899283288,
+    "assembly": 0.010962577998725465,
+    "basic_blocks": 0.020428772002560436
+   },
+   "wall_seconds": 4.017690983000648,
+   "decompiler_children_peak_rss_mib": 30.40234375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 0,
+   "internal_functions": 29,
+   "extraction_seconds": 0.8151252800053044,
+   "stages": {
+    "decompiler_setup": 0.40620612599923334,
+    "decompilation": 0.09464731300067797,
+    "assembly": 0.13259603500591766,
+    "basic_blocks": 0.18167580599947541
+   },
+   "wall_seconds": 4.212223825001274,
+   "decompiler_children_peak_rss_mib": 30.21484375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 1,
+   "internal_functions": 29,
+   "extraction_seconds": 0.4819872129955911,
+   "stages": {
+    "decompiler_setup": 0.37549308799862047,
+    "decompilation": 0.04384783699970285,
+    "assembly": 0.04338032499799738,
+    "basic_blocks": 0.019265962999270414
+   },
+   "wall_seconds": 4.555116715000622,
+   "decompiler_children_peak_rss_mib": 30.80078125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 1,
+   "internal_functions": 29,
+   "extraction_seconds": 0.9872107629944367,
+   "stages": {
+    "decompiler_setup": 0.662620250001055,
+    "decompilation": 0.2939121699964744,
+    "assembly": 0.019588196993936435,
+    "basic_blocks": 0.011090146002970869
+   },
+   "wall_seconds": 4.472315668001102,
+   "decompiler_children_peak_rss_mib": 30.65234375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 2,
+   "internal_functions": 29,
+   "extraction_seconds": 0.437002887001654,
+   "stages": {
+    "decompiler_setup": 0.2211759540005005,
+    "decompilation": 0.1917360190054751,
+    "assembly": 0.009952733998943586,
+    "basic_blocks": 0.014138179996734834
+   },
+   "wall_seconds": 3.5966226639993693,
+   "decompiler_children_peak_rss_mib": 30.796875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 2,
+   "internal_functions": 29,
+   "extraction_seconds": 0.4563718730041728,
+   "stages": {
+    "decompiler_setup": 0.3530551039984857,
+    "decompilation": 0.025788138998905197,
+    "assembly": 0.05229825200694904,
+    "basic_blocks": 0.025230377999832854
+   },
+   "wall_seconds": 19.43472912099969,
+   "decompiler_children_peak_rss_mib": 30.60546875,
+   "freeze_seconds": 15.364532579000297,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 3,
+   "internal_functions": 29,
+   "extraction_seconds": 0.6690754759983975,
+   "stages": {
+    "decompiler_setup": 0.5476563390002411,
+    "decompilation": 0.0791076459991018,
+    "assembly": 0.023177833998488495,
+    "basic_blocks": 0.019133657000566018
+   },
+   "wall_seconds": 23.550827916000344,
+   "decompiler_children_peak_rss_mib": 30.8046875,
+   "freeze_seconds": 19.787958296999932,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 3,
+   "internal_functions": 29,
+   "extraction_seconds": 0.3890840480089537,
+   "stages": {
+    "decompiler_setup": 0.2720211729993025,
+    "decompilation": 0.09976395100420632,
+    "assembly": 0.007619854008225957,
+    "basic_blocks": 0.009679069997218903
+   },
+   "wall_seconds": 3.61557060099949,
+   "decompiler_children_peak_rss_mib": 30.64453125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 4,
+   "internal_functions": 29,
+   "extraction_seconds": 0.4305791770002543,
+   "stages": {
+    "decompiler_setup": 0.25946352100072545,
+    "decompilation": 0.15029399599370663,
+    "assembly": 0.01263943900266895,
+    "basic_blocks": 0.008182221003153245
+   },
+   "wall_seconds": 4.185200481999345,
+   "decompiler_children_peak_rss_mib": 30.74609375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 4,
+   "internal_functions": 29,
+   "extraction_seconds": 0.4528181369914819,
+   "stages": {
+    "decompiler_setup": 0.35825984999974025,
+    "decompilation": 0.026813198999661836,
+    "assembly": 0.03832459399563959,
+    "basic_blocks": 0.0294204939964402
+   },
+   "wall_seconds": 3.4641839930009155,
+   "decompiler_children_peak_rss_mib": 30.41796875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 5,
+   "internal_functions": 29,
+   "extraction_seconds": 0.45202802700987377,
+   "stages": {
+    "decompiler_setup": 0.33897534599964274,
+    "decompilation": 0.05247113299992634,
+    "assembly": 0.035938107008405495,
+    "basic_blocks": 0.02464344100189919
+   },
+   "wall_seconds": 3.951769483001044,
+   "decompiler_children_peak_rss_mib": 30.8828125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 5,
+   "internal_functions": 29,
+   "extraction_seconds": 0.554372192998926,
+   "stages": {
+    "decompiler_setup": 0.3242299419998744,
+    "decompilation": 0.2125129689975438,
+    "assembly": 0.00933708599950478,
+    "basic_blocks": 0.008292196002003038
+   },
+   "wall_seconds": 3.8843554539998877,
+   "decompiler_children_peak_rss_mib": 30.7421875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 6,
+   "internal_functions": 29,
+   "extraction_seconds": 0.43288538799424714,
+   "stages": {
+    "decompiler_setup": 0.30485366200082353,
+    "decompilation": 0.1097797990005347,
+    "assembly": 0.011539712993908324,
+    "basic_blocks": 0.006712213998980587
+   },
+   "wall_seconds": 3.7654258710008435,
+   "decompiler_children_peak_rss_mib": 30.80859375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 6,
+   "internal_functions": 29,
+   "extraction_seconds": 0.6126588579936652,
+   "stages": {
+    "decompiler_setup": 0.5009192980014632,
+    "decompilation": 0.023926078998556477,
+    "assembly": 0.04200478500024474,
+    "basic_blocks": 0.04580869599340076
+   },
+   "wall_seconds": 3.9223520920004376,
+   "decompiler_children_peak_rss_mib": 30.82421875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 7,
+   "internal_functions": 29,
+   "extraction_seconds": 0.5094676830085518,
+   "stages": {
+    "decompiler_setup": 0.3960812919995078,
+    "decompilation": 0.04668717200001993,
+    "assembly": 0.04371915601223009,
+    "basic_blocks": 0.022980062996794004
+   },
+   "wall_seconds": 3.8703492080003343,
+   "decompiler_children_peak_rss_mib": 30.77734375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 7,
+   "internal_functions": 29,
+   "extraction_seconds": 0.40067360500688665,
+   "stages": {
+    "decompiler_setup": 0.2644755940000323,
+    "decompilation": 0.11326768599610659,
+    "assembly": 0.013752555007158662,
+    "basic_blocks": 0.009177770003589103
+   },
+   "wall_seconds": 3.8863752039997053,
+   "decompiler_children_peak_rss_mib": 30.80078125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 8,
+   "internal_functions": 29,
+   "extraction_seconds": 0.514459155006989,
+   "stages": {
+    "decompiler_setup": 0.40326180100055353,
+    "decompilation": 0.09773319499799982,
+    "assembly": 0.009848687011981383,
+    "basic_blocks": 0.003615471996454289
+   },
+   "wall_seconds": 3.2906446650013095,
+   "decompiler_children_peak_rss_mib": 30.828125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 8,
+   "internal_functions": 29,
+   "extraction_seconds": 0.45785125900692947,
+   "stages": {
+    "decompiler_setup": 0.35863625000092725,
+    "decompilation": 0.006936169000255177,
+    "assembly": 0.055566586004715646,
+    "basic_blocks": 0.0367122540010314
+   },
+   "wall_seconds": 3.7503829179986496,
+   "decompiler_children_peak_rss_mib": 30.32421875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 4,
+   "rep": 9,
+   "internal_functions": 29,
+   "extraction_seconds": 0.5107249200027582,
+   "stages": {
+    "decompiler_setup": 0.38923416800025734,
+    "decompilation": 0.05714471799910825,
+    "assembly": 0.03605555300782726,
+    "basic_blocks": 0.028290480995565304
+   },
+   "wall_seconds": 4.348939689998588,
+   "decompiler_children_peak_rss_mib": 30.34765625,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "aire_test_binary",
+   "workers": 1,
+   "rep": 9,
+   "internal_functions": 29,
+   "extraction_seconds": 0.35501726099937514,
+   "stages": {
+    "decompiler_setup": 0.2479368659987813,
+    "decompilation": 0.08542343999761215,
+    "assembly": 0.011566557001060573,
+    "basic_blocks": 0.01009039800192113
+   },
+   "wall_seconds": 3.697070647998771,
+   "decompiler_children_peak_rss_mib": 30.96875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 0,
+   "internal_functions": 44,
+   "extraction_seconds": 0.28459423198000877,
+   "stages": {
+    "decompiler_setup": 0.23663829100041767,
+    "decompilation": 0.04023642400352401,
+    "assembly": 0.004941356977724354,
+    "basic_blocks": 0.002778159998342744
+   },
+   "wall_seconds": 6.64340300099866,
+   "decompiler_children_peak_rss_mib": 32.484375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 0,
+   "internal_functions": 44,
+   "extraction_seconds": 0.277853233003043,
+   "stages": {
+    "decompiler_setup": 0.24262651199933316,
+    "decompilation": 0.01710224500129698,
+    "assembly": 0.010143724002773524,
+    "basic_blocks": 0.007980751999639324
+   },
+   "wall_seconds": 3.09712705200036,
+   "decompiler_children_peak_rss_mib": 32.453125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 1,
+   "internal_functions": 44,
+   "extraction_seconds": 0.35907585099084827,
+   "stages": {
+    "decompiler_setup": 0.3173131290004676,
+    "decompilation": 0.03586861499934457,
+    "assembly": 0.0033019529946614057,
+    "basic_blocks": 0.002592153996374691
+   },
+   "wall_seconds": 3.223747796999305,
+   "decompiler_children_peak_rss_mib": 32.57421875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 1,
+   "internal_functions": 44,
+   "extraction_seconds": 0.44258854098734446,
+   "stages": {
+    "decompiler_setup": 0.35318155300046783,
+    "decompilation": 0.08528691499668639,
+    "assembly": 0.0020851729950663866,
+    "basic_blocks": 0.002034899995123851
+   },
+   "wall_seconds": 3.620643303998804,
+   "decompiler_children_peak_rss_mib": 31.3359375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 2,
+   "internal_functions": 44,
+   "extraction_seconds": 0.3089776290144073,
+   "stages": {
+    "decompiler_setup": 0.2633345800004463,
+    "decompilation": 0.03999937800290354,
+    "assembly": 0.003227944014724926,
+    "basic_blocks": 0.0024157269963325234
+   },
+   "wall_seconds": 3.8903130990001955,
+   "decompiler_children_peak_rss_mib": 31.46875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 2,
+   "internal_functions": 44,
+   "extraction_seconds": 0.3494473939990712,
+   "stages": {
+    "decompiler_setup": 0.3076879359996383,
+    "decompilation": 0.0021074239994050004,
+    "assembly": 0.023384944004646968,
+    "basic_blocks": 0.016267089995380957
+   },
+   "wall_seconds": 3.240222697999343,
+   "decompiler_children_peak_rss_mib": 30.8828125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 3,
+   "internal_functions": 44,
+   "extraction_seconds": 0.5396845949871931,
+   "stages": {
+    "decompiler_setup": 0.49891344999923604,
+    "decompilation": 0.0021996989999024663,
+    "assembly": 0.02098329699219903,
+    "basic_blocks": 0.01758814899585559
+   },
+   "wall_seconds": 4.13809991800008,
+   "decompiler_children_peak_rss_mib": 32.57421875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 3,
+   "internal_functions": 44,
+   "extraction_seconds": 0.4301441929928842,
+   "stages": {
+    "decompiler_setup": 0.2976604729992687,
+    "decompilation": 0.12419602599584323,
+    "assembly": 0.003881445994920796,
+    "basic_blocks": 0.004406248002851498
+   },
+   "wall_seconds": 3.4515053649993206,
+   "decompiler_children_peak_rss_mib": 32.49609375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 4,
+   "internal_functions": 44,
+   "extraction_seconds": 0.41698816700045427,
+   "stages": {
+    "decompiler_setup": 0.38393192299918155,
+    "decompilation": 0.029677160000574077,
+    "assembly": 0.0012575299970194465,
+    "basic_blocks": 0.0021215540036791936
+   },
+   "wall_seconds": 3.0254074660006154,
+   "decompiler_children_peak_rss_mib": 31.35546875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 4,
+   "internal_functions": 44,
+   "extraction_seconds": 0.34644359000230907,
+   "stages": {
+    "decompiler_setup": 0.32217270999899483,
+    "decompilation": 0.0039679790006630355,
+    "assembly": 0.011008311996192788,
+    "basic_blocks": 0.009294589006458409
+   },
+   "wall_seconds": 3.177231750001738,
+   "decompiler_children_peak_rss_mib": 31.390625,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 5,
+   "internal_functions": 44,
+   "extraction_seconds": 0.4563752189897059,
+   "stages": {
+    "decompiler_setup": 0.420871916001488,
+    "decompilation": 0.02097211000000243,
+    "assembly": 0.007010860994341783,
+    "basic_blocks": 0.007520331993873697
+   },
+   "wall_seconds": 3.601937179999368,
+   "decompiler_children_peak_rss_mib": 32.59375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 5,
+   "internal_functions": 44,
+   "extraction_seconds": 0.321185708988196,
+   "stages": {
+    "decompiler_setup": 0.2513355880000745,
+    "decompilation": 0.06268965901836054,
+    "assembly": 0.0033464629705122206,
+    "basic_blocks": 0.0038139989992487244
+   },
+   "wall_seconds": 172.9570434419984,
+   "decompiler_children_peak_rss_mib": 31.390625,
+   "freeze_seconds": 169.29747945100098,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 6,
+   "internal_functions": 44,
+   "extraction_seconds": 0.3170563329840661,
+   "stages": {
+    "decompiler_setup": 0.29353052899750764,
+    "decompilation": 0.020860743992670905,
+    "assembly": 0.0012719190017378423,
+    "basic_blocks": 0.0013931409921497107
+   },
+   "wall_seconds": 2.4769597859994974,
+   "decompiler_children_peak_rss_mib": 31.33203125,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 6,
+   "internal_functions": 44,
+   "extraction_seconds": 0.6007119770110876,
+   "stages": {
+    "decompiler_setup": 0.5670748840020678,
+    "decompilation": 0.0012260149997018743,
+    "assembly": 0.016715785008273087,
+    "basic_blocks": 0.015695293001044774
+   },
+   "wall_seconds": 3.4083729639969533,
+   "decompiler_children_peak_rss_mib": 30.85546875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 7,
+   "internal_functions": 44,
+   "extraction_seconds": 0.37857301099575125,
+   "stages": {
+    "decompiler_setup": 0.3484158989995194,
+    "decompilation": 0.024928576000093017,
+    "assembly": 0.0018948840042867232,
+    "basic_blocks": 0.0033336519918520935
+   },
+   "wall_seconds": 2.773575127001095,
+   "decompiler_children_peak_rss_mib": 32.4765625,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 7,
+   "internal_functions": 44,
+   "extraction_seconds": 0.3498371690111526,
+   "stages": {
+    "decompiler_setup": 0.2563995189993875,
+    "decompilation": 0.08224799000890926,
+    "assembly": 0.006183679997775471,
+    "basic_blocks": 0.005005980005080346
+   },
+   "wall_seconds": 3.178647044001991,
+   "decompiler_children_peak_rss_mib": 32.56640625,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 8,
+   "internal_functions": 44,
+   "extraction_seconds": 0.3037307189879357,
+   "stages": {
+    "decompiler_setup": 0.23775225400095223,
+    "decompilation": 0.058777278987690806,
+    "assembly": 0.0038136109797051176,
+    "basic_blocks": 0.00338757501958753
+   },
+   "wall_seconds": 4.1454039240015845,
+   "decompiler_children_peak_rss_mib": 31.44921875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 8,
+   "internal_functions": 44,
+   "extraction_seconds": 0.6061388999878545,
+   "stages": {
+    "decompiler_setup": 0.5697244139992108,
+    "decompilation": 0.018594433000544086,
+    "assembly": 0.011412172993004788,
+    "basic_blocks": 0.006407879995094845
+   },
+   "wall_seconds": 3.8815966910005955,
+   "decompiler_children_peak_rss_mib": 31.41796875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 4,
+   "rep": 9,
+   "internal_functions": 44,
+   "extraction_seconds": 0.45148018398322165,
+   "stages": {
+    "decompiler_setup": 0.42748841799766524,
+    "decompilation": 0.004456163998838747,
+    "assembly": 0.01027596099083894,
+    "basic_blocks": 0.009259640995878726
+   },
+   "wall_seconds": 3.420736437001324,
+   "decompiler_children_peak_rss_mib": 32.46875,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  },
+  {
+   "binary": "section_offset_beyond_eof.exe",
+   "workers": 1,
+   "rep": 9,
+   "internal_functions": 44,
+   "extraction_seconds": 0.3621694740031671,
+   "stages": {
+    "decompiler_setup": 0.31676929899913375,
+    "decompilation": 0.040572649999376154,
+    "assembly": 0.0031707600101071876,
+    "basic_blocks": 0.0016567649945500307
+   },
+   "wall_seconds": 3.531403714998305,
+   "decompiler_children_peak_rss_mib": 31.77734375,
+   "freeze_seconds": 0.0,
+   "facts_identical": true
+  }
+ ],
+ "summary_freeze_free": {
+  "section_offset_beyond_eof.exe:workers=1": {
+   "extraction_seconds": {
+    "median": 0.3498371690111526,
+    "min": 0.28459423198000877,
+    "max": 0.44258854098734446,
+    "n": 9
+   },
+   "wall_seconds": {
+    "median": 3.531403714998305,
+    "min": 2.4769597859994974,
+    "max": 6.64340300099866,
+    "n": 9
+   },
+   "decompiler_children_peak_rss_mib": {
+    "median": 31.46875,
+    "min": 31.33203125,
+    "max": 32.56640625,
+    "n": 9
+   }
+  },
+  "section_offset_beyond_eof.exe:workers=4": {
+   "extraction_seconds": {
+    "median": 0.41502659748948645,
+    "min": 0.277853233003043,
+    "max": 0.6061388999878545,
+    "n": 10
+   },
+   "wall_seconds": {
+    "median": 3.324297830998148,
+    "min": 2.773575127001095,
+    "max": 4.13809991800008,
+    "n": 10
+   },
+   "decompiler_children_peak_rss_mib": {
+    "median": 32.4609375,
+    "min": 30.85546875,
+    "max": 32.59375,
+    "n": 10
+   }
+  },
+  "aire_test_binary:workers=1": {
+   "extraction_seconds": {
+    "median": 0.4349441374979506,
+    "min": 0.35501726099937514,
+    "max": 0.9872107629944367,
+    "n": 10
+   },
+   "wall_seconds": {
+    "median": 3.8248906625003656,
+    "min": 3.2906446650013095,
+    "max": 4.472315668001102,
+    "n": 10
+   },
+   "decompiler_children_peak_rss_mib": {
+    "median": 30.771484375,
+    "min": 30.40234375,
+    "max": 30.96875,
+    "n": 10
+   }
+  },
+  "aire_test_binary:workers=4": {
+   "extraction_seconds": {
+    "median": 0.49572744800207147,
+    "min": 0.45202802700987377,
+    "max": 0.8151252800053044,
+    "n": 8
+   },
+   "wall_seconds": {
+    "median": 3.937060787500741,
+    "min": 3.4641839930009155,
+    "max": 4.555116715000622,
+    "n": 8
+   },
+   "decompiler_children_peak_rss_mib": {
+    "median": 30.59765625,
+    "min": 30.21484375,
+    "max": 30.8828125,
+    "n": 8
+   }
+  }
+ },
+ "all_facts_identical": true
+}

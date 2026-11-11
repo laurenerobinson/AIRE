@@ -264,7 +264,7 @@ class RunnerTests(unittest.TestCase):
     def test_action_grammar_matches_catalog_and_tool_facts(self):
         tools = AgentTools(self.store, 'b')
         schema = action_schema(tools.registry.catalog())
-        self.assertEqual(len(schema['anyOf']), 19)
+        self.assertEqual(len(schema['anyOf']), 20)
         rank = tools.registry.run('rank_functions', {'limit': 2})
         self.assertIn('join', render_tool_facts([rank]))
         self.assertIn('Connectivity', render_tool_facts([rank]))

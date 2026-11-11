@@ -3,8 +3,9 @@
 The A.I.R.E. GUI is a loopback-only web workspace layered directly over the
 existing M8 agent. It does not implement a second analysis engine. Chat requests
 use `AgentRunner`, tool-panel requests use the same `AgentTools` registry, and
-conversation state uses `AgentSession` plus a separate UI transcript. The
-analysis SQLite database is always opened through the existing read-only store.
+conversation state uses `AgentSession` plus a separate UI transcript.
+Investigations open the analysis database through the existing read-only store;
+explicit intake jobs write snapshots through the serialized index worker.
 
 ## Launch
 
@@ -16,11 +17,16 @@ aire-server/.venv/bin/aire gui tests/fixtures/simple_elf/aire_test_binary \
   --database analysis.sqlite
 ```
 
-The selected binary must already exist in the persisted analysis database. As
+An optional selected binary must already exist in the persisted analysis database. As
 with `aire chat`, a file argument is resolved by SHA-256, while a stored binary
 ID or unique stored name also works. If the binary argument is omitted, the GUI
 starts with the first persisted analysis and the analyst can switch among stored
 analyses from the top bar.
+An empty database opens the Binary Library / Upload screen. The GUI command
+creates a new database if its path does not yet exist. Use **Binary Library /
+Upload** to validate a local ELF/PE, start static analysis, or open a repository
+fixture. See [the October 22 runbook](DEMO_2026-10-22.md) for verified commands,
+binary paths, measured timings and limitations.
 
 The default URL is `http://127.0.0.1:8765/`. Use `--port` to change the port and
 `--no-browser` to prevent automatic browser launch. Remote binding is rejected;
@@ -28,8 +34,10 @@ the GUI accepts loopback hosts only.
 
 ## Preparing the small development fixture
 
-The GUI never implicitly runs Ghidra or writes an index. To create a development
-database from the preferred unstripped fixture, run:
+The GUI indexes only after an explicit **Start static analysis** or repository
+**Analyze & open** action. A single persistent child process serializes work,
+initializes Ghidra on its main thread and reuses the JVM. To prepare an index
+manually from the preferred unstripped fixture, run:
 
 ```bash
 PYTHONPATH=aire-server/src aire-server/.venv/bin/python - <<'PY'
@@ -100,8 +108,9 @@ and Raw Analysis Details are collapsed by default. Full source IDs, provenance,
 model configuration, tool results, bounded code and context diagnostics remain
 available there and are restored with recent chats.
 
-Selecting a binary prepares a `BinaryWorkspace` backed by existing `AgentTools`.
-It caches metadata, up to 100 function identifiers, connectivity ranking, bounded
+Selecting a binary loads only metadata. Investigation creates a `BinaryWorkspace`
+backed by existing `AgentTools`; overview preparation is deferred until requested.
+It then caches metadata, up to 100 function identifiers, connectivity ranking, bounded
 imports/strings/exports, deterministic findings, seed call relationships and a
 bounded overview evidence bundle. Function code and assembly remain lazy except
 for the small overview sample. Deterministic tool results are cached by binary,
@@ -133,9 +142,10 @@ For measurements and limitations, see [GUI_CHAT_PERFORMANCE.md](GUI_CHAT_PERFORM
 
 ## Limits
 
-The GUI operates only on analyses already persisted in the selected SQLite
-database. It does not currently index a newly chosen file from the browser,
-visualize the call graph as an interactive node diagram, or provide dynamic
-execution. Progressive text covers the public summary; further structured
+The GUI accepts validated local ELF/PE uploads up to 32 MiB and local allowlisted
+repository fixtures. Targets are never executed. Uploads and job timing records
+live separately from the SQLite analysis store; investigations remain read-only.
+The GUI does not visualize the call graph as an interactive node diagram or
+provide dynamic execution. Progressive text covers the public summary; further structured
 interpretations appear after validation. The Call Graph panel displays exact stored
 caller/callee relationships. Existing M8 model/tool/evidence limits still apply.

@@ -1,0 +1,12 @@
+A.I.R.E. GUI
+Local URL: http://127.0.0.1:8766/
+Analysis database: /home/laurene/aire/demo_artifacts/oct22/backup.sqlite
+Press Ctrl-C to stop.
+127.0.0.1 - - [21/Oct/2026 03:38:52] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [21/Oct/2026 03:38:52] "GET /api/library HTTP/1.1" 200 -
+127.0.0.1 - - [21/Oct/2026 03:38:52] "GET / HTTP/1.1" 200 -
+
+A.I.R.E. GUI stopped.
+
+BACKUP PASSED: http://127.0.0.1:8766/; all four required indexes cached.
+CLI shutdown return code: 130 (130 = requested Ctrl-C)

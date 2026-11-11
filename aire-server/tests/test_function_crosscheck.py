@@ -217,7 +217,7 @@ class CrosscheckIntegrationTests(unittest.TestCase):
             self.assertEqual(self.tools.crosscheck('b:a')['cross_check_status'], 'AGREEMENT')
 
     def test_tool_schema_count_and_validation(self):
-        self.assertEqual(len(self.tools.registry.catalog()), 18)
+        self.assertEqual(len(self.tools.registry.catalog()), 19)
         self.assertFalse(self.tools.registry.run('crosscheck_function', {})['ok'])
         self.assertFalse(self.tools.registry.run('crosscheck_function', {'function': 'start', 'binary_id': 'other'})['ok'])
 

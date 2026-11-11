@@ -141,3 +141,18 @@ button.tool-row { width: 100%; text-align: left; cursor: pointer; }.tool-row:hov
 .analysis-details { border-top: 1px solid var(--border, #263344); padding: 10px 0; }
 .analysis-details summary { cursor: pointer; color: var(--muted, #9aa9ba); font-size: 13px; }
 .analysis-details pre { max-height: 360px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; }
+/* Binary intake uses the existing workspace palette and responsive layout. */
+.intake-form, .analysis-status, .fixture-row { padding: 18px; border: 1px solid var(--border, #263445); border-radius: 12px; margin: 14px 0; }
+.intake-form { display: grid; gap: 14px; }
+#uploadDetails, .analysis-status { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; }
+.fixture-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.fixture-row p { margin: 6px 0; }
+.fixture-row small { overflow-wrap: anywhere; }
+.intake-form button, .fixture-row button, #refreshLibrary, .function-lookup button { padding: 9px 14px; border-radius: 8px; background: #173c50; color: #eef7ff; border: 1px solid #326078; cursor: pointer; }
+button:disabled { opacity: .55; cursor: wait; }
+.function-lookup { display: grid; gap: 8px; margin-bottom: 12px; }
+.function-lookup input { min-width: 0; padding: 10px; background: #0e1723; color: #fff; border: 1px solid #326078; border-radius: 6px; }
+@media (max-width: 700px) { .fixture-row { align-items: stretch; flex-direction: column; } }
+
+.structure-report summary { cursor: pointer; font-size: 12px; margin-top: 6px; }
+.structure-report pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; margin: 6px 0 0; max-height: 240px; overflow: auto; }

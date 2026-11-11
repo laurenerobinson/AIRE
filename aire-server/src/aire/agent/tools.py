@@ -11,6 +11,7 @@ from aire.knowledge.models import _json_safe
 from aire.knowledge.retrieval import ProgramQueryService, _record
 from aire.knowledge.application_relevance import ApplicationRelevanceService
 from aire.security.rule_engine import RuleEngine
+from aire.security.crypto_evidence import crypto_evidence
 from aire.analysis.function_crosscheck import FunctionCrossCheckService, MAX_FUNCTIONS, compact_report
 from aire.knowledge.investigation import InvestigationService
 
@@ -161,6 +162,9 @@ class AgentTools:
               'max_chars': _integer(8000, 16000, 1000)}, self.evidence),
             ('security_findings', 'M7 deterministic signals/candidates; not confirmed vulnerabilities',
              {}, self.security),
+            ('crypto_evidence', 'Functions calling crypto APIs (CNG/CryptoAPI/OpenSSL) with exact callsites, '
+             'algorithm identifier strings and callers; static evidence, not runtime proof',
+             {'limit': _integer(50, 100)}, self.crypto),
         ]
         for entry in entries:
             self.registry.register(Tool(*entry))
@@ -182,7 +186,13 @@ class AgentTools:
                                                          (self.binary_id,)).fetchone())
             counts = {table: db.execute(f'SELECT count(*) FROM {table} WHERE binary_id=?',
                       (self.binary_id,)).fetchone()[0] for table in ('functions', 'function_edges', 'artifacts', 'warnings')}
+        metadata = self.store.load_analysis_metadata(self.binary_id)
+        incomplete = metadata.get('decompilation_incomplete') or []
+        retry = metadata.get('decompile_retry') or {}
         return {'binary': serializable(binary), 'counts': counts,
+                'decompilation': {'incomplete_count': len(incomplete), 'incomplete': incomplete[:20],
+                                  'timeouts_retried': len(retry.get('retried', [])),
+                                  'timeouts_recovered': len(retry.get('recovered', []))},
                 'provenance': self._provenance('binaries', self.binary_id, binary.image_base)}
 
     def functions(self, limit=20, offset=0):
@@ -282,7 +292,14 @@ class AgentTools:
                 'observed_chars': len(text) if text is not None else None}
 
     def decompiled(self, function, max_chars=2000):
-        return self._text(function, max_chars, 'decompiled_text')
+        result = self._text(function, max_chars, 'decompiled_text')
+        if result['text'] is None:
+            # Explain absence explicitly (timeout after retry, decompiler error,
+            # unavailable decompiler); never imply the function was analyzed.
+            incomplete = self.store.load_analysis_metadata(self.binary_id).get('decompilation_incomplete') or []
+            address = result['function']['address']
+            result['incomplete'] = next((row for row in incomplete if row.get('address') == address), None)
+        return result
 
     def assembly(self, function, max_chars=2000):
         return self._text(function, max_chars, 'assembly')
@@ -350,3 +367,7 @@ class AgentTools:
         result = RuleEngine(self.store).scan_binary(self.binary_id).to_dict()
         result.pop('timing', None)
         return result
+
+    def crypto(self, limit=50):
+        with self.query._snapshot(self.binary_id) as db:
+            return crypto_evidence(db, self.binary_id, limit)

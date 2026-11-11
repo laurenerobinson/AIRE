@@ -1,9 +1,9 @@
-"""Local read-only web application for the A.I.R.E. binary analysis agent.
+"""Local static-analysis web application for the A.I.R.E. binary analysis agent.
 
 The HTTP boundary deliberately stays in the Python standard library. Analysis
-facts are read from the existing SQLite knowledge store through the same M8
-AgentTools/AgentRunner used by the CLI. GUI conversation files live separately
-from the immutable analysis database.
+facts are investigated through the same read-only M8 AgentTools/AgentRunner used
+by the CLI. Validated intake uses a separate serialized index worker. GUI
+conversation files and uploaded binaries live separately from analysis facts.
 """
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -36,6 +36,8 @@ from aire.agent.events import EventStream
 from aire.agent.runner import _binary_overview
 from aire.knowledge.application_relevance import RELEVANCE_POLICY_VERSION
 from aire.analysis.function_crosscheck import CROSSCHECK_POLICY_VERSION
+from aire.security.crypto_evidence import EVIDENCE_VERSION as CRYPTO_EVIDENCE_VERSION
+from aire.api.binary_library import BinaryLibrary, MAX_UPLOAD
 
 _LOG = logging.getLogger('aire.performance')
 
@@ -212,7 +214,8 @@ class GuiApplication:
     """Application boundary used by HTTP handlers and unit tests."""
 
     def __init__(self, database, *, initial_binary=None, session_dir=None,
-                 model_config=None, limits=None, client_factory=None):
+                 model_config=None, limits=None, client_factory=None, upload_dir=None,
+                 repository=None):
         self.database = Path(database).expanduser().resolve()
         if not self.database.is_file():
             raise GuiError(f'Analysis database not found: {self.database}')
@@ -225,6 +228,7 @@ class GuiApplication:
         self._workspaces = OrderedDict()
         self._database_stamp = None
         self.last_performance = {}  # Development instrumentation, never a UI footer.
+        self.library = BinaryLibrary(self.database, directory=upload_dir, repository=repository)
         if os.environ.get('AIRE_GUI_PERFORMANCE') == '1':
             _LOG.setLevel(logging.INFO)
             if not _LOG.handlers:
@@ -232,10 +236,8 @@ class GuiApplication:
             _LOG.propagate = False
         with self.store() as store:
             binaries = store.list_binaries()
-            if not binaries:
-                raise GuiError('Analysis database contains no indexed binaries')
-            selected = resolve_binary(store, initial_binary) if initial_binary else binaries[0]
-            self.initial_binary_id = selected.binary_id
+            selected = resolve_binary(store, initial_binary) if initial_binary else (binaries[0] if binaries else None)
+            self.initial_binary_id = selected.binary_id if selected else None
 
     @contextmanager
     def store(self):
@@ -292,15 +294,17 @@ class GuiApplication:
     def binary_metadata(self, binary_id):
         with self.store() as store:
             binary_id = resolve_binary(store, binary_id).binary_id
-            workspace = self.workspace(binary_id, store)
-            data = deepcopy(workspace.metadata)
-            self._check_database(workspace.database_stamp)
+            stamp = self.database_stamp()
+            data = AgentTools(store, binary_id).registry.run('binary_metadata', {})['data']
+            self._check_database(stamp)
             return data
 
     def bootstrap(self, requested_binary=None):
         binaries = self.list_binaries()
         selected_id = requested_binary or self.initial_binary_id
-        if selected_id not in {b['binary_id'] for b in binaries}:
+        if selected_id is None and binaries:
+            selected_id = binaries[0]['binary_id']
+        if selected_id and selected_id not in {b['binary_id'] for b in binaries}:
             with self.store() as store:
                 selected_id = resolve_binary(store, selected_id).binary_id
         return {
@@ -308,11 +312,11 @@ class GuiApplication:
             'subtitle': 'Artificial Intelligence Reverse Engineering Assistant',
             'database': self.database.name,
             'selected_binary_id': selected_id,
-            'binary_metadata': self.binary_metadata(selected_id),
+            'binary_metadata': self.binary_metadata(selected_id) if selected_id else None,
             'binaries': binaries,
             'model': self.model_config.model or os.environ.get('AIRE_OLLAMA_MODEL'),
             'sessions': self.sessions.list(selected_id),
-            'tool_names': [entry['name'] for entry in self.tool_catalog(selected_id)],
+            'tool_names': [entry['name'] for entry in self.tool_catalog(selected_id)] if selected_id else [],
         }
 
     def tool_catalog(self, binary_id):
@@ -380,9 +384,11 @@ class GuiApplication:
                 workspace_resolution = time.perf_counter() - tick
                 stamp = workspace.database_stamp
                 client = self._client()
-                key = (RELEVANCE_POLICY_VERSION, CROSSCHECK_POLICY_VERSION, question.strip().lower(), getattr(client, 'model', None),
+                key = (RELEVANCE_POLICY_VERSION, CROSSCHECK_POLICY_VERSION, CRYPTO_EVIDENCE_VERSION, question.strip().lower(), getattr(client, 'model', None),
                        getattr(client, 'num_ctx', None), self.limits.evidence_chars)
                 overview = _binary_overview(question)
+                if overview or any(s in question.lower() for s in ('suspicious behavior', 'crypto or hashing')):
+                    workspace.prepare_overview(store)
                 tools = workspace.tools(store, assembly='assembly' in question.lower())
                 first_visible = None
                 first_summary = None
@@ -456,8 +462,16 @@ class GuiApplication:
             actions += [('get_artifacts', {'kind': 'IMPORT', 'limit': 20}),
                         ('get_artifacts', {'kind': 'STRING', 'limit': 20}), ('security_findings', {})]
             if 'crypto or hashing' in lower:
+                actions.append(('crypto_evidence', {'limit': 20}))
                 actions.append(('list_functions', {'limit': 100}))
-                candidates = [r['function']['function_id'] for r in workspace.preloaded[0]['data'].get('items', [])
+                # Prefer functions with exact crypto API callsite evidence
+                # (works for stripped binaries); names are only a fallback.
+                try:
+                    evidence = tools.crypto(limit=20)['functions']
+                except Exception:
+                    evidence = []
+                candidates = [row['function_id'] for row in evidence if row['primary_operations']]
+                candidates = candidates or [r['function']['function_id'] for r in workspace.preloaded[0]['data'].get('items', [])
                               if re.search(r'(?:crypto|hash|sha[0-9]*|md5|aes|encrypt|decrypt|checksum)',
                                            r['function']['current_name'], re.IGNORECASE)
                               and not r['function']['is_external'] and not r['function']['is_thunk']]
@@ -559,8 +573,16 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
         self.wfile.write(raw)
 
     def _error(self, status, exc):
+        # A rejected POST may still have unread bytes. Do not parse those bytes
+        # as another HTTP request on a persistent connection.
+        if self.command == 'POST':
+            self.close_connection = True
         message = str(exc)[:500] or type(exc).__name__
-        self._json(status, {'error': type(exc).__name__, 'message': message})
+        payload = {'error': type(exc).__name__, 'message': message}
+        report = getattr(exc, 'report', None)
+        if isinstance(report, dict):
+            payload['validation'] = report  # structured PE/ELF intake issues
+        self._json(status, payload)
 
     def _body(self):
         if self.headers.get_content_type() != 'application/json':
@@ -597,6 +619,11 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
                 return self._json(200, self.app.bootstrap(selected))
             if path == '/api/binaries':
                 return self._json(200, {'binaries': self.app.list_binaries()})
+            if path == '/api/library':
+                return self._json(200, {'fixtures': self.app.library.list(), 'max_upload_bytes': MAX_UPLOAD,
+                                        'analyzer': self.app.library.analyzer_status()})
+            if re.fullmatch(r'/api/analysis/[0-9a-f]{32}', path):
+                return self._json(200, self.app.library.job(path.rsplit('/', 1)[-1]))
             if path == '/api/sessions':
                 binary_id = parse_qs(urlparse(self.path).query).get('binary_id', [None])[0]
                 return self._json(200, {'sessions': self.app.sessions.list(binary_id)})
@@ -626,7 +653,22 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
             return self._json(403, {'error': 'Forbidden', 'message': 'A.I.R.E. GUI accepts loopback requests only'})
         path = self._api_path()
         try:
+            if path == '/api/uploads':
+                if self.headers.get_content_type() != 'application/octet-stream':
+                    raise GuiError('Expected application/octet-stream')
+                if self.headers.get('Transfer-Encoding'):
+                    raise GuiError('Chunked uploads are not supported')
+                length = int(self.headers.get('Content-Length', '0'))
+                if not 0 < length <= MAX_UPLOAD:
+                    self.close_connection = True
+                    raise GuiError('Upload must be between 1 byte and 32 MiB')
+                self.connection.settimeout(30)
+                filename = parse_qs(urlparse(self.path).query).get('filename', ['binary'])[0]
+                return self._json(201, self.app.library.upload(self.rfile, length, filename))
             body = self._body()
+            if path == '/api/analysis':
+                return self._json(202, self.app.library.start(
+                    upload_id=body.get('upload_id'), fixture_id=body.get('fixture_id')))
             if path == '/api/sessions':
                 return self._json(201, self.app.new_session(body.get('binary_id')))
             session_id = self._session_route('/select-function')
@@ -715,3 +757,4 @@ def serve(application, *, host='127.0.0.1', port=8765, open_browser=True, output
         return 130
     finally:
         server.server_close()
+        application.library.close()

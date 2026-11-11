@@ -1,0 +1,10 @@
+test_crypto_evidence_matches_ground_truth (aire-server.tests.test_m9_integration.M9GhidraIntegrationTests.test_crypto_evidence_matches_ground_truth) ... ok
+test_injected_decompiler_freeze_is_retried_and_recovered (aire-server.tests.test_m9_integration.M9GhidraIntegrationTests.test_injected_decompiler_freeze_is_retried_and_recovered) ... ok
+test_parallel_decompilation_equals_serial_on_real_binary (aire-server.tests.test_m9_integration.M9GhidraIntegrationTests.test_parallel_decompilation_equals_serial_on_real_binary) ... ok
+test_partial_corrupt_pes_index_without_crashing (aire-server.tests.test_m9_integration.M9GhidraIntegrationTests.test_partial_corrupt_pes_index_without_crashing) ... ok
+test_prewarmed_worker_serves_first_job_without_jvm_start (aire-server.tests.test_m9_integration.M9GhidraIntegrationTests.test_prewarmed_worker_serves_first_job_without_jvm_start) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 396.944s
+
+OK

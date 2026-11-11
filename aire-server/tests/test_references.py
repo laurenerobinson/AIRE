@@ -289,10 +289,12 @@ class ReferencePersistenceTests(unittest.TestCase):
         self.assertEqual(self.path.read_bytes(), before)
 
     def test_cache_hit_preserves_reference_facts_and_legacy_options_miss(self):
+        from aire.analysis.versions import analyzer_versions
         target = Path(self.directory.name) / 'target'
         target.write_bytes(b'controlled target; never execute')
         digest = hashlib.sha256(target.read_bytes()).hexdigest()
         original = enriched_index(digest)
+        original.metadata.update(analyzer_versions=analyzer_versions(), ghidra_version=analyzer_versions()['ghidra'])
         original.binary.sha256 = digest
         original.binary.path = str(target)
         with patch('aire.analysis.cache.index_binary', return_value=original) as indexer:

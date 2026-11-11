@@ -1,0 +1,59 @@
+......s.......................................................................................127.0.0.1 - - [10/Nov/2026 23:38:27] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:27] "POST /api/uploads?filename=demo.exe HTTP/1.1" 201 -
+127.0.0.1 - - [10/Nov/2026 23:38:27] "POST /api/uploads?filename=demo.exe HTTP/1.1" 400 -
+127.0.0.1 - - [10/Nov/2026 23:38:27] "POST /api/uploads HTTP/1.1" 403 -
+..................................
+M5: {"citation_count": 17, "citations_valid": true, "context_truncated": true, "facts": ["\"process_input\" (004012f8) contains a stored resolved CALL to \"validate_input\" (004011bc) at callsite 00401316.", "\"process_input\" (004012f8) contains a stored resolved CALL to \"transform_input\" (00401269) at callsite 00401334.", "\"main\" (0040148d) contains a stored resolved CALL to \"process_input\" (004012f8) at callsite 00401545."], "ground_truth_direct_callee_matches": 2, "interpretations": ["The function may coordinate the shown callees."], "mode": "real static evidence + fake model; NOT live inference", "model": "fake-local-test", "question": "What functions does this function interact with? Select the direct call relationships as facts.", "sha256_after": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "sha256_before": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "sizes": {"context_characters": 23874, "eval_count": null, "last_prompt_characters": 26811, "m4_rendered_characters": 23949, "prompt_characters": 26811, "prompt_eval_count": null, "response_characters": 491, "total_response_characters": 491}, "summary": "The selected evidence describes stored function relationships.", "target_address": "004012f8", "target_name": "process_input", "timing_seconds": {"context_build_seconds": 0.013520170999981929, "inference_seconds": 0.00029458699998485827, "parsing_seconds": 0.0001036049999925126, "prompt_build_seconds": 0.003162556000006589, "total_chat_seconds": 0.01709353299997929}}
+.s
+M5: {"citation_count": 17, "citations_valid": true, "context_truncated": true, "facts": ["\"FUN_004012f8\" (004012f8) contains a stored resolved CALL to \"FUN_004011bc\" (004011bc) at callsite 00401316.", "\"FUN_004012f8\" (004012f8) contains a stored resolved CALL to \"FUN_00401269\" (00401269) at callsite 00401334.", "\"FUN_0040148d\" (0040148d) contains a stored resolved CALL to \"FUN_004012f8\" (004012f8) at callsite 00401545."], "ground_truth_direct_callee_matches": 2, "interpretations": ["The function may coordinate the shown callees."], "mode": "real static evidence + fake model; NOT live inference", "model": "fake-local-test", "question": "What functions does this function interact with? Select the direct call relationships as facts.", "sha256_after": "08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188", "sha256_before": "08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188", "sizes": {"context_characters": 23853, "eval_count": null, "last_prompt_characters": 26790, "m4_rendered_characters": 23948, "prompt_characters": 26790, "prompt_eval_count": null, "response_characters": 491, "total_response_characters": 491}, "summary": "The selected evidence describes stored function relationships.", "target_address": "004012f8", "target_name": "FUN_004012f8", "timing_seconds": {"context_build_seconds": 0.017536717999973916, "inference_seconds": 0.00017269500000338667, "parsing_seconds": 6.761699995649906e-05, "prompt_build_seconds": 0.0021416380000118806, "total_chat_seconds": 0.019924948000038967}}
+.s.............................
+M4 context: {"build_timings_seconds": {"artifact_selection_seconds": 0.0031147500000088257, "graph_selection_seconds": 0.0030584909999902266, "rendering_seconds": 0.007645905999993374, "target_resolution_seconds": 0.00018248800000719712, "total_context_seconds": 0.014389547999996921}, "mean_build_ms_10_repeats": {"depth_3": 7.582253800001126, "direct_neighbors": 5.991307400000778, "target_only": 3.410805200002187}, "omitted_warnings": 25, "rendered_chars": 59951, "selected_artifacts": 8, "selected_edges": 16, "selected_functions": 12, "selected_warnings": 1, "sha256_after": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "sha256_before": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "small_bundle_chars": 1914, "socket_edge": {"callee": "socket", "callee_address": "00101060", "caller": "FUN_00101efe", "callsite": "00101f39"}, "target": "FUN_00101efe", "truncations": {"artifact_value": 8, "artifacts": 1, "assembly": 11, "decompiled_text": 11, "references": 1, "render_block": 23, "total_chars": 1, "warning_text": 1, "warnings": 1}}
+..........................
+M2 round-trip: {"database_bytes": 1708032, "load_seconds": 0.009365913999999975, "loaded": {"call_edges": 134, "decompiled_functions": 81, "exports": 8, "functions": 106, "imports": 25, "strings": 132, "warnings": 26}, "original": {"call_edges": 134, "decompiled_functions": 81, "exports": 8, "functions": 106, "imports": 25, "strings": 132, "warnings": 26}, "save_seconds": 0.04938744600002565, "sha256_after": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "sha256_before": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de"}
+........................................................127.0.0.1 - - [10/Nov/2026 23:38:52] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "GET /app.css HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "GET /app.js HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "POST /api/sessions HTTP/1.1" 201 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "POST /api/sessions/4efdcaf5bed44b008e73941909573f3b/select-function HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "GET /api/sessions/4efdcaf5bed44b008e73941909573f3b HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "POST /api/sessions HTTP/1.1" 400 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "POST /api/chat HTTP/1.1" 200 -
+127.0.0.1 - - [10/Nov/2026 23:38:52] "GET /api/sessions?binary_id=b HTTP/1.1" 200 -
+.................................................................................................................Naming preflight: prompt=7387 characters, num_ctx=fake
+Naming preflight: prompt=7565 characters, num_ctx=fake
+.Naming preflight: prompt=7387 characters, num_ctx=fake
+.s...........................................................................
+M3 queries: {"depth_3_nodes": 10, "example": {"callee": {"address": "00101060", "is_external": false, "is_thunk": true, "name": "socket"}, "caller": {"address": "00101efe", "is_external": false, "is_thunk": false, "name": "FUN_00101efe"}, "callsite_address": "00101f39"}, "mean_query_ms_20_repeats": {"callees": 0.1927112500027306, "callers": 0.07311079999681169, "depth_3": 0.3891000000010081, "top_unique_callers": 0.6855566000012914}, "outgoing_relationships": 14, "resolutions": {"memset": [{"address": "00101090", "caller_callsites": 10, "is_external": false, "is_thunk": true, "name": "memset"}, {"address": "00107030", "caller_callsites": 0, "is_external": false, "is_thunk": true, "name": "memset"}, {"address": "EXTERNAL:00000007", "caller_callsites": 0, "is_external": true, "is_thunk": false, "name": "memset"}], "socket": [{"address": "00101060", "caller_callsites": 1, "is_external": false, "is_thunk": true, "name": "socket"}, {"address": "00107018", "caller_callsites": 0, "is_external": false, "is_thunk": true, "name": "socket"}, {"address": "EXTERNAL:00000004", "caller_callsites": 0, "is_external": true, "is_thunk": false, "name": "socket"}], "write": [{"address": "00101070", "caller_callsites": 1, "is_external": false, "is_thunk": true, "name": "write"}, {"address": "00107020", "caller_callsites": 0, "is_external": false, "is_thunk": true, "name": "write"}, {"address": "EXTERNAL:00000005", "caller_callsites": 0, "is_external": true, "is_thunk": false, "name": "write"}]}, "reverse_depth_3_nodes": 2, "sha256_after": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "sha256_before": "157c7089f3d612607cb64ca960d060788c4c317a7d6ba0f6a12a9b5d998c46de", "top_unique_callers": [{"address": "00101269", "incoming_callsites": 48, "is_external": false, "is_thunk": false, "name": "FUN_00101269", "unique_callers": 14}, {"address": "0010129a", "incoming_callsites": 9, "is_external": false, "is_thunk": false, "name": "FUN_0010129a", "unique_callers": 7}, {"address": "00101090", "incoming_callsites": 10, "is_external": false, "is_thunk": true, "name": "memset", "unique_callers": 4}, {"address": "001012cb", "incoming_callsites": 4, "is_external": false, "is_thunk": false, "name": "FUN_001012cb", "unique_callers": 3}, {"address": "001010e0", "incoming_callsites": 2, "is_external": false, "is_thunk": true, "name": "memcpy", "unique_callers": 2}]}
+...................../usr/bin/ld: /tmp/ccgHPeUl.o: in function `read_input':
+/home/laurene/aire/tests/fixtures/security_rules/dangerous_gets.c:9:(.text+0x23): warning: the `gets' function is dangerous and should not be used.
+......................
+----------------------------------------------------------------------
+Ran 477 tests in 171.404s
+
+OK (skipped=4)
+	Command being timed: "aire-server/.venv/bin/python -m unittest discover -s aire-server/tests"
+	User time (seconds): 129.05
+	System time (seconds): 68.82
+	Percent of CPU this job got: 114%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:52.28
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3202924
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 51
+	Minor (reclaiming a frame) page faults: 1732563
+	Voluntary context switches: 774639
+	Involuntary context switches: 374345
+	Swaps: 0
+	File system inputs: 703368
+	File system outputs: 978192
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

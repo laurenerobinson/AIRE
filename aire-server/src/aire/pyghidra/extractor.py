@@ -1,6 +1,9 @@
 """Read Ghidra facts. Java imports are delayed until extraction is requested."""
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
+import os
+import queue
 from datetime import datetime, timezone
 
 from aire.knowledge.models import ArtifactRecord, BinaryRecord, FunctionRecord
@@ -68,48 +71,185 @@ def extract_binary(program, path, digest, warnings):
 
 @profiled('decompilation')
 def decompile_function(decompiler, function, options, monitor, warnings, context):
-    def attempt():
-        decompile_attempt(context)
+    """Single attempt (public helper, original contract): text or None with the
+    failure recorded in warnings."""
+    decompile_attempt(context)
+    outcome = _attempt(decompiler, function, options, monitor, context)
+    _apply_warnings(outcome, warnings, context)
+    if outcome.text is not None:
+        count('decompile_successes')
+    return outcome.text
+
+
+DEFAULT_MAX_DECOMPILE_WORKERS = 4
+
+
+def decompile_workers(environ=None):
+    """Parallel decompiler instances. Not part of IndexOptions/cache identity:
+    output is verified identical for any worker count (see docs/M9_PERFORMANCE.md).
+    AIRE_DECOMPILE_WORKERS overrides; 1 restores the original serial path."""
+    environ = os.environ if environ is None else environ
+    value = environ.get('AIRE_DECOMPILE_WORKERS')
+    if value is not None:
+        try:
+            parsed = int(value)
+        except ValueError:
+            parsed = 0
+        if parsed >= 1:
+            return min(parsed, 32)
+    return max(1, min(DEFAULT_MAX_DECOMPILE_WORKERS, os.cpu_count() or 1))
+
+
+def _open_decompiler(program):
+    from ghidra.app.decompiler import DecompInterface
+    decompiler = DecompInterface()
+    try:
+        if not decompiler.openProgram(program):
+            raise RuntimeError(str(decompiler.getLastMessage()))
+    except Exception:
+        decompiler.dispose()
+        raise
+    return decompiler
+
+
+def _attach_daemon():
+    # Worker threads must never keep the JVM alive at process exit.
+    try:
+        import jpype
+        if jpype.isJVMStarted():
+            jpype.java.lang.Thread.attachAsDaemon()
+    except Exception:
+        pass
+
+
+class _DecompilerPool:
+    """N independent DecompInterface instances (each its own native process)
+    shared through a queue. Results are keyed by function so callers merge them
+    in the original deterministic order."""
+
+    def __init__(self, program, workers, warnings):
+        self.decompilers = []
+        self.available = queue.Queue()
+        self.executor = None
+        with stage('decompiler_setup'):
+            count('decompiler_instances', workers)
+            errors = []
+            if workers == 1:
+                opened = [self._try_open(program)]
+            else:
+                self.executor = ThreadPoolExecutor(max_workers=workers, thread_name_prefix='aire-decompile',
+                                                   initializer=_attach_daemon)
+                opened = list(self.executor.map(lambda _: self._try_open(program), range(workers)))
+            for decompiler, error in opened:
+                if decompiler is not None:
+                    self.decompilers.append(decompiler)
+                    self.available.put(decompiler)
+                else:
+                    errors.append(error)
+            if not self.decompilers:
+                # Same warning text as the original single-instance path.
+                warnings.append(f'Decompiler initialization: {errors[0]}')
+
+    @staticmethod
+    def _try_open(program):
+        try:
+            return _open_decompiler(program), None
+        except Exception as exc:
+            return None, exc
+
+    @property
+    def usable(self):
+        return bool(self.decompilers)
+
+    def submit(self, function, options, monitor, context):
+        def run():
+            decompiler = self.available.get()
+            try:
+                return _attempt(decompiler, function, options, monitor, context)
+            finally:
+                self.available.put(decompiler)
+        return self.executor.submit(run)
+
+    def attempt_serial(self, function, options, monitor, context):
+        """Retry on the caller's thread with one pooled instance (all parallel
+        work has finished, so every instance is idle)."""
+        decompiler = self.available.get()
+        try:
+            return _attempt(decompiler, function, options, monitor, context)
+        finally:
+            self.available.put(decompiler)
+
+    def close(self):
+        with stage('cleanup'):
+            if self.executor is not None:
+                self.executor.shutdown(wait=True)
+            for decompiler in self.decompilers:
+                decompiler.dispose()
+
+
+class Outcome:
+    """Result of one decompile attempt. status: ok | timeout | failed."""
+    __slots__ = ('text', 'status', 'message', 'notes')
+
+    def __init__(self, text, status, message='', notes=()):
+        self.text, self.status, self.message, self.notes = text, status, message, tuple(notes)
+
+
+def _timed_out(result):
+    try:
+        return bool(result.isTimedOut())
+    except Exception:
+        return False
+
+
+def _attempt(decompiler, function, options, monitor, context):
+    """One decompile attempt. Thread-safe: touches no shared or profiling state."""
+    try:
         result = decompiler.decompileFunction(function, options.decompile_timeout_seconds, monitor)
         if result is None:
-            raise RuntimeError('decompiler returned no result')
+            return Outcome(None, 'failed', 'decompiler returned no result')
         if not result.decompileCompleted() or result.getDecompiledFunction() is None:
-            raise RuntimeError(str(result.getErrorMessage()) or 'decompilation did not complete')
+            message = str(result.getErrorMessage() or '') or 'decompilation did not complete'
+            return Outcome(None, 'timeout' if _timed_out(result) else 'failed', message)
         message = str(result.getErrorMessage() or '')
-        if message:
-            warnings.append(f'{context} decompiler: {message}')
-        text = str(result.getDecompiledFunction().getC())
-        count('decompile_successes')
-        return text
-    return read_fact(warnings, f'{context} decompilation', attempt)
+        notes = [f'{context} decompiler: {message}'] if message else []
+        return Outcome(str(result.getDecompiledFunction().getC()), 'ok', notes=notes)
+    except Exception as exc:
+        return Outcome(None, 'failed', str(exc))
+
+
+def _apply_warnings(outcome, warnings, context):
+    # Identical text to the original read_fact-based messages.
+    if outcome.text is None:
+        warnings.append(f'{context} decompilation: {outcome.message}')
+    warnings.extend(outcome.notes)
 
 
 @profiled('function_metadata')
-def extract_functions(program, functions, binary, options, monitor, warnings):
+def extract_functions(program, functions, binary, options, monitor, warnings, workers=None, report=None):
+    """Extract function facts. report (dict, optional) receives decompilation
+    reliability facts: 'decompile_retry' (timed_out/retried/recovered address
+    lists) and 'decompilation_incomplete' (functions left without decompiled
+    text, each with reason and message). Timed-out functions are retried once,
+    serially, after the main pass; successful results are never re-decompiled."""
     from ghidra.program.model.block import BasicBlockModel
-    from ghidra.app.decompiler import DecompInterface
 
     records = []
     blocks = BasicBlockModel(program)
-    decompiler = None
+    pool = None
+    pending = []  # (record, pre-decompile warnings, future/_Done or None, context, function)
+    timed_out, retried, recovered, incomplete = [], [], [], []
+    workers = decompile_workers() if workers is None else workers
     try:
         if options.decompile:
-            with stage('decompiler_setup'):
-                count('decompiler_instances')
-                decompiler = DecompInterface()
-                try:
-                    if not decompiler.openProgram(program):
-                        raise RuntimeError(str(decompiler.getLastMessage()))
-                except Exception as exc:
-                    warnings.append(f'Decompiler initialization: {exc}')
-                    decompiler.dispose()
-                    decompiler = None
+            pool = _DecompilerPool(program, workers, warnings)
         for function in functions:
             address = str(function.getEntryPoint())
             name = str(function.getName())
             context = f'Function {address} {name}'
+            local = []
             def fact(label, getter):
-                return read_fact(warnings, f'{context} {label}', getter)
+                return read_fact(local, f'{context} {label}', getter)
             external = bool(function.isExternal())
             record = FunctionRecord(
                 function_id(binary, address), binary, address, name,
@@ -119,9 +259,14 @@ def extract_functions(program, functions, binary, options, monitor, warnings):
                 namespace=fact('namespace', lambda: str(function.getParentNamespace().getName(True))),
                 calling_convention=fact('calling convention', lambda: str(function.getCallingConventionName())),
             )
+            future = None
             if external:
                 record.instruction_count = record.basic_block_count = record.branch_count = 0
             else:
+                # Submit first so native decompilation overlaps the Python
+                # assembly/basic-block work below.
+                if options.decompile and pool.usable and pool.executor is not None:
+                    future = pool.submit(function, options, monitor, context)
                 with stage('assembly'):
                     buffer = AssemblyBuffer(options.max_assembly_instructions, options.max_assembly_characters)
                 def instructions():
@@ -142,18 +287,81 @@ def extract_functions(program, functions, binary, options, monitor, warnings):
                 with stage('basic_blocks'):
                     record.basic_block_count = fact('basic blocks', lambda: sum(
                         1 for _ in blocks.getCodeBlocksContaining(function.getBody(), monitor)))
-                if options.decompile:
-                    if decompiler is None:
-                        warnings.append(f'{context} decompilation: decompiler unavailable')
-                    else:
-                        record.decompiled_text = decompile_function(
-                            decompiler, function, options, monitor, warnings, context)
+                if options.decompile and future is None:
+                    if not pool.usable:
+                        local.append(f'{context} decompilation: decompiler unavailable')
+                        incomplete.append(_incomplete(record, 'decompiler_unavailable', 'decompiler unavailable'))
+                    else:  # serial path: original single-instance behavior
+                        with stage('decompilation'):
+                            decompile_attempt(context)
+                            future = _Done(_attempt(pool.decompilers[0], function, options, monitor, context))
             records.append(record)
+            pending.append((record, local, future, context, function))
+        # Collect outcomes in the original function order (completion order is
+        # irrelevant), then retry timeouts once, serially, before any warning is
+        # emitted. A recovered function yields exactly the warnings of a clean
+        # run; the retry itself is recorded in report['decompile_retry'].
+        outcomes = {}
+        with stage('decompilation'):
+            for index, (record, local, future, context, function) in enumerate(pending):
+                if future is None:
+                    continue
+                if not isinstance(future, _Done):
+                    decompile_attempt(context)
+                outcome = future.result()
+                if outcome.status == 'timeout':
+                    count('decompile_timeouts')
+                    timed_out.append(record.address)
+                outcomes[index] = outcome
+            for index, outcome in list(outcomes.items()):
+                if outcome.status != 'timeout':
+                    continue
+                record, local, future, context, function = pending[index]
+                count('decompile_retries')
+                retried.append(record.address)
+                decompile_attempt(context)
+                retry = pool.attempt_serial(function, options, monitor, context)
+                if retry.text is not None:
+                    count('decompile_retry_recovered')
+                    recovered.append(record.address)
+                    outcomes[index] = retry
+                else:
+                    outcomes[index] = Outcome(None, 'timeout_after_retry',
+                                              f'{outcome.message}; serial retry: {retry.message}; '
+                                              'decompilation INCOMPLETE')
+        for index, (record, local, future, context, function) in enumerate(pending):
+            outcome = outcomes.get(index)
+            if outcome is not None:
+                record.decompiled_text = outcome.text
+                _apply_warnings(outcome, local, context)
+                if outcome.text is not None:
+                    count('decompile_successes')
+                else:
+                    reason = outcome.status if outcome.status == 'timeout_after_retry' else 'decompiler_error'
+                    incomplete.append(_incomplete(record, reason, outcome.message))
+            warnings.extend(local)
     finally:
-        if decompiler is not None:
-            with stage('cleanup'):
-                decompiler.dispose()
+        if pool is not None:
+            pool.close()
+    if report is not None:
+        report['decompile_retry'] = {'timed_out': timed_out, 'retried': retried, 'recovered': recovered}
+        report['decompilation_incomplete'] = sorted(incomplete, key=lambda row: row['address'])
     return records
+
+
+class _Done:
+    """Serial-path outcome wrapped like a completed future."""
+
+    def __init__(self, outcome):
+        self._outcome = outcome
+
+    def result(self):
+        return self._outcome
+
+
+def _incomplete(record, reason, message):
+    return {'function_id': record.function_id, 'address': record.address, 'name': record.current_name,
+            'reason': reason, 'message': message}
 
 
 @profiled('artifact_setup')

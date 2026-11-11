@@ -1,0 +1,191 @@
+{
+ "note": "Ground truth from source + linker PDB publics; analysis targets carry no symbols.",
+ "programs": {
+  "aes_gcm": {
+   "binary": "tests/fixtures/m9/crypto_pe/aes_gcm.exe",
+   "sha256": "90e403baf7bc7e0faef7258b140a28742436a63ee73bb468b8ed60131b6a0db5",
+   "image_base": "00400000",
+   "pdb_guid": "9a00602b2afe36db4c4c44205044422e",
+   "algorithm": "AES-256-GCM",
+   "source": "tests/fixtures/m9/crypto_pe/src/aes_gcm.c",
+   "functions": {
+    "create_aes_gcm_key": {
+     "address": "0041d080",
+     "apis": [
+      "BCryptOpenAlgorithmProvider",
+      "BCryptSetProperty",
+      "BCryptGenerateSymmetricKey"
+     ],
+     "role": "key_handling",
+     "strings": [
+      "AES",
+      "ChainingModeGCM",
+      "ChainingMode"
+     ]
+    },
+    "aes_gcm_encrypt": {
+     "address": "0041d160",
+     "apis": [
+      "BCryptEncrypt"
+     ],
+     "role": "encryption"
+    },
+    "aes_gcm_decrypt": {
+     "address": "0041d1e0",
+     "apis": [
+      "BCryptDecrypt"
+     ],
+     "role": "decryption"
+    },
+    "destroy_aes_key": {
+     "address": "0041d270",
+     "apis": [
+      "BCryptDestroyKey",
+      "BCryptCloseAlgorithmProvider"
+     ],
+     "role": "key_cleanup"
+    },
+    "init_auth_info": {
+     "address": "0041d100",
+     "apis": [],
+     "role": "auth_mode_setup"
+    },
+    "main": {
+     "address": "0041d2a0",
+     "calls": [
+      "create_aes_gcm_key",
+      "aes_gcm_encrypt",
+      "aes_gcm_decrypt",
+      "destroy_aes_key"
+     ],
+     "role": "driver"
+    }
+   }
+  },
+  "sha256_hash": {
+   "binary": "tests/fixtures/m9/crypto_pe/sha256_hash.exe",
+   "sha256": "9c5ac9cd5a76d14515f2558a82c2b103c581ed483e38bc6a96f4742257f438a6",
+   "image_base": "00400000",
+   "pdb_guid": "e233f0247094e99c4c4c44205044422e",
+   "algorithm": "SHA-256",
+   "source": "tests/fixtures/m9/crypto_pe/src/sha256_hash.c",
+   "functions": {
+    "prepare_sample_input": {
+     "address": "0041d020",
+     "apis": [],
+     "role": "input_processing"
+    },
+    "sha256_digest": {
+     "address": "0041d0a0",
+     "apis": [
+      "BCryptOpenAlgorithmProvider",
+      "BCryptCreateHash",
+      "BCryptHashData",
+      "BCryptFinishHash",
+      "BCryptDestroyHash",
+      "BCryptCloseAlgorithmProvider"
+     ],
+     "role": "hashing",
+     "strings": [
+      "SHA256"
+     ]
+    },
+    "print_digest": {
+     "address": "0041d1a0",
+     "apis": [],
+     "role": "output"
+    },
+    "main": {
+     "address": "0041d350",
+     "calls": [
+      "prepare_sample_input",
+      "sha256_digest",
+      "print_digest"
+     ],
+     "role": "driver"
+    }
+   }
+  },
+  "ecdsa_sign": {
+   "binary": "tests/fixtures/m9/crypto_pe/ecdsa_sign.exe",
+   "sha256": "d52ad9d02868e6dd532dcb5feb35a855659c9a3044bc86ed9d32ccd47f649c36",
+   "image_base": "00400000",
+   "pdb_guid": "437ac37722a1bb464c4c44205044422e",
+   "algorithm": "ECDSA P-256 with SHA-256",
+   "source": "tests/fixtures/m9/crypto_pe/src/ecdsa_sign.c",
+   "functions": {
+    "generate_signing_key": {
+     "address": "0041d020",
+     "apis": [
+      "BCryptOpenAlgorithmProvider",
+      "BCryptGenerateKeyPair",
+      "BCryptFinalizeKeyPair"
+     ],
+     "role": "key_handling",
+     "strings": [
+      "ECDSA_P256"
+     ]
+    },
+    "export_public_key": {
+     "address": "0041d080",
+     "apis": [
+      "BCryptExportKey"
+     ],
+     "role": "key_handling"
+    },
+    "import_verification_key": {
+     "address": "0041d0b0",
+     "apis": [
+      "BCryptImportKeyPair"
+     ],
+     "role": "key_handling"
+    },
+    "hash_message": {
+     "address": "0041d0e0",
+     "apis": [
+      "BCryptOpenAlgorithmProvider",
+      "BCryptCreateHash",
+      "BCryptHashData",
+      "BCryptFinishHash",
+      "BCryptDestroyHash",
+      "BCryptCloseAlgorithmProvider"
+     ],
+     "role": "hashing",
+     "strings": [
+      "SHA256"
+     ]
+    },
+    "sign_digest": {
+     "address": "0041d1b0",
+     "apis": [
+      "BCryptSignHash"
+     ],
+     "role": "signing"
+    },
+    "verify_signature": {
+     "address": "0041d1f0",
+     "apis": [
+      "BCryptVerifySignature"
+     ],
+     "role": "verification"
+    },
+    "main": {
+     "address": "0041d230",
+     "calls": [
+      "generate_signing_key",
+      "export_public_key",
+      "import_verification_key",
+      "hash_message",
+      "sign_digest",
+      "verify_signature"
+     ],
+     "apis": [
+      "BCryptDestroyKey",
+      "BCryptCloseAlgorithmProvider"
+     ],
+     "role": "driver_and_cleanup"
+    }
+   }
+  }
+ }
+}

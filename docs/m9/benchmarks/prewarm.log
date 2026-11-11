@@ -1,0 +1,148 @@
+{"condition": "no-prewarm", "gui_ready_seconds": 0.234, "gui_rss_mib_at_ready": 28.938, "first_upload_latency_seconds": 27.459, "job_status": "completed", "job_error": null, "job_processing_seconds": 27.254, "job_queue_seconds": 0.0, "launcher_start_calls_in_job": 1, "runtime_startup_in_job": 3.639, "worker_peak_rss_mib_during_job": 1075.691, "time_to_first_result_from_launch_seconds": 27.707, "analyzer_status_final": "running", "detected_freeze_seconds": 0.0, "rep": 0}
+{"condition": "prewarm-immediate", "gui_ready_seconds": 0.403, "gui_rss_mib_at_ready": 47.926, "first_upload_latency_seconds": 31.924, "job_status": "completed", "job_error": null, "job_processing_seconds": 25.96, "job_queue_seconds": 0.001, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 1222.637, "time_to_first_result_from_launch_seconds": 32.351, "analyzer_status_final": "ready", "detected_freeze_seconds": 0.0, "rep": 0}
+{"condition": "prewarm-ready", "gui_ready_seconds": 0.374, "gui_rss_mib_at_ready": 43.723, "analyzer_ready_seconds": 5.969, "worker_rss_mib_idle_warm": 258.48, "first_upload_latency_seconds": 23.433, "job_status": "completed", "job_error": null, "job_processing_seconds": 23.221, "job_queue_seconds": 0.001, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 994.398, "time_to_first_result_from_launch_seconds": 29.436, "analyzer_status_final": "ready", "detected_freeze_seconds": 0.0, "rep": 0}
+{"condition": "prewarm-immediate", "gui_ready_seconds": 0.312, "gui_rss_mib_at_ready": 43.441, "first_upload_latency_seconds": 31.135, "job_status": "completed", "job_error": null, "job_processing_seconds": 26.044, "job_queue_seconds": 0.0, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 957.941, "time_to_first_result_from_launch_seconds": 31.461, "analyzer_status_final": "ready", "detected_freeze_seconds": 0.0, "rep": 1}
+{"condition": "prewarm-ready", "gui_ready_seconds": 0.335, "gui_rss_mib_at_ready": 43.891, "analyzer_ready_seconds": 6.553, "worker_rss_mib_idle_warm": 248.977, "first_upload_latency_seconds": 25.496, "job_status": "completed", "job_error": null, "job_processing_seconds": 25.435, "job_queue_seconds": 0.001, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 1067.969, "time_to_first_result_from_launch_seconds": 32.085, "analyzer_status_final": "ready", "detected_freeze_seconds": 0.0, "rep": 1}
+{"condition": "no-prewarm", "gui_ready_seconds": 0.265, "gui_rss_mib_at_ready": 28.926, "first_upload_latency_seconds": 74.732, "job_status": "completed", "job_error": null, "job_processing_seconds": 74.461, "job_queue_seconds": 0.001, "launcher_start_calls_in_job": 1, "runtime_startup_in_job": 48.411, "worker_peak_rss_mib_during_job": 1120.137, "time_to_first_result_from_launch_seconds": 75.019, "analyzer_status_final": "running", "detected_freeze_seconds": 43.764, "rep": 1}
+{"condition": "prewarm-ready", "gui_ready_seconds": 0.32, "gui_rss_mib_at_ready": 50.891, "analyzer_ready_seconds": 5.862, "worker_rss_mib_idle_warm": 267.789, "first_upload_latency_seconds": 24.679, "job_status": "completed", "job_error": null, "job_processing_seconds": 24.472, "job_queue_seconds": 0.001, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 1020.176, "time_to_first_result_from_launch_seconds": 30.568, "analyzer_status_final": "ready", "detected_freeze_seconds": 0.0, "rep": 2}
+{"condition": "no-prewarm", "gui_ready_seconds": 0.249, "gui_rss_mib_at_ready": 28.906, "first_upload_latency_seconds": 31.482, "job_status": "completed", "job_error": null, "job_processing_seconds": 31.088, "job_queue_seconds": 0.002, "launcher_start_calls_in_job": 1, "runtime_startup_in_job": 4.917, "worker_peak_rss_mib_during_job": 1799.777, "time_to_first_result_from_launch_seconds": 31.755, "analyzer_status_final": "running", "detected_freeze_seconds": 0.0, "rep": 2}
+{"condition": "prewarm-immediate", "gui_ready_seconds": 0.266, "gui_rss_mib_at_ready": 39.164, "first_upload_latency_seconds": 27.963, "job_status": "completed", "job_error": null, "job_processing_seconds": 23.094, "job_queue_seconds": 0.0, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 1070.48, "time_to_first_result_from_launch_seconds": 28.259, "analyzer_status_final": "ready", "detected_freeze_seconds": 0.0, "rep": 2}
+{"condition": "no-prewarm", "gui_ready_seconds": 0.313, "gui_rss_mib_at_ready": 28.926, "first_upload_latency_seconds": 27.637, "job_status": "completed", "job_error": null, "job_processing_seconds": 27.201, "job_queue_seconds": 0.001, "launcher_start_calls_in_job": 1, "runtime_startup_in_job": 4.42, "worker_peak_rss_mib_during_job": 1131.828, "time_to_first_result_from_launch_seconds": 27.965, "analyzer_status_final": "running", "detected_freeze_seconds": 0.0, "rep": 3}
+{"condition": "prewarm-immediate", "gui_ready_seconds": 0.288, "gui_rss_mib_at_ready": 48.57, "first_upload_latency_seconds": 29.656, "job_status": "completed", "job_error": null, "job_processing_seconds": 23.644, "job_queue_seconds": 0.0, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 1269.25, "time_to_first_result_from_launch_seconds": 29.99, "analyzer_status_final": "ready", "detected_freeze_seconds": 0.0, "rep": 3}
+{"condition": "prewarm-ready", "gui_ready_seconds": 0.324, "gui_rss_mib_at_ready": 40.84, "analyzer_ready_seconds": 51.731, "worker_rss_mib_idle_warm": 313.035, "first_upload_latency_seconds": 24.011, "job_status": "completed", "job_error": null, "job_processing_seconds": 23.813, "job_queue_seconds": 0.002, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 1001.219, "time_to_first_result_from_launch_seconds": 75.788, "analyzer_status_final": "ready", "detected_freeze_seconds": 46.644, "rep": 3}
+{"condition": "prewarm-immediate", "gui_ready_seconds": 0.319, "gui_rss_mib_at_ready": 49.523, "first_upload_latency_seconds": 109.568, "job_status": "completed", "job_error": null, "job_processing_seconds": 104.27, "job_queue_seconds": 0.0, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 1284.887, "time_to_first_result_from_launch_seconds": 109.925, "analyzer_status_final": "ready", "detected_freeze_seconds": 79.769, "rep": 4}
+{"condition": "prewarm-ready", "gui_ready_seconds": 0.324, "gui_rss_mib_at_ready": 43.359, "analyzer_ready_seconds": 5.301, "worker_rss_mib_idle_warm": 312.352, "first_upload_latency_seconds": 53.825, "job_status": "completed", "job_error": null, "job_processing_seconds": 53.595, "job_queue_seconds": 0.0, "launcher_start_calls_in_job": 0, "runtime_startup_in_job": 0.0, "worker_peak_rss_mib_during_job": 971.887, "time_to_first_result_from_launch_seconds": 59.154, "analyzer_status_final": "ready", "detected_freeze_seconds": 34.603, "rep": 4}
+{"condition": "no-prewarm", "gui_ready_seconds": 0.226, "gui_rss_mib_at_ready": 28.898, "first_upload_latency_seconds": 131.284, "job_status": "completed", "job_error": null, "job_processing_seconds": 131.08, "job_queue_seconds": 0.0, "launcher_start_calls_in_job": 1, "runtime_startup_in_job": 3.714, "worker_peak_rss_mib_during_job": 1480.25, "time_to_first_result_from_launch_seconds": 131.526, "analyzer_status_final": "running", "detected_freeze_seconds": 105.473, "rep": 4}
+{
+ "no-prewarm": {
+  "gui_ready_seconds": {
+   "median": 0.24875686799896357,
+   "min": 0.22597587599921098,
+   "max": 0.31263216299885244,
+   "n": 5
+  },
+  "analyzer_ready_seconds": null,
+  "first_upload_latency_seconds": {
+   "median": 31.482161111000096,
+   "min": 27.459488157001033,
+   "max": 131.28426636800032,
+   "n": 5
+  },
+  "time_to_first_result_from_launch_seconds": {
+   "median": 31.7547650180004,
+   "min": 27.7067961820012,
+   "max": 131.52564225300011,
+   "n": 5
+  },
+  "worker_rss_mib_idle_warm": null,
+  "worker_peak_rss_mib_during_job": {
+   "median": 1131.828125,
+   "min": 1075.69140625,
+   "max": 1799.77734375,
+   "n": 5
+  },
+  "gui_rss_mib_at_ready": {
+   "median": 28.92578125,
+   "min": 28.8984375,
+   "max": 28.9375,
+   "n": 5
+  },
+  "first_upload_latency_freeze_free": {
+   "median": 27.636850701001094,
+   "min": 27.459488157001033,
+   "max": 31.482161111000096,
+   "n": 3
+  }
+ },
+ "prewarm-immediate": {
+  "gui_ready_seconds": {
+   "median": 0.31204816900026344,
+   "min": 0.26627432300119835,
+   "max": 0.4030105090005236,
+   "n": 5
+  },
+  "analyzer_ready_seconds": null,
+  "first_upload_latency_seconds": {
+   "median": 31.135048049000034,
+   "min": 27.962877563999427,
+   "max": 109.56793609300075,
+   "n": 5
+  },
+  "time_to_first_result_from_launch_seconds": {
+   "median": 31.46074991000023,
+   "min": 28.258654496001327,
+   "max": 109.92547249500058,
+   "n": 5
+  },
+  "worker_rss_mib_idle_warm": null,
+  "worker_peak_rss_mib_during_job": {
+   "median": 1222.63671875,
+   "min": 957.94140625,
+   "max": 1284.88671875,
+   "n": 5
+  },
+  "gui_rss_mib_at_ready": {
+   "median": 47.92578125,
+   "min": 39.1640625,
+   "max": 49.5234375,
+   "n": 5
+  },
+  "first_upload_latency_freeze_free": {
+   "median": 30.39542324749982,
+   "min": 27.962877563999427,
+   "max": 31.924027794999347,
+   "n": 4
+  }
+ },
+ "prewarm-ready": {
+  "gui_ready_seconds": {
+   "median": 0.3239972030005447,
+   "min": 0.3195047989993327,
+   "max": 0.3737619840012485,
+   "n": 5
+  },
+  "analyzer_ready_seconds": {
+   "median": 5.968674805000774,
+   "min": 5.301256489001389,
+   "max": 51.731075663999945,
+   "n": 5
+  },
+  "first_upload_latency_seconds": {
+   "median": 24.678943127999446,
+   "min": 23.433043327999258,
+   "max": 53.8248489589987,
+   "n": 5
+  },
+  "time_to_first_result_from_launch_seconds": {
+   "median": 32.084548548000384,
+   "min": 29.4361554040006,
+   "max": 75.7877460339987,
+   "n": 5
+  },
+  "worker_rss_mib_idle_warm": {
+   "median": 267.7890625,
+   "min": 248.9765625,
+   "max": 313.03515625,
+   "n": 5
+  },
+  "worker_peak_rss_mib_during_job": {
+   "median": 1001.21875,
+   "min": 971.88671875,
+   "max": 1067.96875,
+   "n": 5
+  },
+  "gui_rss_mib_at_ready": {
+   "median": 43.72265625,
+   "min": 40.83984375,
+   "max": 50.890625,
+   "n": 5
+  },
+  "first_upload_latency_freeze_free": {
+   "median": 24.678943127999446,
+   "min": 23.433043327999258,
+   "max": 25.496046828000544,
+   "n": 3
+  }
+ }
+}
+EXIT 0

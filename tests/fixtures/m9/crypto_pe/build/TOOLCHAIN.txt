@@ -1,0 +1,2 @@
+0.13.0
+target: x86_64-windows-gnu; flags: -target x86_64-windows-gnu -O1 -fno-inline-functions -fno-stack-protector

@@ -1,0 +1,252 @@
+{
+ "fixtures": [
+  {
+   "name": "corrupt_dos_signature_invalid",
+   "binary_path": "corrupt_pe/dos_signature_invalid.exe",
+   "binary_sha256": "9a84aa0357c018142de1aca0e42062282b196b77639e706e56b8f563ecb3f3fc",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "dos_signature"
+   ],
+   "description": "DOS magic MZ replaced by ZM",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_pe_signature_invalid",
+   "binary_path": "corrupt_pe/pe_signature_invalid.exe",
+   "binary_sha256": "dc6c84ccf40e35b2a11fe04ddab3df10acc7d295ab15dc4fe91b0f3f762aacb9",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "pe_signature"
+   ],
+   "description": "PE\\0\\0 signature replaced by PX\\0\\0",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_e_lfanew_out_of_range",
+   "binary_path": "corrupt_pe/e_lfanew_out_of_range.exe",
+   "binary_sha256": "8fb3dfe7df41bd3ba5481ff6791b36ca4fc26adafe987b507e22f5b90a3ae60f",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "pe_header_offset"
+   ],
+   "description": "e_lfanew points past end of file",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_optional_magic_invalid",
+   "binary_path": "corrupt_pe/optional_magic_invalid.exe",
+   "binary_sha256": "98e293fabbba640e33059651892db73ac70af1cd943daeb91353f76264477034",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "optional_magic"
+   ],
+   "description": "Optional header magic is neither PE32 nor PE32+",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_zero_sections",
+   "binary_path": "corrupt_pe/zero_sections.exe",
+   "binary_sha256": "fca145a85280b06c53a4eeed0550973a8ac8111aa1a3ec8150ba02440083f6a6",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "no_sections"
+   ],
+   "description": "COFF NumberOfSections set to 0",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_truncated_in_optional_header",
+   "binary_path": "corrupt_pe/truncated_in_optional_header.exe",
+   "binary_sha256": "5271fb8fe769bf70ae010fb1d274c976bfab64602dd5e034d69afbf08d797050",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "truncated_optional_header"
+   ],
+   "description": "File cut inside the optional header",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_truncated_section_table",
+   "binary_path": "corrupt_pe/truncated_section_table.exe",
+   "binary_sha256": "c2f400ddfe52d8625d4d7606daf29a9932e5883aee67818c1cf2d1ded8d834a2",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "truncated_section_table"
+   ],
+   "description": "File cut after the first section header",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_truncated_tiny",
+   "binary_path": "corrupt_pe/truncated_tiny.exe",
+   "binary_sha256": "74db2527f5f87d5916b041b6a45fb9b0f650c756f13f295344c9c1e6778b6d27",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "none",
+   "expected_issue_codes": [
+    "truncated_dos_header"
+   ],
+   "description": "Only 40 bytes remain",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_truncated_half",
+   "binary_path": "corrupt_pe/truncated_half.exe",
+   "binary_sha256": "5ac984aae26fc5b653df54247214c12aec5b78644187581e3194d3f62ecb35e3",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "section_truncated"
+   ],
+   "description": "Last half of the file removed",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_section_offset_beyond_eof",
+   "binary_path": "corrupt_pe/section_offset_beyond_eof.exe",
+   "binary_sha256": "b2d2656dfb344f94a13d078229d72dd6ba58c9c7f13470d02bc655f5d423700b",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "section_beyond_eof"
+   ],
+   "description": "Code section PointerToRawData past end of file",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_section_size_oversized",
+   "binary_path": "corrupt_pe/section_size_oversized.exe",
+   "binary_sha256": "e5e5cee6a61799deab7fa1a91792e1cd1cf161421560f0b87ab693052ee00710",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "section_truncated"
+   ],
+   "description": "Code section SizeOfRawData set to 0x7FFF0000",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_section_offset_into_headers",
+   "binary_path": "corrupt_pe/section_offset_into_headers.exe",
+   "binary_sha256": "0e65ff0932e296f0394a3d4fe4b6a6d10bf442236f452b7aa3227c012503e29b",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "section_raw_offset"
+   ],
+   "description": "Code section raw data offset points into the headers",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_section_overlap",
+   "binary_path": "corrupt_pe/section_overlap.exe",
+   "binary_sha256": "11656f41723c1049992cdd2c927bacbba1d51ea486b8d4e439db06598ea3039f",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "section_overlap"
+   ],
+   "description": "Second section VirtualAddress equals the first",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_import_directory_invalid",
+   "binary_path": "corrupt_pe/import_directory_invalid.exe",
+   "binary_sha256": "0d5ff7f2c499edff428f444eca07fcdc83106f4158bddbdaa76134fb53493eb7",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "import_directory"
+   ],
+   "description": "Import directory RVA maps to no file data",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_import_dll_name_invalid",
+   "binary_path": "corrupt_pe/import_dll_name_invalid.exe",
+   "binary_sha256": "c4d03503b52285a8cc2f56b32a7ee07c852ba2d96b42135e4486bbeeda86431f",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "import_dll_name"
+   ],
+   "description": "First import descriptor DLL-name RVA invalid",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  },
+  {
+   "name": "corrupt_import_thunks_invalid",
+   "binary_path": "corrupt_pe/import_thunks_invalid.exe",
+   "binary_sha256": "fe3b693e7decdec64837b22687293180beefc55e598ad14ad87c55bf58855977",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": true,
+   "expected_analysis": "partial",
+   "expected_issue_codes": [
+    "import_thunks"
+   ],
+   "description": "First import descriptor thunk arrays point nowhere",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_valid_overlay_appended",
+   "binary_path": "corrupt_pe/valid_overlay_appended.exe",
+   "binary_sha256": "4dc8db2bcec78dfeb757fe2eaeacefa5782e85c6ee64e1b0fdf9e333747b3428",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": false,
+   "expected_analysis": "full",
+   "expected_issue_codes": [],
+   "description": "4 KiB overlay appended after the last section (common for installers)",
+   "derived_from": "tests/fixtures/external/angr/windows_getprocaddress/GetProcAddress.exe",
+   "derived_from_sha256": "fac8a1f6e2351b870ebb426a2339ff817b195a437be0f7f6fc91f739579d246c"
+  },
+  {
+   "name": "corrupt_valid_renamed_sections",
+   "binary_path": "corrupt_pe/valid_renamed_sections.exe",
+   "binary_sha256": "448c50b3bdb289852624136f9a498a163794673b04abfdf2ae1c1bd1596ebfde",
+   "collection": "M9 corrupted PE",
+   "negative_fixture": false,
+   "expected_analysis": "full",
+   "expected_issue_codes": [],
+   "description": "All section names replaced with nonstandard names",
+   "derived_from": "tests/fixtures/external/angr/windows_tls_x86/TLS.exe",
+   "derived_from_sha256": "5a9327f87f994a76c84c986a498e105be183a558b520fe6004ceb6e498a7489d"
+  }
+ ]
+}

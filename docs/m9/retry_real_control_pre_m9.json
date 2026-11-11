@@ -1,0 +1,23 @@
+{
+ "binary": "tests/fixtures/m9/crypto_pe/sha256_hash.exe",
+ "timeout_seconds": 2,
+ "freeze_seconds": 5,
+ "frozen_decompiler_processes": 1,
+ "decompile_retry": {
+  "timed_out": [],
+  "retried": [],
+  "recovered": []
+ },
+ "decompilation_incomplete": null,
+ "functions_without_decompiled_text": 1,
+ "counts": {
+  "decompile_attempts": 294,
+  "decompile_successes": 293,
+  "decompile_timeouts": 0,
+  "decompile_retries": 0,
+  "decompile_retry_recovered": 0
+ },
+ "facts_identical_to_clean_run": false,
+ "clean_incomplete": null,
+ "passed": false
+}
