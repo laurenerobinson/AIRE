@@ -173,7 +173,8 @@ class BinaryLibrary:
             # Only small metadata is loaded; never all functions or source bodies.
             all_metadata = {}
             for row in store._db.execute('SELECT binary_id,key,value FROM analysis_metadata'):
-                if row[1] in ('options', 'analyzer_versions', 'reference_facts_version', 'ghidra_version'):
+                if row[1] in ('options', 'analyzer_versions', 'reference_facts_version', 'ghidra_version',
+                              'instruction_ir'):
                     all_metadata.setdefault(row[0], {})[row[1]] = json.loads(row[2])
         rows = []
         for key, fixture in self._fixtures.items():

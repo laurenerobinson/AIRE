@@ -21,6 +21,7 @@ from aire.knowledge.database import BinaryKnowledgeStore
 from aire.knowledge.models import BinaryRecord, ProgramIndex
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION
+from aire.analysis.versions import INSTRUCTION_IR_VERSION
 
 ELF = REPOSITORY / 'tests/fixtures/simple_elf/aire_test_binary'
 PE = REPOSITORY / 'professor_samples/function_overloading/original/FunctionOverloading.exe'
@@ -87,7 +88,7 @@ class BinaryLibraryTests(unittest.TestCase):
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             return ProgramIndex(BinaryRecord(digest, str(path), digest, 'ELF', 'x86_64', '0', None),
                 metadata={'options':asdict(options), 'analyzer_versions':analyzer_versions(),
-                          'ghidra_version':analyzer_versions()['ghidra'], 'reference_facts_version':REFERENCE_FACTS_VERSION})
+                          'ghidra_version':analyzer_versions()['ghidra'], 'reference_facts_version':REFERENCE_FACTS_VERSION, 'instruction_ir': {'version': INSTRUCTION_IR_VERSION}})
         with patch('aire.analysis.cache.index_binary', side_effect=RuntimeError('controlled analysis failure')):
             result = self.wait(self.library.start(upload_id=uploaded['upload_id']))
         self.assertEqual(result['status'], 'failed')
@@ -140,7 +141,7 @@ class BinaryLibraryTests(unittest.TestCase):
         digest = hashlib.sha256(content).hexdigest()
         index = ProgramIndex(BinaryRecord(digest, str(ELF), digest, 'ELF', 'x86_64', '0', None),
             metadata={'options':asdict(IndexOptions()), 'analyzer_versions':analyzer_versions(),
-                      'ghidra_version':analyzer_versions()['ghidra'], 'reference_facts_version':REFERENCE_FACTS_VERSION})
+                      'ghidra_version':analyzer_versions()['ghidra'], 'reference_facts_version':REFERENCE_FACTS_VERSION, 'instruction_ir': {'version': INSTRUCTION_IR_VERSION}})
         with BinaryKnowledgeStore(self.database) as store:
             store.save_program_index(index)
         first = self.wait(self.library.start(fixture_id='local:simple-elf'))

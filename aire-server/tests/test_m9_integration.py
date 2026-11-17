@@ -133,5 +133,21 @@ class M9GhidraIntegrationTests(unittest.TestCase):
                 library.close()
 
 
+    def test_m10_phase1_matches_objdump_on_elf(self):
+        # M10: structured facts + semantics vs an independent disassembler.
+        import shutil, sys
+        if shutil.which('objdump') is None:
+            self.skipTest('objdump not installed')
+        sys.path.insert(0, str(REPOSITORY / 'scripts'))
+        from evaluate_m10 import evaluate_phase1
+        path = REPOSITORY / 'tests/fixtures/simple_elf/aire_test_binary'
+        result = analyze_binary(path, self.store)
+        binary = next(b for b in self.store.list_binaries() if b.binary_id == result.binary_id)
+        report = evaluate_phase1(self.store, binary, path)
+        self.assertEqual(report['mismatches'], {})
+        self.assertEqual(report['rates']['relations'], 1.0)
+        self.assertGreater(report['counts']['relations'], 10)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -156,3 +156,42 @@ button:disabled { opacity: .55; cursor: wait; }
 
 .structure-report summary { cursor: pointer; font-size: 12px; margin-top: 6px; }
 .structure-report pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; margin: 6px 0 0; max-height: 240px; overflow: auto; }
+
+/* M10 function explorer */
+.explorer { position: fixed; inset: 4vh 4vw; z-index: 50; display: flex; flex-direction: column; background: var(--panel, #0d1420);
+  border: 1px solid var(--border, #263445); border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5); overflow: hidden; }
+.explorer.hidden { display: none; }
+.explorer-head { display: flex; gap: 16px; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border, #263445); flex-wrap: wrap; }
+.explorer-head h3 { margin: 0; font-size: 16px; }
+.explorer-tabs { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.explorer-tabs button, .mini { background: transparent; border: 1px solid var(--border, #263445); color: inherit; border-radius: 8px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
+.explorer-tabs button.active { background: var(--accent, #1677ff); border-color: var(--accent, #1677ff); color: #fff; }
+.explorer-close { background: transparent; border: 0; color: inherit; font-size: 22px; cursor: pointer; }
+.explorer-body { overflow: auto; padding: 14px 18px; font-size: 13px; }
+.asm-table { border-collapse: collapse; width: 100%; }
+.asm-table td, .asm-table th { padding: 4px 8px; vertical-align: top; border-bottom: 1px solid rgba(128,128,128,.15); text-align: left; }
+.asm-table code { white-space: nowrap; }
+.asm-table tr.focus { outline: 2px solid var(--accent, #1677ff); }
+.block-sep td { font-size: 11px; opacity: .7; padding-top: 10px; }
+.addr-link { background: none; border: 0; padding: 0; color: var(--accent, #4aa3ff); cursor: pointer; font-family: monospace; }
+.badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; border: 1px solid currentColor; }
+.badge.ok { color: #3fb950; } .badge.warn { color: #d29922; } .badge.muted { opacity: .7; }
+.warning { color: #d29922; }
+.trace { margin: 4px 0 0 0; padding-left: 16px; } .detail:empty { display: none; }
+@media (max-width: 700px) { .explorer { inset: 0; border-radius: 0; } .asm-table code { white-space: normal; } }
+
+/* GUI/UX Phase 2: concise verified answers */
+.answer-badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border, #263344); }
+.answer-badge.verified { color: #7ee2a8; border-color: rgba(126, 226, 168, 0.45); background: rgba(126, 226, 168, 0.08); }
+.answer-badge.interpretation { color: #f2c46d; border-color: rgba(242, 196, 109, 0.45); background: rgba(242, 196, 109, 0.08); }
+.table-wrap { overflow-x: auto; margin: 8px 0 12px; }
+.fact-table { border-collapse: collapse; font-size: 13px; min-width: 100%; }
+.fact-table th, .fact-table td { border: 1px solid var(--border, #263344); padding: 5px 8px; text-align: left; vertical-align: top; }
+.fact-table th { color: var(--muted, #9aa9ba); font-weight: 600; background: rgba(255, 255, 255, 0.03); }
+.fact-table code { white-space: nowrap; }
+.fact-table th, .fact-table td { overflow-wrap: normal; word-break: normal; }
+.fact-table td:first-child { white-space: nowrap; }
+.evidence-list { list-style: none; padding-left: 0; margin: 6px 0; font-size: 13px; }
+.evidence-list li { padding: 3px 0; border-bottom: 1px dashed var(--border, #263344); overflow-wrap: anywhere; }
+.evidence-list details.provenance summary { font-size: 11px; color: var(--muted, #9aa9ba); }
+.answer-body em { color: var(--muted, #9aa9ba); font-style: normal; font-size: 12.5px; }

@@ -1,0 +1,12 @@
+{
+  "fixture": "crypto_pe_index.sqlite",
+  "sha256": "3723208dde564df7771bead6ba8d37858c2f4f59f3ad7282d0c0aac05e83a689",
+  "exported_from": "m10.sqlite",
+  "binaries": [
+    "tests/fixtures/m9/crypto_pe/aes_gcm.exe",
+    "tests/fixtures/m9/crypto_pe/ecdsa_sign.exe",
+    "tests/fixtures/m9/crypto_pe/sha256_hash.exe"
+  ],
+  "ground_truth": "tests/fixtures/m9/crypto_pe/GROUND_TRUTH.json",
+  "note": "Real PyGhidra index facts. Trimmed: M10 IR, decompiled text and assembly kept only for ground-truth functions; non-call data references kept only for strings or ground-truth owners."
+}

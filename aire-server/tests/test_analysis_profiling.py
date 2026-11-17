@@ -15,6 +15,7 @@ from aire.knowledge.models import BinaryRecord, ProgramIndex
 from aire.pyghidra.extractor import decompile_function
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION
+from aire.analysis.versions import INSTRUCTION_IR_VERSION
 from aire.profiling import (
     AnalysisProfile, count, profiled, stage, timed_context,
 )
@@ -145,7 +146,7 @@ class AnalysisProfilingTests(unittest.TestCase):
                                     warnings=['original'], metadata={'options': asdict(IndexOptions()),
                                     'analyzer_versions': analyzer_versions(),
                                     'ghidra_version': analyzer_versions()['ghidra'],
-                                    'reference_facts_version': REFERENCE_FACTS_VERSION})
+                                    'reference_facts_version': REFERENCE_FACTS_VERSION, 'instruction_ir': {'version': INSTRUCTION_IR_VERSION}})
             with BinaryKnowledgeStore(Path(directory) / 'analysis.sqlite') as store:
                 with patch('aire.analysis.cache.index_binary', return_value=original):
                     with AnalysisProfile() as fresh_profile:

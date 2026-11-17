@@ -27,6 +27,7 @@ from aire.knowledge.database import BinaryKnowledgeStore
 from aire.knowledge.models import BinaryRecord, ProgramIndex
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION
+from aire.analysis.versions import INSTRUCTION_IR_VERSION
 from aire.validation.pe_structure import validate_pe
 
 M9 = REPOSITORY / 'tests/fixtures/m9'
@@ -235,7 +236,7 @@ class WatchdogTests(unittest.TestCase):
                 BinaryRecord(digest, str(ELF), digest, 'ELF', 'x86_64', '0', None),
                 metadata={'options': asdict(IndexOptions()), 'analyzer_versions': analyzer_versions(),
                           'ghidra_version': analyzer_versions()['ghidra'],
-                          'reference_facts_version': REFERENCE_FACTS_VERSION}))
+                          'reference_facts_version': REFERENCE_FACTS_VERSION, 'instruction_ir': {'version': INSTRUCTION_IR_VERSION}}))
         library = BinaryLibrary(database, directory=root / 'uploads')
         self.addCleanup(library.close)
         library.analysis_timeout = 0.5

@@ -226,12 +226,15 @@ def _apply_warnings(outcome, warnings, context):
 
 
 @profiled('function_metadata')
-def extract_functions(program, functions, binary, options, monitor, warnings, workers=None, report=None):
+def extract_functions(program, functions, binary, options, monitor, warnings, workers=None, report=None, ir=None):
     """Extract function facts. report (dict, optional) receives decompilation
     reliability facts: 'decompile_retry' (timed_out/retried/recovered address
     lists) and 'decompilation_incomplete' (functions left without decompiled
     text, each with reason and message). Timed-out functions are retried once,
-    serially, after the main pass; successful results are never re-decompiled."""
+    serially, after the main pass; successful results are never re-decompiled.
+    ir (dict, optional) receives M10 structured instruction facts per function_id,
+    collected in the same single instruction pass that produces assembly text and
+    metrics (identical strings/counts), while decompilation runs in parallel."""
     from ghidra.program.model.block import BasicBlockModel
 
     records = []
@@ -239,6 +242,12 @@ def extract_functions(program, functions, binary, options, monitor, warnings, wo
     pool = None
     pending = []  # (record, pre-decompile warnings, future/_Done or None, context, function)
     timed_out, retried, recovered, incomplete = [], [], [], []
+    ir_factory = None
+    if ir is not None:
+        from aire.pyghidra.instruction_ir import collect_blocks, new_collector_factory
+        ir_factory = new_collector_factory(program)
+    else:
+        collect_blocks = None
     workers = decompile_workers() if workers is None else workers
     try:
         if options.decompile:
@@ -269,10 +278,19 @@ def extract_functions(program, functions, binary, options, monitor, warnings, wo
                     future = pool.submit(function, options, monitor, context)
                 with stage('assembly'):
                     buffer = AssemblyBuffer(options.max_assembly_instructions, options.max_assembly_characters)
+                collector = ir_factory() if ir_factory is not None else None
                 def instructions():
                     count = branches = 0
                     for instruction in program.getListing().getInstructions(function.getBody(), True):
                         count += 1
+                        if collector is not None:
+                            address, text = str(instruction.getAddress()), str(instruction)
+                            with stage('instruction_ir'):
+                                flags = collector.add(instruction, address, text)
+                            branches += flags['jump']
+                            if options.include_assembly and not buffer.truncated:
+                                buffer.append(f'{address}: {text}')
+                            continue
                         branches += bool(instruction.getFlowType().isJump())
                         if options.include_assembly and not buffer.truncated:
                             buffer.append(f'{instruction.getAddress()}: {instruction}')
@@ -285,8 +303,17 @@ def extract_functions(program, functions, binary, options, monitor, warnings, wo
                         record.assembly = buffer.text()
                         record.assembly_truncated = buffer.truncated
                 with stage('basic_blocks'):
-                    record.basic_block_count = fact('basic blocks', lambda: sum(
-                        1 for _ in blocks.getCodeBlocksContaining(function.getBody(), monitor)))
+                    if collector is None:
+                        record.basic_block_count = fact('basic blocks', lambda: sum(
+                            1 for _ in blocks.getCodeBlocksContaining(function.getBody(), monitor)))
+                    else:
+                        block_rows = fact('basic blocks', lambda: collect_blocks(
+                            blocks.getCodeBlocksContaining(function.getBody(), monitor), monitor))
+                        record.basic_block_count = len(block_rows) if block_rows is not None else None
+                if collector is not None:
+                    with stage('instruction_ir'):
+                        ir[record.function_id] = collector.document(
+                            program, function, block_rows or [], local, f'{context} instruction facts')
                 if options.decompile and future is None:
                     if not pool.usable:
                         local.append(f'{context} decompilation: decompiler unavailable')

@@ -142,6 +142,13 @@ _REFERENCE_SCHEMA = (
     'CREATE INDEX references_artifact_idx ON binary_references(binary_id, target_artifact_id)',
 )
 
+_FUNCTION_IR_TABLE = '''CREATE TABLE IF NOT EXISTS function_ir (
+        binary_id TEXT NOT NULL REFERENCES binaries(binary_id) ON DELETE CASCADE,
+        function_id TEXT NOT NULL,
+        ir_version INTEGER NOT NULL,
+        data BLOB NOT NULL,
+        PRIMARY KEY (binary_id, function_id))'''
+
 # SQL identifiers below come exclusively from these internal dataclass mappings,
 # never caller values. Ordinal-bearing UNIQUE/PRIMARY KEY indexes cover binary_id.
 _COLUMNS = {
@@ -274,6 +281,9 @@ class BinaryKnowledgeStore:
                        for key, value in data['program_info'].items()):
                 raise ValueError('program_info must contain string keys and values')
             with self._transaction(write=True) as db:
+                if program_index.function_ir:
+                    # Created lazily so databases without M10 facts are never migrated.
+                    db.execute(_FUNCTION_IR_TABLE)
                 db.execute('DELETE FROM binaries WHERE binary_id = ?', (identity,))
                 columns = _COLUMNS['binaries']
                 db.execute(self._insert_sql('binaries', columns), tuple(binary[c] for c in columns))
@@ -299,6 +309,12 @@ class BinaryKnowledgeStore:
                 db.executemany('INSERT INTO warnings(binary_id, ordinal, warning_text) VALUES (?, ?, ?)',
                                ((identity, ordinal, warning) for ordinal, warning in enumerate(data['warnings'])))
                 db.executemany('INSERT INTO analysis_metadata(binary_id, key, value) VALUES (?, ?, ?)', metadata)
+                if program_index.function_ir:
+                    from aire.pyghidra.instruction_ir import encode
+                    known = {f.function_id for f in program_index.functions}
+                    db.executemany('INSERT INTO function_ir(binary_id, function_id, ir_version, data) VALUES (?, ?, ?, ?)',
+                                   ((identity, fid, int(doc['version']), encode(doc))
+                                    for fid, doc in program_index.function_ir.items() if fid in known))
         except (sqlite3.Error, TypeError, ValueError, KeyError, AttributeError) as exc:
             raise TransactionError(f'Cannot save ProgramIndex; no changes committed: {exc}') from exc
 
@@ -398,6 +414,24 @@ class BinaryKnowledgeStore:
                 return metadata
         except (sqlite3.Error, TypeError, ValueError) as exc:
             raise PersistedDataError(f'Cannot load analysis metadata {binary_id!r}: {exc}') from exc
+
+    def load_function_ir(self, binary_id: str, function_id: str) -> dict | None:
+        """M10 structured instruction facts for one function, or None when the
+        snapshot predates them (table absent or no row)."""
+        try:
+            row = self._db.execute('SELECT data FROM function_ir WHERE binary_id = ? AND function_id = ?',
+                                   (binary_id, function_id)).fetchone()
+        except sqlite3.OperationalError as exc:
+            if 'no such table' in str(exc):
+                return None
+            raise PersistedDataError(f'Cannot load instruction facts: {exc}') from exc
+        if row is None:
+            return None
+        from aire.pyghidra.instruction_ir import decode
+        try:
+            return decode(row[0])
+        except (ValueError, TypeError) as exc:
+            raise PersistedDataError(f'Malformed instruction facts for {function_id!r}: {exc}') from exc
 
     def load_warnings(self, binary_id: str, limit: int | None = None) -> tuple[int, list[str]]:
         """Return (total warning count, first `limit` warnings in stored order)."""

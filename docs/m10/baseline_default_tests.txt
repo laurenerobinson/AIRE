@@ -1,0 +1,44 @@
+.....ss.......................................................s..........................ssss.127.0.0.1 - - [11/Nov/2026 16:09:14] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:14] "POST /api/uploads?filename=demo.exe HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 16:09:14] "POST /api/uploads?filename=demo.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 16:09:14] "POST /api/uploads HTTP/1.1" 403 -
+..................................ssss.............................s.........................s.......................................................127.0.0.1 - - [11/Nov/2026 16:09:17] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "GET /app.css HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "GET /app.js HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "POST /api/sessions HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "POST /api/sessions/59d1755391c547a7b02e277da008182a/select-function HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "GET /api/sessions/59d1755391c547a7b02e277da008182a HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "POST /api/sessions HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 16:09:17] "POST /api/chat HTTP/1.1" 200 -
+/usr/lib/python3.12/dataclasses.py:1286: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp29hohcpm/.aire-uploads/index-worker.log' mode='a' encoding='UTF-8'>
+  return tuple(f for f in fields.values() if f._field_type is _FIELD)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 39888 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/dataclasses.py:1286: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='UTF-8'>
+  return tuple(f for f in fields.values() if f._field_type is _FIELD)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/dataclasses.py:1286: ResourceWarning: unclosed file <_io.TextIOWrapper name=6 encoding='UTF-8'>
+  return tuple(f for f in fields.values() if f._field_type is _FIELD)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+127.0.0.1 - - [11/Nov/2026 16:09:17] "GET /api/sessions?binary_id=b HTTP/1.1" 200 -
+.....................................s.....................s.......sssss.......127.0.0.1 - - [11/Nov/2026 16:09:19] "POST /api/uploads?filename=corrupt_dos_signature_invalid.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 16:09:19] "POST /api/uploads?filename=corrupt_truncated_section_table.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 16:09:19] "POST /api/uploads?filename=corrupt_e_lfanew_out_of_range.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 16:09:19] "POST /api/uploads?filename=corrupt_section_offset_beyond_eof.exe HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 16:09:19] "GET /api/library HTTP/1.1" 200 -
+......./usr/lib/python3.12/unittest/case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=4 encoding='UTF-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/unittest/case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='UTF-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....................................................................sss..............................................s............................s....................sss...................
+----------------------------------------------------------------------
+Ran 518 tests in 12.970s
+
+OK (skipped=28)

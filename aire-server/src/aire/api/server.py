@@ -25,7 +25,7 @@ from uuid import uuid4
 import webbrowser
 
 from aire.agent.binary_scope import resolve_binary
-from aire.agent.runner import AgentLimits, AgentRunner
+from aire.agent.runner import AgentLimits, AgentResult, AgentRunner
 from aire.agent.session import AgentSession
 from aire.agent.tools import AgentTools, serializable
 from aire.ai.ollama_client import OllamaClient
@@ -383,7 +383,29 @@ class GuiApplication:
                 workspace = self.workspace(session.binary_id, store)
                 workspace_resolution = time.perf_counter() - tick
                 stamp = workspace.database_stamp
+                facts = self._fact_answer(store, workspace, session, question, on_event)
+                if facts is not None:
+                    self._check_database(stamp)
+                    self.sessions.save_agent(session_id, session)
+                    self.sessions.append_exchange(session_id, question.strip(), facts.answer, facts.status,
+                                                  facts.presentation)
+                    self.last_performance = {'total_seconds': time.perf_counter() - started,
+                                             'path': 'deterministic_facts', 'model_requests': 0,
+                                             'session_resolution_seconds': resolution,
+                                             'workspace_resolution_seconds': workspace_resolution,
+                                             **facts.presentation.get('timing', {})}
+                    _LOG.info('chat_performance %s', json.dumps(self.last_performance, sort_keys=True))
+                    return facts
                 client = self._client()
+                m10 = self._assembly_answer(store, session, question, client, on_event)
+                if m10 is not None:
+                    self._structure_banner(m10, self._structure(workspace))
+                    self._check_database(stamp)
+                    self.sessions.save_agent(session_id, session)
+                    self.sessions.append_exchange(session_id, question.strip(), m10.answer, m10.status, m10.presentation)
+                    self.last_performance = {'total_seconds': time.perf_counter() - started, 'path': 'm10_assembly',
+                                             **m10.presentation.get('timing', {})}
+                    return m10
                 key = (RELEVANCE_POLICY_VERSION, CROSSCHECK_POLICY_VERSION, CRYPTO_EVIDENCE_VERSION, question.strip().lower(), getattr(client, 'model', None),
                        getattr(client, 'num_ctx', None), self.limits.evidence_chars)
                 overview = _binary_overview(question)
@@ -427,6 +449,7 @@ class GuiApplication:
                         performance=model_performance)
                     tick = time.perf_counter()
                     present(result)
+                    self._structure_banner(result, self._structure(workspace))
                     formatting = time.perf_counter() - tick
                     if overview and result.status == 'completed' and result.response:
                         with workspace.lock:
@@ -448,6 +471,187 @@ class GuiApplication:
                 'cache_hits': workspace.hits, 'cache_misses': workspace.misses, **model_timing, **model_performance}
             _LOG.info('chat_performance %s', json.dumps(self.last_performance, sort_keys=True))
             return result
+
+    def _fact_answer(self, store, workspace, session, question, on_event=None):
+        """Deterministic answers for supported factual crypto/API/call-graph questions.
+
+        No model request is made. Returns None for unsupported question forms so the
+        M10 and model-backed paths run unchanged.
+        """
+        from aire.agent import fact_answers
+        tick = time.perf_counter()
+        routed = fact_answers.classify(question)
+        structure = self._structure(workspace)
+        if routed is None and _binary_overview(question) and structure['status'] in ('partial', 'none'):
+            # Structural validation is authoritative: no whole-program model interpretation of a damaged file.
+            routed = {**fact_answers.classify('What is this file?'), 'overview': True}
+        if routed is None:
+            return None
+        stream = EventStream(on_event)
+        stream.emit('agent_started', 'A.I.R.E. deterministic evidence lookup started')
+        tools = workspace.tools(store)
+        try:
+            fact = fact_answers.FactAnswerer(tools, session, workspace.metadata.get('binary'), structure).answer(routed)
+        except fact_answers.FactQuestionError as exc:
+            raise GuiError(str(exc)) from exc
+        evidence_seconds = time.perf_counter() - tick
+        for result in fact.tool_results:
+            stream.emit('tool_completed', 'Tool completed' if result['ok'] else 'Tool failed',
+                        tool_name=result['tool'], metadata={'ok': result['ok']})
+        stream.emit('evidence_found', 'Retrieved stored evidence with provenance',
+                    metadata={'count': len(fact.evidence) + len(fact.relationships)})
+        if fact.selected:
+            session.current_function_id = fact.selected['function_id']
+            stream.emit('function_selected', 'Selected stored function', function=fact.selected)
+        stream.emit('answer_completed', 'Deterministic answer completed (no model inference)')
+        stream.emit('agent_finished', 'Agent finished',
+                    metadata={'status': 'completed', 'tool_calls': len(fact.tool_results)})
+        session.remember(question, fact.summary, [e['provenance'] for e in fact.evidence[:32]],
+                         fact.tool_results)
+        sources = len({e['evidence_id'] for e in fact.evidence}) + len(fact.relationships)
+        presentation = {'footer': f'Static analysis only · {sources} cited evidence sources · No target execution',
+                        'interpretation': False, 'verified': True, 'evidence': fact.evidence,
+                        'relationships': fact.relationships, 'security': [], 'limitations': fact.limitations,
+                        'tool_facts': fact.tool_facts, 'facts': fact.facts,
+                        'raw': {'answer': fact.answer, 'response': None,
+                                'tool_results': fact.tool_results, 'intent': fact.intent},
+                        'timing': {'evidence_seconds': evidence_seconds}}
+        return AgentResult('completed', fact.answer, stream.events, fact.tool_results, None, presentation)
+
+    @staticmethod
+    def _structure(workspace):
+        """Cached authoritative structural condition of the workspace binary (re-validated original file)."""
+        from aire.analysis.file_structure import assess
+        with workspace.lock:
+            if getattr(workspace, 'structure', None) is None:
+                workspace.structure = assess(workspace.metadata.get('binary') or {})
+            return workspace.structure
+
+    @staticmethod
+    def _structure_banner(result, structure):
+        """Prefix non-deterministic answers about a damaged or unverified file with its condition."""
+        if structure['status'] == 'full' or not result.answer:
+            return result
+        from aire.agent.fact_answers import STRUCTURE_LABEL
+        codes = ', '.join(dict.fromkeys(i['code'] for i in structure['issues'] if i['severity'] != 'info'))
+        banner = (f"**Structural condition:** {STRUCTURE_LABEL[structure['status']]}" + (f' ({codes})' if codes else '') +
+                  '. This file is damaged or could not be re-validated, so evidence may be missing or misattributed; '
+                  'treat any interpretation below as unverified. Ask "Is this file corrupted?" for details.\n\n')
+        result.answer = banner + result.answer
+        if result.presentation is not None:
+            result.presentation['structure'] = {k: structure.get(k) for k in ('status', 'summary', 'reason')}
+        return result
+
+    def _assembly_answer(self, store, session, question, client, on_event=None):
+        """M10: deterministic, evidence-grounded assembly answers (model narration optional and validated)."""
+        from aire.agent import assembly_answers as aa
+        from aire.analysis.assembly_intelligence import AssemblyIntelligence
+        routed = aa.route(question)
+        if routed is None:
+            return None
+        ai = AssemblyIntelligence(store, session.binary_id)
+        selector = session.current_function_id
+        if routed['intent'] != 'validation' and not selector:
+            for token in [*routed['addresses'], *re.findall(r'[A-Za-z_][A-Za-z0-9_]{2,}', question)]:
+                try:
+                    selector = ai.resolve(token).function_id
+                    break
+                except Exception:
+                    continue
+            if not selector:
+                raise GuiError('Select a function from Functions (or name it / give its address) for this question.')
+        stream = EventStream(on_event)
+        stream.emit('agent_started', 'A.I.R.E. assembly analysis started')
+        tick = time.perf_counter()
+        intent, addresses, locations = routed['intent'], routed['addresses'], routed['locations']
+        try:
+            if intent == 'function':
+                answer, tool, cited = aa.answer_function(ai, selector)
+            elif intent == 'instructions':
+                answer, tool, cited = aa.answer_instructions(ai, selector, start=addresses[0] if addresses else None)
+            elif intent == 'branch':
+                if not addresses:
+                    raise GuiError('Give the address of the conditional jump, e.g. "what happens when the branch at 0x4011e1 is true?"')
+                answer, tool, cited = aa.answer_branch(ai, selector, addresses[0])
+            elif intent == 'trace':
+                if not addresses or not locations:
+                    raise GuiError('Give an instruction address and a register or stack slot, e.g. "where does the value of '
+                                   'EAX at 0x4011dc come from?"')
+                answer, tool, cited = aa.answer_trace(ai, selector, addresses[0], locations[0])
+            elif intent == 'return_usage':
+                answer, tool, cited = aa.answer_return_usage(ai, selector)
+            elif intent == 'crossvalidate':
+                answer, tool, cited = aa.answer_crossvalidate(ai, selector)
+            elif intent == 'validation':
+                answer, tool, cited = aa.answer_validation(ai)
+            else:  # callers: existing graph path handles it
+                return None
+        except (KeyError, ValueError) as exc:
+            raise GuiError(str(exc)) from exc
+        evidence_seconds = time.perf_counter() - tick
+        stream.emit('progress', 'Deterministic evidence retrieved')
+        narration_note, narration_seconds = None, 0.0
+        # Narration is opt-in until it can stream after the deterministic answer
+        # (chat-performance Step 2); a blocking local-model call must not delay it.
+        if os.environ.get('AIRE_M10_NARRATION', '0') == '1' and client is not None and tool is not None:
+            tick = time.perf_counter()
+            instructions = {}
+            if selector:
+                record = ai.resolve(selector)
+                instructions = {i['a']: i['t'] for i in ai.document(record).get('instructions', [])}
+            budget = float(os.environ.get('AIRE_M10_NARRATION_SECONDS', '60'))
+            from aire.agent.assembly_answers import CITED
+            # The deterministic answer is the evidence: anything it displays may be cited.
+            cited = set(cited) | {m.group(1).lower().zfill(8)[-8:] for m in CITED.finditer(answer)}
+            if selector:
+                cited.add(ai.resolve(selector).address)
+            box = {}
+            def narrate():
+                try:
+                    box['result'] = client.generate(
+                    'Explain the verified evidence below to a reverse engineer in 3-5 sentences. Use only facts in the '
+                    'evidence; cite instruction addresses exactly as written (0x...). Do not speculate about source-level '
+                    'names or intent beyond the evidence.\n\n' + answer[:12000],
+                    system='You narrate deterministic static-analysis evidence. Never add facts.',
+                    response_schema={'type': 'object', 'properties': {'explanation': {'type': 'string'}},
+                                     'required': ['explanation']})
+                except Exception as exc:  # reported below
+                    box['error'] = exc
+            worker = threading.Thread(target=narrate, daemon=True)
+            worker.start()
+            worker.join(budget)
+            try:
+                if worker.is_alive():
+                    raise TimeoutError(f'no narration within {budget:g} s')
+                if 'error' in box:
+                    raise box['error']
+                text = json.loads(box['result'].text)['explanation'].strip()
+                problems = aa.validate_narration(text, cited, instructions)
+                if problems:
+                    narration_note = ('Local-model narration rejected (unsupported claims: ' + '; '.join(problems[:3]) +
+                                      '). The deterministic evidence above is the answer.')
+                else:
+                    answer += '\n\n### Plain-English summary (local model; every cited address validated against the evidence)\n\n' + text
+            except Exception as exc:
+                narration_note = (f'Local model unavailable or failed ({type(exc).__name__}: {str(exc)[:120]}); '
+                                  'deterministic evidence only.')
+            narration_seconds = time.perf_counter() - tick
+        if narration_note:
+            answer += '\n\n*' + narration_note + '*'
+        stream.emit('answer_completed', 'Grounded answer completed')
+        stream.emit('agent_finished', 'Agent finished', metadata={'status': 'completed', 'tool_calls': 1})
+        tool_results = [{'ok': True, 'tool': tool['tool'], 'data': tool['data']}] if tool else []
+        summary = answer.split('\n')[0].lstrip('# ').strip()
+        session.remember(question, summary, [], tool_results)
+        evidence = [{'label': f'instruction @ 0x{a}', 'evidence_id': f'{session.binary_id}:{a}',
+                     'provenance': {'source_table': 'function_ir', 'source_id': selector, 'address': a,
+                                    'binary_id': session.binary_id}} for a in sorted(cited)[:60]]
+        presentation = {'footer': f'Static analysis only · {len(cited)} cited instruction addresses · No target execution'
+                                  ' · Deterministic evidence (M10)', 'interpretation': False, 'evidence': evidence,
+                        'relationships': [], 'security': [],
+                        'raw': {'answer': answer, 'response': None, 'tool_results': tool_results},
+                        'timing': {'evidence_seconds': evidence_seconds, 'narration_seconds': narration_seconds}}
+        return AgentResult('completed', answer, stream.events, tool_results, None, presentation)
 
     @staticmethod
     def _prepared_actions(workspace, session, question, tools):

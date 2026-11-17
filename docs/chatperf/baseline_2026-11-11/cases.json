@@ -1,0 +1,18 @@
+[
+ {"label":"Q-encdec(user)","binary":"aes_gcm.exe","question":"What functions in this binary perform encryption and decryption? Show their addresses and the API calls that support your answer."},
+ {"label":"Q-encdec(user)","binary":"aes_gcm.exe","question":"What functions in this binary perform encryption and decryption? Show their addresses and the API calls that support your answer."},
+ {"label":"Q-hash","binary":"sha256_hash.exe","question":"Which function hashes the input?"},
+ {"label":"Q-sign","binary":"ecdsa_sign.exe","question":"Which function signs or verifies a digital signature?"},
+ {"label":"Q-encrypt","binary":"aes_gcm.exe","question":"Which function encrypts data?"},
+ {"label":"F-apis","binary":"ecdsa_sign.exe","select":"FUN_0041d1b0","question":"What API calls does this function make?"},
+ {"label":"F-callers","binary":"aes_gcm.exe","select":"FUN_0041d160","question":"What calls this function?"},
+ {"label":"F-evidence","binary":"sha256_hash.exe","select":"FUN_0041d0a0","question":"Show the evidence for this function."},
+ {"label":"F-m10-whatdoes","binary":"aes_gcm.exe","select":"FUN_0041d160","question":"What does this function do?"},
+ {"label":"Q-crypto-or-hashing","binary":"sha256_hash.exe","question":"Does this binary use crypto or hashing?"},
+ {"label":"Q-overview","binary":"ecdsa_sign.exe","question":"What does this binary do?"},
+ {"label":"Q-overview(repeat)","binary":"ecdsa_sign.exe","question":"What does this binary do?"},
+ {"label":"F-summarize","binary":"aes_gcm.exe","select":"FUN_0041d160","question":"Summarize this function"},
+ {"label":"Q-hash","binary":"sha256_hash.exe","question":"Which function hashes the input?"},
+ {"label":"Q-sign","binary":"ecdsa_sign.exe","question":"Which function signs or verifies a digital signature?"},
+ {"label":"Q-encrypt(cold)","binary":"aes_gcm.exe","cold":true,"question":"Which function encrypts data?"}
+]

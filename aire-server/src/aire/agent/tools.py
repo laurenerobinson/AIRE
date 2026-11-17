@@ -165,6 +165,24 @@ class AgentTools:
             ('crypto_evidence', 'Functions calling crypto APIs (CNG/CryptoAPI/OpenSSL) with exact callsites, '
              'algorithm identifier strings and callers; static evidence, not runtime proof',
              {'limit': _integer(50, 100)}, self.crypto),
+            # M10 evidence-grounded assembly intelligence (deterministic, Ghidra P-code facts).
+            ('explain_instructions', 'Per-instruction semantics and plain-English explanations from Ghidra P-code',
+             {'function': SELECTOR, 'start': {'type': 'string', 'default': None, 'nullable': True},
+              'limit': _integer(32, 200)}, self.m10_explain),
+            ('function_evidence', 'Deterministic function summary evidence: calls, strings, conditions, loops, writes',
+             {'function': SELECTOR}, self.m10_evidence),
+            ('function_cfg', 'Basic blocks, edges, loops (dominator back-edges) and branch conditions',
+             {'function': SELECTOR}, self.m10_cfg),
+            ('branch_paths', 'What happens when a conditional branch is taken / not taken',
+             {'function': SELECTOR, 'address': {'type': 'string'}}, self.m10_branch),
+            ('trace_value', 'Where a register or frame slot value used at an instruction comes from (bounded)',
+             {'function': SELECTOR, 'address': {'type': 'string'}, 'location': {'type': 'string'}}, self.m10_trace),
+            ('parameter_use', 'Parameters/argument registers read before written, vs Ghidra signature',
+             {'function': SELECTOR}, self.m10_parameters),
+            ('return_usage', 'How callers use this function\'s return value at each stored call site',
+             {'function': SELECTOR}, self.m10_return_usage),
+            ('crossvalidate_function', 'Decompiled C vs assembly/P-code: CONSISTENT / POTENTIAL DISCREPANCY / '
+             'INSUFFICIENT EVIDENCE with evidence', {'function': SELECTOR}, self.m10_crossvalidate),
         ]
         for entry in entries:
             self.registry.register(Tool(*entry))
@@ -371,3 +389,34 @@ class AgentTools:
     def crypto(self, limit=50):
         with self.query._snapshot(self.binary_id) as db:
             return crypto_evidence(db, self.binary_id, limit)
+
+    # ---------------------------------------------------------------- M10
+    def _ai(self):
+        from aire.analysis.assembly_intelligence import AssemblyIntelligence
+        if getattr(self, '_assembly', None) is None:
+            self._assembly = AssemblyIntelligence(self.store, self.binary_id)
+        return self._assembly
+
+    def m10_explain(self, function, start=None, limit=32):
+        return self._ai().explain(function, start=start, limit=limit)
+
+    def m10_evidence(self, function):
+        return self._ai().function_evidence(function)
+
+    def m10_cfg(self, function):
+        return self._ai().cfg(function)
+
+    def m10_branch(self, function, address):
+        return self._ai().branch(function, address)
+
+    def m10_trace(self, function, address, location):
+        return self._ai().trace(function, address, location)
+
+    def m10_parameters(self, function):
+        return self._ai().parameters(function)
+
+    def m10_return_usage(self, function):
+        return self._ai().return_usage(function)
+
+    def m10_crossvalidate(self, function):
+        return self._ai().crossvalidate(function)

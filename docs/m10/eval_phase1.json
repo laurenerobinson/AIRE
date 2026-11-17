@@ -1,0 +1,127 @@
+[
+ {
+  "binary": "aire_test_binary",
+  "sha256": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e",
+  "counts": {
+   "instructions": 395,
+   "boundary_ok": 395,
+   "mnemonic_ok": 395,
+   "targets": 68,
+   "target_ok": 68,
+   "relations": 24,
+   "relation_ok": 24,
+   "relations_beyond_oracle": 1,
+   "memory": 135,
+   "memory_ok": 135
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {},
+  "examples": {}
+ },
+ {
+  "binary": "aire_test_binary_stripped",
+  "sha256": "08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188",
+  "counts": {
+   "instructions": 395,
+   "boundary_ok": 395,
+   "mnemonic_ok": 395,
+   "targets": 68,
+   "target_ok": 68,
+   "relations": 24,
+   "relation_ok": 24,
+   "relations_beyond_oracle": 1,
+   "memory": 135,
+   "memory_ok": 135
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {},
+  "examples": {}
+ },
+ {
+  "binary": "aes_gcm.exe",
+  "sha256": "90e403baf7bc7e0faef7258b140a28742436a63ee73bb468b8ed60131b6a0db5",
+  "counts": {
+   "instructions": 25230,
+   "boundary_ok": 25230,
+   "mnemonic_ok": 25230,
+   "memory": 3350,
+   "memory_ok": 3350,
+   "targets": 3236,
+   "target_ok": 3236,
+   "relations": 1360,
+   "relation_ok": 1360,
+   "relations_beyond_oracle": 432
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {},
+  "examples": {}
+ },
+ {
+  "binary": "sha256_hash.exe",
+  "sha256": "9c5ac9cd5a76d14515f2558a82c2b103c581ed483e38bc6a96f4742257f438a6",
+  "counts": {
+   "instructions": 25195,
+   "boundary_ok": 25195,
+   "mnemonic_ok": 25195,
+   "memory": 3351,
+   "memory_ok": 3351,
+   "targets": 3252,
+   "target_ok": 3252,
+   "relations": 1356,
+   "relation_ok": 1356,
+   "relations_beyond_oracle": 431
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {},
+  "examples": {}
+ },
+ {
+  "binary": "ecdsa_sign.exe",
+  "sha256": "d52ad9d02868e6dd532dcb5feb35a855659c9a3044bc86ed9d32ccd47f649c36",
+  "counts": {
+   "instructions": 25205,
+   "boundary_ok": 25205,
+   "mnemonic_ok": 25205,
+   "memory": 3347,
+   "memory_ok": 3347,
+   "targets": 3243,
+   "target_ok": 3243,
+   "relations": 1364,
+   "relation_ok": 1364,
+   "relations_beyond_oracle": 431
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {},
+  "examples": {}
+ }
+]

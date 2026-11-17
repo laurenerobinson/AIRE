@@ -1,5 +1,5 @@
 """Pure in-memory records; addresses retain Ghidra address-space notation."""
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields, is_dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -104,9 +104,22 @@ class ProgramIndex:
     references: list[ReferenceRecord] = field(default_factory=list)
     thunks: list[ThunkRecord] = field(default_factory=list)
     program_info: dict[str, str] = field(default_factory=dict)
+    # M10 structured instruction facts, keyed by function_id. Persisted in a
+    # separate table and loaded per function on demand; deliberately excluded
+    # from equality and to_dict() so snapshot digests/equality are unchanged.
+    function_ir: dict[str, dict] = field(default_factory=dict, compare=False, repr=False)
 
     def to_dict(self) -> dict[str, object]:
-        return _json_safe(asdict(self))
+        return _json_safe({f.name: _plain(getattr(self, f.name))
+                           for f in fields(self) if f.name != 'function_ir'})
+
+
+def _plain(value):
+    if is_dataclass(value) and not isinstance(value, type):
+        return asdict(value)
+    if isinstance(value, list):
+        return [_plain(v) for v in value]
+    return value
 
 
 def _json_safe(value):

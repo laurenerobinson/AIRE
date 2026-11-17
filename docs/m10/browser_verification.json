@@ -1,0 +1,35 @@
+{
+ "url": "http://127.0.0.1:8768/",
+ "steps": {
+  "page_ready_seconds": 0.4030024069979845,
+  "overview": {
+   "seconds": 0.21632137000051443,
+   "ok": true
+  },
+  "assembly": {
+   "seconds": 0.6424665710001136,
+   "rows": 48,
+   "paths": "condition true (branch taken) \u2192 0x004011ea: reaches another branch at 0x004011f9 (JMP 0x00401267); calls putscondition false (falls through) \u2192 0x004011e3: reaches another branch at 0x004011e8 (JBE 0x004011fb)",
+   "trace": "[RBP-0x10] \u2190 0x004011d8 MOV qword ptr [RBP + -0x10],RAX: stored valueRAX \u2190 0x004011d3 CALL 0x00401040: result of call to strlenIntra-procedural reaching definitions over register families and frame-pointer stack slots; depth <= 6; memory through other pointers is not tracked.",
+   "ok": true
+  },
+  "cfg": {
+   "ok": true,
+   "excerpt": "aire_test_binary \u00b7 x86:LE:64:default \u00b7 SHA-256 be852ca8fcb09454\u2026 \u00b7 48 instructions \u00b7 11 blocks \u00b7 evidence: Ghidra P-code11 blocks \u00b7 1 loop(s) \u00b7 0 unreachable\n    BlockBranchSuccessors0x004011bc\n      0x004011e1 when qword ptr [RBP + -0x10] == 0x0\n      0x004011ea conditional_jump0x004011e3 fallthrou"
+  },
+  "dataflow": {
+   "ok": true,
+   "excerpt": "aire_test_binary \u00b7 x86:LE:64:default \u00b7 SHA-256 be852ca8fcb09454\u2026 \u00b7 48 instructions \u00b7 11 blocks \u00b7 evidence: Ghidra P-codeParameters read before writtenRDI = parameter 0 text (RDI:8) \u00b7 first read 0x004011c4RSI = parameter 1 data (RSI:8) \u00b7 first read 0x004011c8How callers use the return valueReturn sto"
+  },
+  "decompiler": {
+   "ok": true,
+   "excerpt": "aire_test_binary \u00b7 x86:LE:64:default \u00b7 SHA-256 be852ca8fcb09454\u2026 \u00b7 48 instructions \u00b7 11 blocks \u00b7 evidence: Ghidra P-codeVerdict: CONSISTENTCONSISTENT call_targets: All 3 assembly call target(s) appear in the decompiled text.CONSISTENT string_references: All 2 referenced string(s) appear in the decom"
+  },
+  "chat": {
+   "seconds": 0.24262804800309823,
+   "excerpt": "Function analysis (deterministic evidence)\n\nFunction: validate_input at 0x004011bc \u2014 binary aire_test_binary (SHA-256 be852ca8fcb09454\u2026, x86:LE:64:default)\n\nEvidence source: Ghidra P-code and instruction facts\n\nPurpose (evidence-derived, hedged): Appears to check values against constants and take a separate path when a check fails (an error-style message is referenced).\n\nEvidence:\n\nAppears to check values against constants and take a separate path when a check fails (an error-style message is referenced) \u2014 0x004011e1, 0x004011e8, 0x0040121a, 0x00401220, 0x004011ea, 0x00401222 (compare-with-constant branches plus message references / multiple returns)\nContains 1 loop(s); the first is headed at 0x00401238 and exits to 0x00401222, 0x00401242 \u2014 0x00401238, 0x00401233 (CFG back-edge (dominator analysis))\nCalls strlen, puts, calculate_checksum \u2014 0x004011d3, 0x004011ef, 0x00401227, 0x00401256 (",
+   "ok": true
+  }
+ },
+ "passed": true
+}

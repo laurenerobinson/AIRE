@@ -1,0 +1,44 @@
+.....ss.......................................................s..........................ssss.127.0.0.1 - - [11/Nov/2026 21:28:25] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:25] "POST /api/uploads?filename=demo.exe HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 21:28:25] "POST /api/uploads?filename=demo.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 21:28:25] "POST /api/uploads HTTP/1.1" 403 -
+..................................ssss.............................s.........................s.......................................................127.0.0.1 - - [11/Nov/2026 21:28:29] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "GET /app.css HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "GET /app.js HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "GET /api/bootstrap HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "POST /api/sessions HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "POST /api/sessions/56b7dbd3de094030a41182d7cb28399f/select-function HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "POST /api/tool HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "GET /api/sessions/56b7dbd3de094030a41182d7cb28399f HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "POST /api/sessions HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "POST /api/chat HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 21:28:29] "GET /api/sessions?binary_id=b HTTP/1.1" 200 -
+.../usr/lib/python3.12/copy.py:118: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpzn_mxhj1/.aire-uploads/index-worker.log' mode='a' encoding='UTF-8'>
+  def deepcopy(x, memo=None, _nil=[]):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 4384 is still running
+  _warn("subprocess %s is still running" % self.pid,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/copy.py:118: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='UTF-8'>
+  def deepcopy(x, memo=None, _nil=[]):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/copy.py:118: ResourceWarning: unclosed file <_io.TextIOWrapper name=6 encoding='UTF-8'>
+  def deepcopy(x, memo=None, _nil=[]):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..................................s.....................s......................................................ssssss.......127.0.0.1 - - [11/Nov/2026 21:28:33] "POST /api/uploads?filename=corrupt_dos_signature_invalid.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 21:28:33] "POST /api/uploads?filename=corrupt_truncated_section_table.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 21:28:33] "POST /api/uploads?filename=corrupt_e_lfanew_out_of_range.exe HTTP/1.1" 400 -
+127.0.0.1 - - [11/Nov/2026 21:28:33] "POST /api/uploads?filename=corrupt_section_offset_beyond_eof.exe HTTP/1.1" 201 -
+127.0.0.1 - - [11/Nov/2026 21:28:33] "GET /api/library HTTP/1.1" 200 -
+......./usr/lib/python3.12/unittest/case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=4 encoding='UTF-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.12/unittest/case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=5 encoding='UTF-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....................................................................sss..............................................s............................s....................sss...................
+----------------------------------------------------------------------
+Ran 566 tests in 18.634s
+
+OK (skipped=29)

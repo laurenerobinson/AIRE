@@ -1,0 +1,57 @@
+{
+ "verdicts": {
+  "INSUFFICIENT EVIDENCE": 736,
+  "CONSISTENT": 206,
+  "POTENTIAL DISCREPANCY": 12
+ },
+ "checks": {
+  "call_targets:CONSISTENT": 656,
+  "string_references:CONSISTENT": 821,
+  "control_flow:CONSISTENT": 808,
+  "return_value:CONSISTENT": 799,
+  "constants:CONSISTENT": 521,
+  "global_data:CONSISTENT": 825,
+  "arithmetic:INSUFFICIENT EVIDENCE": 265,
+  "return_value:INSUFFICIENT EVIDENCE": 28,
+  "global_data:INSUFFICIENT EVIDENCE": 2,
+  "thunk:INSUFFICIENT EVIDENCE": 127,
+  "constants:INSUFFICIENT EVIDENCE": 306,
+  "control_flow:INSUFFICIENT EVIDENCE": 10,
+  "arithmetic:CONSISTENT": 562,
+  "call_targets:INSUFFICIENT EVIDENCE": 171,
+  "control_flow:POTENTIAL DISCREPANCY": 9,
+  "string_references:INSUFFICIENT EVIDENCE": 3,
+  "string_references:POTENTIAL DISCREPANCY": 3
+ },
+ "discrepancies": [
+  [
+   "FUN_004075e0",
+   "control_flow"
+  ],
+  [
+   "FUN_00415300",
+   "control_flow"
+  ],
+  [
+   "FUN_00415d50",
+   "control_flow"
+  ],
+  [
+   "FUN_0041f140",
+   "string_references"
+  ],
+  [
+   "FUN_0041f150",
+   "string_references"
+  ],
+  [
+   "FUN_0041f170",
+   "string_references"
+  ]
+ ],
+ "verdicts_core_basis": {
+  "CONSISTENT": 612,
+  "INSUFFICIENT EVIDENCE": 330,
+  "POTENTIAL DISCREPANCY": 12
+ }
+}

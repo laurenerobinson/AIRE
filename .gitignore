@@ -45,3 +45,42 @@ Thumbs.db
 # Per-invocation benchmark outputs; all rows are preserved in docs/m9/benchmarks/progress.jsonl
 /docs/m9/benchmarks/interleaved/
 /docs/m9/benchmarks/before_small.json
+
+# Step 1 chat regression fixture (real index facts, trimmed; see MANIFEST.json)
+!tests/fixtures/chatperf/crypto_pe_index.sqlite
+
+# M10 generated demo data and browser sessions
+/demo_artifacts/m10/
+
+# Temporary browser profiles, caches, and private session state
+firefox-profile*/
+aire-ui-verify-*/
+.mozilla/
+cache2/
+startupCache/
+sessionstore-backups/
+sessionstore.jsonlz4
+firefox.log
+/demo_artifacts/**/sessions/
+/demo_artifacts/**/uploads/
+
+# SQLite runtime sidecars (the intentional chat fixture exception stays above)
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite3-journal
+*.db-wal
+*.db-shm
+*.db-journal
+
+# Browser captures, session transcripts, and transient benchmark logs.
+# Keep evaluation metrics, test records, scripts, and documentation reviewable.
+/docs/m10/browser_*.png
+/docs/m10/*transcript*.txt
+/docs/m10/*.log
+/docs/chatperf/**/*.png
+/docs/chatperf/**/*.log
+/docs/chatperf/baseline_2026-11-11/run1.jsonl
+/docs/chatperf/baseline_2026-11-11/stall.jsonl

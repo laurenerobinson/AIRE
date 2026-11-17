@@ -20,6 +20,7 @@ from aire.knowledge.reference_views import (
 from aire.knowledge.retrieval import ProgramQueryService
 from aire.pyghidra.graph_builder import build_call_edges
 from aire.pyghidra.options import IndexOptions
+from aire.analysis.versions import INSTRUCTION_IR_VERSION
 from aire.pyghidra.references import extract_references, REFERENCE_FACTS_VERSION
 from aire.security.rule_engine import _ReadOnlyRuleStore
 from aire.ai.naming import _ReadOnlyNamingStore
@@ -68,7 +69,8 @@ def reference(target, kind, *, call=False, read=False, computed=False, operand=0
 def enriched_index(identity='binary'):
     index = sample_index(identity)
     source, target = index.functions[1], index.functions[0]
-    index.metadata = {'options': asdict(IndexOptions()), 'reference_facts_version': REFERENCE_FACTS_VERSION}
+    index.metadata = {'options': asdict(IndexOptions()), 'reference_facts_version': REFERENCE_FACTS_VERSION,
+                      'instruction_ir': {'version': INSTRUCTION_IR_VERSION}}
     index.references = [
         ReferenceRecord(f'{identity}:r:0', identity, '00101003', target.address, 'UNCONDITIONAL_CALL',
                         source.function_id, target.function_id, index.artifacts[1].artifact_id,

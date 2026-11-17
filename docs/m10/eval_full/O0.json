@@ -1,0 +1,254 @@
+{
+ "_meta": {
+  "identity": {
+   "seconds": 0.0,
+   "finished": "2026-11-11T21:30:03",
+   "max_rss_mb": 23.8,
+   "load1": 0.39,
+   "mem_available_mb": 21745,
+   "disk_free_mb": 833
+  },
+  "phase1": {
+   "seconds": 0.09,
+   "finished": "2026-11-11T21:30:03",
+   "max_rss_mb": 30.5,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "explanations": {
+   "seconds": 0.03,
+   "finished": "2026-11-11T21:30:03",
+   "max_rss_mb": 30.9,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "calls": {
+   "seconds": 0.7,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "cfg": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "citations": {
+   "seconds": 0.11,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.7,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "loops": {
+   "seconds": 0.02,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.7,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "parameters": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.7,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "branch_constants": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.7,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "return_usage": {
+   "seconds": 0.0,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.7,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "value_origins": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.7,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "latency": {
+   "seconds": 0.09,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.8,
+   "load1": 0.39,
+   "mem_available_mb": 21736,
+   "disk_free_mb": 833
+  },
+  "complete": [
+   "identity",
+   "phase1",
+   "explanations",
+   "calls",
+   "cfg",
+   "citations",
+   "loops",
+   "parameters",
+   "branch_constants",
+   "return_usage",
+   "value_origins",
+   "latency"
+  ]
+ },
+ "identity": {
+  "sha256": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e",
+  "functions": 29
+ },
+ "phase1": {
+  "counts": {
+   "instructions": 395,
+   "boundary_ok": 395,
+   "mnemonic_ok": 395,
+   "targets": 68,
+   "target_ok": 68,
+   "relations": 24,
+   "relation_ok": 24,
+   "relations_beyond_oracle": 1,
+   "memory": 135,
+   "memory_ok": 135
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {}
+ },
+ "explanations": {
+  "category_rate": 1.0,
+  "checked": 391,
+  "violations": {},
+  "explanations": 395,
+  "unsupported_register_claims": 0,
+  "unsupported_examples": []
+ },
+ "calls": {
+  "call_instructions": 28,
+  "objdump_direct_calls": 28,
+  "objdump_direct_calls_found": 28,
+  "compared": 28,
+  "agree": 28,
+  "source_functions": 12,
+  "source_exact": 12,
+  "target_agreement": 1.0,
+  "call_recall": 1.0,
+  "mismatches": [],
+  "source_mismatches": []
+ },
+ "cfg": {
+  "conditional_blocks": 25,
+  "conditional_agree": 25,
+  "return_blocks": 19,
+  "return_agree": 19,
+  "internal_jump_targets": 39,
+  "leaders_found": 39,
+  "jump_blocks": 15,
+  "jump_agree": 14,
+  "conditional_rate": 1.0,
+  "jump_rate": 0.9333,
+  "return_rate": 1.0,
+  "leader_recall": 1.0,
+  "mismatches": [
+   {
+    "function": "frame_dummy",
+    "block": "00401140",
+    "last": "00401144",
+    "mnemonic": "jmp",
+    "ours": [],
+    "objdump": [
+     "004010d0"
+    ]
+   }
+  ]
+ },
+ "citations": {
+  "citations": 501,
+  "valid": 501,
+  "validity": 1.0,
+  "invalid_examples": []
+ },
+ "loops": {
+  "backward_jump_proxy_compared": 20,
+  "backward_jump_proxy_agree": 20,
+  "functions": 12,
+  "agree": 12,
+  "truth": "source loops (presence); backward-jump proxy reported separately (a backward jump is not necessarily a loop)",
+  "mismatches": []
+ },
+ "parameters": {
+  "functions": 12,
+  "agree": 12,
+  "mismatches": []
+ },
+ "branch_constants": {
+  "checks": 10,
+  "found": 10,
+  "misses": []
+ },
+ "return_usage": {
+  "pairs": 5,
+  "agree": 5,
+  "mismatches": []
+ },
+ "value_origins": [
+  {
+   "function": "validate_input",
+   "question": "value compared with 0 at the first length check",
+   "outcome": "correct"
+  },
+  {
+   "function": "secret_operation",
+   "question": "first argument of the call to add_values",
+   "outcome": "correct"
+  }
+ ],
+ "latency": {
+  "explain_64": {
+   "n": 29,
+   "median_ms": 0.55,
+   "p95_ms": 2.76,
+   "max_ms": 5.24
+  },
+  "function_evidence": {
+   "n": 29,
+   "median_ms": 0.53,
+   "p95_ms": 2.77,
+   "max_ms": 5.47
+  },
+  "cfg": {
+   "n": 29,
+   "median_ms": 0.13,
+   "p95_ms": 0.48,
+   "max_ms": 0.52
+  },
+  "crossvalidate": {
+   "n": 29,
+   "median_ms": 0.68,
+   "p95_ms": 1.24,
+   "max_ms": 2.94
+  }
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "_meta": {
+  "identity": {
+   "seconds": 0.0,
+   "finished": "2026-11-11T21:30:06",
+   "max_rss_mb": 41.3,
+   "load1": 0.39,
+   "mem_available_mb": 21733,
+   "disk_free_mb": 833
+  },
+  "phase1": {
+   "seconds": 5.33,
+   "finished": "2026-11-11T21:30:12",
+   "max_rss_mb": 297.3,
+   "load1": 0.52,
+   "mem_available_mb": 21523,
+   "disk_free_mb": 833
+  },
+  "explanations": {
+   "seconds": 4.39,
+   "finished": "2026-11-11T21:30:16",
+   "max_rss_mb": 297.3,
+   "load1": 0.72,
+   "mem_available_mb": 21278,
+   "disk_free_mb": 817
+  }
+ },
+ "identity": {
+  "sha256": "90e403baf7bc7e0faef7258b140a28742436a63ee73bb468b8ed60131b6a0db5",
+  "functions": 299
+ },
+ "phase1": {
+  "counts": {
+   "instructions": 25230,
+   "boundary_ok": 25230,
+   "mnemonic_ok": 25230,
+   "memory": 3350,
+   "memory_ok": 3350,
+   "targets": 3236,
+   "target_ok": 3236,
+   "relations": 1360,
+   "relation_ok": 1360,
+   "relations_beyond_oracle": 432
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {}
+ },
+ "explanations": {
+  "category_rate": 1.0,
+  "checked": 19117,
+  "violations": {},
+  "explanations": 25230,
+  "unsupported_register_claims": 0,
+  "unsupported_examples": []
+ }
+}

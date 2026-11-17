@@ -1,0 +1,260 @@
+{
+  "note": "Hand-derived from tests/fixtures/simple_elf/aire_test_binary.c (not from A.I.R.E., Ghidra or a model). Compare constants list every faithful compiled encoding (x < C as x < C or x <= C-1). Source-level calls/loops apply to the -O0 builds; for -O2, calls and loops are taken from objdump (direct call targets, backward jumps) because inlining/transformations change them.",
+  "source": "tests/fixtures/simple_elf/aire_test_binary.c",
+  "loops": {
+    "calculate_checksum": 1,
+    "validate_input": 1,
+    "transform_input": 1,
+    "print_banner": 0,
+    "initialize_app": 0,
+    "process_input": 0,
+    "add_values": 0,
+    "multiply_values": 0,
+    "secret_operation": 0,
+    "choose_operation": 0,
+    "print_result": 0,
+    "main": 0
+  },
+  "callees": {
+    "main": [
+      "initialize_app",
+      "puts",
+      "strlen",
+      "process_input",
+      "choose_operation",
+      "print_result"
+    ],
+    "initialize_app": [
+      "print_banner"
+    ],
+    "print_banner": [
+      "puts"
+    ],
+    "validate_input": [
+      "strlen",
+      "puts",
+      "calculate_checksum"
+    ],
+    "transform_input": [
+      "calculate_checksum"
+    ],
+    "process_input": [
+      "validate_input",
+      "transform_input"
+    ],
+    "secret_operation": [
+      "puts",
+      "calculate_checksum",
+      "add_values"
+    ],
+    "choose_operation": [
+      "add_values",
+      "multiply_values",
+      "secret_operation",
+      "puts"
+    ],
+    "print_result": [
+      "printf"
+    ],
+    "calculate_checksum": [],
+    "add_values": [],
+    "multiply_values": []
+  },
+  "parameters_used": {
+    "calculate_checksum": 1,
+    "validate_input": 2,
+    "transform_input": 2,
+    "process_input": 2,
+    "add_values": 2,
+    "multiply_values": 2,
+    "secret_operation": 1,
+    "choose_operation": 2,
+    "print_result": 2,
+    "main": 2,
+    "print_banner": 0,
+    "initialize_app": 0
+  },
+  "compare_constants": {
+    "validate_input": [
+      {
+        "source": "length == 0",
+        "constants": [
+          "0x0"
+        ]
+      },
+      {
+        "source": "length >= INPUT_CAPACITY (32)",
+        "constants": [
+          "0x1f",
+          "0x20"
+        ]
+      },
+      {
+        "source": "ch < 32",
+        "constants": [
+          "0x1f",
+          "0x20"
+        ]
+      },
+      {
+        "source": "ch > 126",
+        "constants": [
+          "0x7e",
+          "0x7f"
+        ]
+      }
+    ],
+    "transform_input": [
+      {
+        "source": "ch >= 'a'",
+        "constants": [
+          "0x60",
+          "0x61"
+        ]
+      },
+      {
+        "source": "ch <= 'z'",
+        "constants": [
+          "0x7a",
+          "0x7b"
+        ]
+      }
+    ],
+    "main": [
+      {
+        "source": "argc != 3",
+        "constants": [
+          "0x3"
+        ]
+      },
+      {
+        "source": "strlen(argv[2]) != 1",
+        "constants": [
+          "0x1"
+        ]
+      },
+      {
+        "source": "argv[2][0] < '0'",
+        "constants": [
+          "0x2f",
+          "0x30"
+        ]
+      },
+      {
+        "source": "argv[2][0] > '9'",
+        "constants": [
+          "0x39",
+          "0x3a"
+        ]
+      }
+    ]
+  },
+  "return_usage": {
+    "validate_input": {
+      "process_input": [
+        "tested",
+        "compared"
+      ]
+    },
+    "process_input": {
+      "main": [
+        "tested",
+        "compared"
+      ]
+    },
+    "calculate_checksum": {
+      "validate_input": [
+        "stored to memory",
+        "copied"
+      ],
+      "transform_input": [
+        "stored to memory",
+        "copied"
+      ],
+      "secret_operation": [
+        "copied",
+        "passed to another call",
+        "stored to memory"
+      ]
+    }
+  },
+  "value_origins": [
+    {
+      "function": "validate_input",
+      "question": "value compared with 0 at the first length check",
+      "branch_constant": "0x0",
+      "expected_origin": "call_result",
+      "expected_call": "strlen"
+    },
+    {
+      "function": "secret_operation",
+      "question": "first argument of the call to add_values",
+      "call_target": "add_values",
+      "argument_register": "RDI",
+      "expected_origin": "call_result",
+      "expected_call": "calculate_checksum"
+    }
+  ],
+  "compare_constants_O2_range_folded": {
+    "note": "Hand-derived from the C source plus the unsigned range identity lo <= x <= hi  <=>  (unsigned)(x - lo) <= (hi - lo). GCC -O2 folds two-sided range checks (and length == 0 || length >= 32) into one subtraction and one unsigned comparison, so the literal source constants of compare_constants do not exist in the -O2 binary. A check passes when, in that function, a stated branch/conditional-move relation compares a register with span (<=) or span+1 (<) as unsigned, and that register (or a sub-register of the same family) was produced by an instruction subtracting lo (LEA displacement -lo or SUB lo). objdump_confirmation addresses were read from GNU objdump output of aire_test_binary_O2 and are documentation, not used for scoring.",
+    "checks": [
+      {
+        "function": "validate_input",
+        "source": "line 39: length == 0 || length >= INPUT_CAPACITY  (valid: 1 <= length <= 31)",
+        "lo": "0x1",
+        "hi": "0x1f",
+        "objdump_confirmation": "4012e8 lea rdx,[rax-0x1]; 4012f1 cmp rdx,0x1e; 4012f5 jbe"
+      },
+      {
+        "function": "validate_input",
+        "source": "line 45: ch < 32 || ch > 126  (valid: 0x20 <= ch <= 0x7e)",
+        "lo": "0x20",
+        "hi": "0x7e",
+        "objdump_confirmation": "40130c lea edx,[rdi-0x20]; 40130f cmp dl,0x5e; 401312 jbe"
+      },
+      {
+        "function": "transform_input",
+        "source": "line 59: ch >= 'a' && ch <= 'z'",
+        "lo": "0x61",
+        "hi": "0x7a",
+        "objdump_confirmation": "401394 lea r8d,[rax-0x61]; 40139b cmp r8b,0x1a; 40139f cmovb"
+      },
+      {
+        "function": "main",
+        "source": "line 128: argv[2][0] < '0' || argv[2][0] > '9'",
+        "lo": "0x30",
+        "hi": "0x39",
+        "objdump_confirmation": "40110f lea eax,[rbx-0x30]; 401112 cmp al,0x9; 401114 jbe"
+      }
+    ]
+  },
+  "O2_binary_adjustments": {
+    "note": "-O2 only. Source-level truth assumes each C function keeps its own body; GCC -O2 inlined some callees. Each adjustment is justified from the C source (which callee contains which loop/call) and confirmed in GNU objdump output of aire_test_binary_O2 (addresses below); none is derived from A.I.R.E. or Ghidra output. Source-level scores are still reported unchanged alongside the adjusted ones.",
+    "loops": {
+      "secret_operation": {
+        "loops": 1,
+        "reason": "calculate_checksum (for-loop at source line 29) inlined",
+        "objdump_confirmation": "401469 jne 401458 (backward); no call to calculate_checksum"
+      },
+      "choose_operation": {
+        "loops": 1,
+        "reason": "secret_operation -> calculate_checksum inlined into case 3",
+        "objdump_confirmation": "4014e1 jne 4014d0 (backward); no call to secret_operation"
+      }
+    },
+    "value_origins": [
+      {
+        "function": "validate_input",
+        "question": "value compared with 0x1e (folded length range check, source line 39)",
+        "branch_constant": "0x1e",
+        "expected_origin": "call_result",
+        "expected_call": "strlen",
+        "objdump_confirmation": "4012e0 call strlen; 4012e8 lea rdx,[rax-0x1]; 4012f1 cmp rdx,0x1e"
+      }
+    ],
+    "not_applicable_origins": {
+      "validate_input/value compared with 0 at the first length check": "no comparison with 0 exists: length == 0 folded into the range check (objdump 4012e8-4012f5)",
+      "secret_operation/first argument of the call to add_values": "add_values and calculate_checksum inlined; no call instruction exists (objdump 401430-401470 calls only puts)"
+    }
+  }
+}

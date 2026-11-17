@@ -1,0 +1,59 @@
+{
+  "url": "http://127.0.0.1:39331/",
+  "cases": [
+    {
+      "program": "aes_gcm.exe",
+      "question": "Which functions perform encryption and decryption?",
+      "first_visible_ms": 26,
+      "answer_rendered_ms": 88,
+      "table_rows": 2,
+      "sections": [
+        "Evidence \u00b7 verified stored facts (2)",
+        "Call relationships (2)",
+        "Limitations (5)",
+        "Tool output \u00b7 full identifiers (1)",
+        "Raw analysis record (1)"
+      ],
+      "visible_chars": 613,
+      "badge": "Verified stored facts \u00b7 deterministic \u00b7 no AI model",
+      "problems": [],
+      "screenshot": "browser_answer_1.png"
+    },
+    {
+      "program": "ecdsa_sign.exe",
+      "question": "Which functions sign and verify a digital signature?",
+      "first_visible_ms": 17,
+      "answer_rendered_ms": 53,
+      "table_rows": 2,
+      "sections": [
+        "Evidence \u00b7 verified stored facts (2)",
+        "Call relationships (3)",
+        "Limitations (5)",
+        "Tool output \u00b7 full identifiers (1)",
+        "Raw analysis record (1)"
+      ],
+      "visible_chars": 692,
+      "badge": "Verified stored facts \u00b7 deterministic \u00b7 no AI model",
+      "problems": [],
+      "screenshot": "browser_answer_2.png"
+    },
+    {
+      "program": "import_dll_name_invalid.exe",
+      "question": "What is this file?",
+      "first_visible_ms": 17,
+      "answer_rendered_ms": 38,
+      "table_rows": 0,
+      "sections": [
+        "Evidence \u00b7 verified stored facts (1)",
+        "Limitations (2)",
+        "Raw analysis record (1)"
+      ],
+      "visible_chars": 1362,
+      "badge": "Verified stored facts \u00b7 deterministic \u00b7 no AI model",
+      "problems": [],
+      "screenshot": "browser_answer_3.png"
+    }
+  ],
+  "model_calls": 0,
+  "passed": true
+}

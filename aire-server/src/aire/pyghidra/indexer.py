@@ -22,6 +22,7 @@ from aire.pyghidra.extractor import decompile_workers, extract_artifacts, extrac
 from aire.pyghidra.graph_builder import build_call_edges
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION, extract_references
+from aire.pyghidra.instruction_ir import IR_VERSION
 from aire.profiling import count, profiled, stage as profile_stage, timed_context
 from aire.analysis.progress import report_progress
 from aire.analysis.versions import analyzer_versions
@@ -181,8 +182,14 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                             tick = time.perf_counter()
                             workers = decompile_workers() if options.decompile else 0
                             reliability = {}
+                            # AIRE_INSTRUCTION_IR=0 disables M10 facts (benchmark A/B only);
+                            # such snapshots are not cache-compatible and refresh later.
+                            collect_ir = os.environ.get('AIRE_INSTRUCTION_IR', '1') != '0'
+                            function_ir = {} if collect_ir else None
                             records = extract_functions(program, functions, binary.binary_id, options, monitor,
-                                                        warnings, workers=workers or 1, report=reliability)
+                                                        warnings, workers=workers or 1, report=reliability,
+                                                        ir=function_ir)
+                            function_ir = function_ir or {}
                             function_seconds = time.perf_counter() - tick
                             tick = time.perf_counter()
                             report_progress('Extracting strings, imports and exports')
@@ -220,7 +227,13 @@ def index_binary(path: Path, options: IndexOptions | None = None) -> ProgramInde
                                                                    {'timed_out': [], 'retried': [], 'recovered': []}),
                                 'decompilation_incomplete': reliability.get('decompilation_incomplete', []),
                                 'reference_facts_version': REFERENCE_FACTS_VERSION if options.include_references else None,
-                            }, references, thunks, program_info)
+                                'instruction_ir': {
+                                    'version': IR_VERSION if collect_ir else None, 'functions': len(function_ir),
+                                    'instructions': sum(len(d['instructions']) for d in function_ir.values()),
+                                    'truncated_functions': sorted(d['function_address'] for d in function_ir.values()
+                                                                  if d['truncated']),
+                                },
+                            }, references, thunks, program_info, function_ir)
                         finally:
                             with profile_stage('cleanup'):
                                 program.release(consumer)

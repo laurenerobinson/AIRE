@@ -190,6 +190,10 @@ def render_tool_facts(results):
                              f"[{item['provenance']['source_id']}]")
             if data['truncations']:
                 lines.append('Artifact or diagnostic results were bounded.')
+        elif name in ('explain_instructions', 'function_evidence', 'branch_paths', 'trace_value', 'return_usage',
+                      'crossvalidate_function', 'function_cfg', 'parameter_use'):
+            from aire.agent.assembly_answers import render_tool
+            lines = render_tool(name, data)
         elif name == 'crypto_evidence':
             summary = data['summary']
             lines = [f"Crypto API evidence (static call sites only): {summary['functions_with_crypto_calls']} "

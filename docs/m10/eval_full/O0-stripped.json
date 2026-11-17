@@ -1,0 +1,267 @@
+{
+ "_meta": {
+  "identity": {
+   "seconds": 0.0,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 23.9,
+   "load1": 0.39,
+   "mem_available_mb": 21739,
+   "disk_free_mb": 833
+  },
+  "phase1": {
+   "seconds": 0.06,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 30.6,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "explanations": {
+   "seconds": 0.04,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 30.9,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "calls": {
+   "seconds": 0.56,
+   "finished": "2026-11-11T21:30:04",
+   "max_rss_mb": 31.3,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "cfg": {
+   "seconds": 0.03,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.3,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "citations": {
+   "seconds": 0.14,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "loops": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "parameters": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "branch_constants": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "return_usage": {
+   "seconds": 0.0,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "value_origins": {
+   "seconds": 0.01,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.4,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "latency": {
+   "seconds": 0.09,
+   "finished": "2026-11-11T21:30:05",
+   "max_rss_mb": 31.6,
+   "load1": 0.39,
+   "mem_available_mb": 21730,
+   "disk_free_mb": 833
+  },
+  "complete": [
+   "identity",
+   "phase1",
+   "explanations",
+   "calls",
+   "cfg",
+   "citations",
+   "loops",
+   "parameters",
+   "branch_constants",
+   "return_usage",
+   "value_origins",
+   "latency"
+  ]
+ },
+ "identity": {
+  "sha256": "08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188",
+  "functions": 29
+ },
+ "phase1": {
+  "counts": {
+   "instructions": 395,
+   "boundary_ok": 395,
+   "mnemonic_ok": 395,
+   "targets": 68,
+   "target_ok": 68,
+   "relations": 24,
+   "relation_ok": 24,
+   "relations_beyond_oracle": 1,
+   "memory": 135,
+   "memory_ok": 135
+  },
+  "rates": {
+   "boundaries": 1.0,
+   "mnemonics": 1.0,
+   "targets": 1.0,
+   "memory": 1.0,
+   "relations": 1.0
+  },
+  "mismatches": {}
+ },
+ "explanations": {
+  "category_rate": 1.0,
+  "checked": 391,
+  "violations": {},
+  "explanations": 395,
+  "unsupported_register_claims": 0,
+  "unsupported_examples": []
+ },
+ "calls": {
+  "call_instructions": 28,
+  "objdump_direct_calls": 28,
+  "objdump_direct_calls_found": 28,
+  "compared": 28,
+  "agree": 28,
+  "source_functions": 12,
+  "source_exact": 12,
+  "target_agreement": 1.0,
+  "call_recall": 1.0,
+  "mismatches": [],
+  "source_mismatches": []
+ },
+ "cfg": {
+  "conditional_blocks": 25,
+  "conditional_agree": 25,
+  "return_blocks": 19,
+  "return_agree": 19,
+  "internal_jump_targets": 39,
+  "leaders_found": 39,
+  "jump_blocks": 15,
+  "jump_agree": 14,
+  "conditional_rate": 1.0,
+  "jump_rate": 0.9333,
+  "return_rate": 1.0,
+  "leader_recall": 1.0,
+  "mismatches": [
+   {
+    "function": "_INIT_0",
+    "block": "00401140",
+    "last": "00401144",
+    "mnemonic": "jmp",
+    "ours": [],
+    "objdump": [
+     "004010d0"
+    ]
+   }
+  ]
+ },
+ "citations": {
+  "citations": 483,
+  "valid": 480,
+  "validity": 0.9938,
+  "invalid_examples": [
+   [
+    "FUN_004010a0",
+    "00404030"
+   ],
+   [
+    "FUN_004010a0",
+    "00404030"
+   ],
+   [
+    "FUN_004010a0",
+    "00404030"
+   ]
+  ]
+ },
+ "loops": {
+  "backward_jump_proxy_compared": 4,
+  "backward_jump_proxy_agree": 3,
+  "functions": 12,
+  "agree": 12,
+  "truth": "source loops (presence); backward-jump proxy reported separately (a backward jump is not necessarily a loop)",
+  "mismatches": []
+ },
+ "parameters": {
+  "functions": 12,
+  "agree": 12,
+  "mismatches": []
+ },
+ "branch_constants": {
+  "checks": 10,
+  "found": 10,
+  "misses": []
+ },
+ "return_usage": {
+  "pairs": 5,
+  "agree": 5,
+  "mismatches": []
+ },
+ "value_origins": [
+  {
+   "function": "validate_input",
+   "question": "value compared with 0 at the first length check",
+   "outcome": "correct"
+  },
+  {
+   "function": "secret_operation",
+   "question": "first argument of the call to add_values",
+   "outcome": "incorrect_or_missing"
+  }
+ ],
+ "latency": {
+  "explain_64": {
+   "n": 29,
+   "median_ms": 0.44,
+   "p95_ms": 3.56,
+   "max_ms": 5.29
+  },
+  "function_evidence": {
+   "n": 29,
+   "median_ms": 0.45,
+   "p95_ms": 3.68,
+   "max_ms": 10.61
+  },
+  "cfg": {
+   "n": 29,
+   "median_ms": 0.09,
+   "p95_ms": 0.28,
+   "max_ms": 0.35
+  },
+  "crossvalidate": {
+   "n": 29,
+   "median_ms": 0.49,
+   "p95_ms": 1.71,
+   "max_ms": 1.75
+  }
+ }
+}

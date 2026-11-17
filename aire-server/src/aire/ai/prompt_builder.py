@@ -166,7 +166,10 @@ def build_prompt(question, bundle, *, policy, compact=False):
                         'scope': 'Local operation agreement only; no full equivalence or input provenance.',
                         'limitations': data['uncertainties'][:1]}
             elif kind == 'BINARY':
-                data = {k: data[k] for k in ('program_name', 'format', 'architecture', 'entry_point')}
+                # The file name is user/fixture-chosen text, not evidence ("import_dll_name_invalid.exe"
+                # once led the model to call a corrupted EXE a "DLL loader"); withhold it from inference.
+                data = {k: data[k] for k in ('format', 'architecture', 'entry_point')}
+                data['file_name'] = 'withheld: file names are not evidence of behavior'
             elif kind == 'FUNC':
                 f = data['function']
                 data = {k: f[k] for k in ('current_name', 'address', 'is_external', 'is_thunk', 'decompiled_text', 'assembly')

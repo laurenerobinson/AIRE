@@ -1,0 +1,265 @@
+{
+ "rows": [
+  {
+   "binary": "FunctionOverloading.exe",
+   "ir": true,
+   "pair": 0,
+   "wall": 17.64862672199888,
+   "freeze": 0.0,
+   "stages": {
+    "project_creation": 0.14391255200098385,
+    "import_open": 0.2861534619987651,
+    "auto_analysis": 12.911707739000121,
+    "function_discovery": 0.020479768001678167,
+    "decompiler_setup": 0.3576937479992921,
+    "decompilation": 0.09843873399950098,
+    "assembly": 0.7269220860835048,
+    "basic_blocks": 0.6149789910450636,
+    "function_metadata": 0.22563541599083692,
+    "strings": 0.031794880000234116,
+    "call_graph": 0.0955207769984554,
+    "xrefs": 0.3266886900019017,
+    "instruction_ir": 1.7645729278810904,
+    "cleanup": 0.030245136003941298
+   },
+   "ir_instructions": 4301,
+   "ir_compressed_bytes": 355711,
+   "non_ir_facts_identical": true
+  },
+  {
+   "binary": "FunctionOverloading.exe",
+   "ir": false,
+   "pair": 0,
+   "wall": 14.505090886003018,
+   "freeze": 0.0,
+   "stages": {
+    "project_creation": 0.06317320199741516,
+    "import_open": 0.21007669399841689,
+    "auto_analysis": 10.541036410999368,
+    "decompiler_setup": 0.6478000589995645,
+    "decompilation": 0.9934764940007881,
+    "assembly": 0.839392224981566,
+    "basic_blocks": 0.5609268449879892,
+    "function_metadata": 0.25259421303053387,
+    "strings": 0.026465299000847153,
+    "call_graph": 0.046326016999955755,
+    "xrefs": 0.2803570319993014,
+    "cleanup": 0.01552865800113068,
+    "other": 0.011337945001287153
+   },
+   "ir_instructions": 0,
+   "ir_compressed_bytes": 0,
+   "non_ir_facts_identical": true
+  },
+  {
+   "binary": "FunctionOverloading.exe",
+   "ir": false,
+   "pair": 1,
+   "wall": 10.997695362999366,
+   "freeze": 0.0,
+   "stages": {
+    "project_creation": 0.02595905800262699,
+    "import_open": 0.13157637599942973,
+    "auto_analysis": 8.506197421000252,
+    "decompiler_setup": 0.5931427710020216,
+    "decompilation": 1.1858695829978387,
+    "assembly": 0.17740361301548546,
+    "basic_blocks": 0.09480573401378933,
+    "function_metadata": 0.06404299797213753,
+    "strings": 0.01618383299864945,
+    "call_graph": 0.04852039400066133,
+    "xrefs": 0.1344902720011305
+   },
+   "ir_instructions": 0,
+   "ir_compressed_bytes": 0,
+   "non_ir_facts_identical": true
+  },
+  {
+   "binary": "FunctionOverloading.exe",
+   "ir": true,
+   "pair": 1,
+   "wall": 11.598858823999763,
+   "freeze": 0.0,
+   "stages": {
+    "project_creation": 0.022634132001257967,
+    "import_open": 0.12440427099500084,
+    "auto_analysis": 7.671450923000521,
+    "decompiler_setup": 0.2918475070000568,
+    "decompilation": 0.13343796999834012,
+    "assembly": 0.7210866830282612,
+    "basic_blocks": 0.4435644820405287,
+    "function_metadata": 0.17161604097054806,
+    "strings": 0.025032647001353325,
+    "call_graph": 0.13145102999988012,
+    "xrefs": 0.18143661100111785,
+    "instruction_ir": 1.648736981966067,
+    "cleanup": 0.021018268998886924
+   },
+   "ir_instructions": 4301,
+   "ir_compressed_bytes": 355711,
+   "non_ir_facts_identical": true
+  },
+  {
+   "binary": "sleigh.exe",
+   "ir": true,
+   "pair": 0,
+   "wall": 355.5677346739976,
+   "freeze": 86.7315134499986,
+   "stages": {
+    "python_setup": 0.012069107993738726,
+    "project_creation": 0.020524861000012606,
+    "import_open": 1.5350878099998226,
+    "auto_analysis": 199.1938483110025,
+    "function_discovery": 0.046169638000719715,
+    "decompiler_setup": 1.0025481949996902,
+    "decompilation": 0.026018353000836214,
+    "assembly": 34.546109929138765,
+    "basic_blocks": 15.396019057938247,
+    "function_metadata": 1.6185482591063192,
+    "strings": 3.2295092639978975,
+    "imports": 0.028872050999780186,
+    "call_graph": 2.865356997001072,
+    "xrefs": 16.874271027998475,
+    "instruction_ir": 79.1254314718135,
+    "cleanup": 0.031240603999322047,
+    "other": 0.011071178003476234
+   },
+   "ir_instructions": 150966,
+   "ir_compressed_bytes": 9383368,
+   "non_ir_facts_identical": true
+  },
+  {
+   "binary": "sleigh.exe",
+   "ir": false,
+   "pair": 0,
+   "wall": 280.3246001089974,
+   "freeze": 128.96965268399072,
+   "stages": {
+    "project_creation": 0.07418472399876919,
+    "import_open": 4.211763639996207,
+    "auto_analysis": 167.74250784899777,
+    "function_discovery": 0.06924246299968217,
+    "decompiler_setup": 0.563779883999814,
+    "decompilation": 46.77358399399964,
+    "assembly": 26.937275423151732,
+    "basic_blocks": 15.178809143046237,
+    "function_metadata": 1.4899436418054393,
+    "strings": 0.7267851169999631,
+    "call_graph": 5.438153381997836,
+    "xrefs": 10.409966870996868,
+    "cleanup": 0.035296155994728906,
+    "other": 0.655396030000702
+   },
+   "ir_instructions": 0,
+   "ir_compressed_bytes": 0,
+   "non_ir_facts_identical": true
+  },
+  {
+   "binary": "sleigh.exe",
+   "ir": false,
+   "pair": 1,
+   "wall": 759.42831381,
+   "freeze": 588.3847727109969,
+   "stages": {
+    "project_creation": 0.052877250003803056,
+    "import_open": 0.8094706640004006,
+    "auto_analysis": 682.0391176340017,
+    "function_discovery": 0.02753463000044576,
+    "decompiler_setup": 0.7257878470009018,
+    "decompilation": 38.63252030500007,
+    "assembly": 13.212342691869708,
+    "basic_blocks": 7.718418632954126,
+    "function_metadata": 1.3940907831747609,
+    "strings": 0.8599214839996421,
+    "call_graph": 3.6628967090000515,
+    "xrefs": 10.231261692999396,
+    "cleanup": 0.03083567499925266,
+    "other": 0.014144262004265329
+   },
+   "ir_instructions": 0,
+   "ir_compressed_bytes": 0,
+   "non_ir_facts_identical": false
+  },
+  {
+   "binary": "sleigh.exe",
+   "ir": true,
+   "pair": 1,
+   "wall": 149.2885897619999,
+   "freeze": 8.69594627799961,
+   "stages": {
+    "project_creation": 0.04185478600265924,
+    "import_open": 0.6048119100014446,
+    "auto_analysis": 83.07283724000081,
+    "function_discovery": 0.02345180900010746,
+    "decompiler_setup": 0.6808524289990601,
+    "decompilation": 0.01749390699842479,
+    "assembly": 12.12377714633476,
+    "basic_blocks": 4.8400989739420766,
+    "function_metadata": 0.8303057110751979,
+    "strings": 0.3263606209984573,
+    "call_graph": 1.3303568049996102,
+    "xrefs": 6.3984487439993245,
+    "instruction_ir": 38.957373649649526,
+    "cleanup": 0.018966208001074847
+   },
+   "ir_instructions": 150966,
+   "ir_compressed_bytes": 9383368,
+   "non_ir_facts_identical": true
+  }
+ ],
+ "summary": {
+  "FunctionOverloading.exe:ir=True": {
+   "wall_freeze_adjusted_median": 14.623742772999321,
+   "raw": [
+    17.65,
+    11.6
+   ],
+   "freeze": [
+    0.0,
+    0.0
+   ],
+   "instruction_ir_stage_median": 1.7066549549235788,
+   "assembly_stage_median": 0.724004384555883
+  },
+  "FunctionOverloading.exe:ir=False": {
+   "wall_freeze_adjusted_median": 12.751393124501192,
+   "raw": [
+    14.51,
+    11.0
+   ],
+   "freeze": [
+    0.0,
+    0.0
+   ],
+   "instruction_ir_stage_median": 0.0,
+   "assembly_stage_median": 0.5083979189985257
+  },
+  "sleigh.exe:ir=True": {
+   "wall_freeze_adjusted_median": 204.71443235399965,
+   "raw": [
+    355.57,
+    149.29
+   ],
+   "freeze": [
+    86.7,
+    8.7
+   ],
+   "instruction_ir_stage_median": 59.04140256073151,
+   "assembly_stage_median": 23.334943537736763
+  },
+  "sleigh.exe:ir=False": {
+   "wall_freeze_adjusted_median": 161.19924426200487,
+   "raw": [
+    280.32,
+    759.43
+   ],
+   "freeze": [
+    129.0,
+    588.4
+   ],
+   "instruction_ir_stage_median": 0.0,
+   "assembly_stage_median": 20.07480905751072
+  }
+ },
+ "all_non_ir_facts_identical": false
+}

@@ -16,7 +16,7 @@ from aire.knowledge.models import BinaryRecord, ProgramIndex
 from aire.pyghidra.indexer import IndexingError
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION
-from aire.analysis.versions import analyzer_versions
+from aire.analysis.versions import INSTRUCTION_IR_VERSION, analyzer_versions
 
 
 class AnalysisCacheTests(unittest.TestCase):
@@ -43,6 +43,7 @@ class AnalysisCacheTests(unittest.TestCase):
                       'analyzer_versions': analyzer_versions(),
                       'ghidra_version': analyzer_versions()['ghidra'],
                       'reference_facts_version': REFERENCE_FACTS_VERSION if options.include_references else None,
+                      'instruction_ir': {'version': INSTRUCTION_IR_VERSION},
                       'input_sha256_unchanged': True})
 
     def test_old_or_missing_reference_format_is_a_cache_miss(self):

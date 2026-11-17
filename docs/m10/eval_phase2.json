@@ -1,0 +1,189 @@
+[
+ {
+  "binary": "aire_test_binary_stripped",
+  "outcomes": {
+   "positive:remove_call": {
+    "detected": 11
+   },
+   "positive:empty_body": {
+    "detected": 12
+   },
+   "benign:rename_locals": {
+    "not_flagged": 16
+   },
+   "benign:reformat_strip_comments": {
+    "not_flagged": 16
+   },
+   "benign:constant_base": {
+    "not_flagged": 16
+   },
+   "positive:add_phantom_call": {
+    "detected": 15
+   },
+   "positive:remove_string": {
+    "detected": 6
+   }
+  },
+  "examples": {}
+ },
+ {
+  "binary": "aes_gcm.exe",
+  "outcomes": {
+   "positive:remove_call": {
+    "detected": 141,
+    "missed": 4
+   },
+   "positive:empty_body": {
+    "detected": 189,
+    "missed": 2
+   },
+   "positive:add_phantom_call": {
+    "detected": 187,
+    "missed": 1
+   },
+   "benign:rename_locals": {
+    "not_flagged": 196
+   },
+   "benign:reformat_strip_comments": {
+    "not_flagged": 196
+   },
+   "benign:constant_base": {
+    "not_flagged": 196
+   },
+   "positive:remove_string": {
+    "detected": 6
+   }
+  },
+  "examples": {
+   "remove_call": [
+    "FUN_00401160",
+    "FUN_00402aa0",
+    "FUN_0041db70"
+   ],
+   "empty_body": [
+    "FUN_00402aa0",
+    "FUN_0041f0e0"
+   ],
+   "add_phantom_call": [
+    "FUN_00402aa0"
+   ]
+  }
+ },
+ {
+  "binary": "sha256_hash.exe",
+  "outcomes": {
+   "positive:remove_call": {
+    "detected": 138,
+    "missed": 4
+   },
+   "positive:empty_body": {
+    "detected": 185,
+    "missed": 2
+   },
+   "positive:add_phantom_call": {
+    "detected": 183,
+    "missed": 1
+   },
+   "benign:rename_locals": {
+    "not_flagged": 192
+   },
+   "benign:reformat_strip_comments": {
+    "not_flagged": 192
+   },
+   "benign:constant_base": {
+    "not_flagged": 192
+   },
+   "positive:remove_string": {
+    "detected": 4
+   }
+  },
+  "examples": {
+   "remove_call": [
+    "FUN_00401160",
+    "FUN_00402aa0",
+    "FUN_0041db40"
+   ],
+   "empty_body": [
+    "FUN_00402aa0",
+    "FUN_0041f0b0"
+   ],
+   "add_phantom_call": [
+    "FUN_00402aa0"
+   ]
+  }
+ },
+ {
+  "binary": "aire_test_binary",
+  "outcomes": {
+   "positive:remove_call": {
+    "detected": 7
+   },
+   "positive:empty_body": {
+    "detected": 8
+   },
+   "benign:rename_locals": {
+    "not_flagged": 12
+   },
+   "benign:reformat_strip_comments": {
+    "not_flagged": 12
+   },
+   "benign:constant_base": {
+    "not_flagged": 12
+   },
+   "positive:add_phantom_call": {
+    "detected": 11
+   },
+   "positive:remove_string": {
+    "detected": 4
+   }
+  },
+  "examples": {}
+ },
+ {
+  "binary": "ecdsa_sign.exe",
+  "outcomes": {
+   "positive:remove_call": {
+    "detected": 143,
+    "missed": 4
+   },
+   "positive:empty_body": {
+    "detected": 189,
+    "missed": 2
+   },
+   "positive:add_phantom_call": {
+    "detected": 187,
+    "missed": 1
+   },
+   "benign:rename_locals": {
+    "not_flagged": 196
+   },
+   "benign:reformat_strip_comments": {
+    "not_flagged": 196
+   },
+   "benign:constant_base": {
+    "not_flagged": 196
+   },
+   "positive:remove_string": {
+    "detected": 6,
+    "missed": 1
+   }
+  },
+  "examples": {
+   "remove_call": [
+    "FUN_00401160",
+    "FUN_00402aa0",
+    "FUN_0041db50"
+   ],
+   "empty_body": [
+    "FUN_00402aa0",
+    "FUN_0041f0c0"
+   ],
+   "add_phantom_call": [
+    "FUN_00402aa0"
+   ],
+   "remove_string": [
+    "FUN_0041d230"
+   ]
+  }
+ }
+]

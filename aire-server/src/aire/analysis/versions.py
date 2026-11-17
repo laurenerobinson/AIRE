@@ -5,7 +5,10 @@ import os
 from pathlib import Path
 import platform
 
-EXTRACTION_VERSION = 1
+# 2 = snapshot includes M10 structured instruction facts (function_ir).
+EXTRACTION_VERSION = 2
+# Version of the per-function structured instruction facts format (M10).
+INSTRUCTION_IR_VERSION = 1
 
 
 def _lastrun_install_dir(environ=os.environ):

@@ -38,11 +38,24 @@ function renderMarkdown(text) {
   safe = safe.replace(/(^|\n)((decompiled_text|assembly) for [^\n]+:)\n([\s\S]*?)(?=\n(?:Retrieved code evidence \[|Connectivity ranking by |get_callers \(|get_callees \(|Bounded stored call path:|Stored binary-level artifacts \(|Deterministic security rule evaluations \(|Text was truncated;)|$)/g,
     (_, prefix, label, field, code) => `${prefix}### ${label}\n${codeBlock(code, field === 'assembly' ? 'asm' : 'c')}`);
   safe = safe.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  const inline = value => value.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[\s(])\*([^*\s][^*]*?)\*(?=[\s).,;:]|$)/g, '$1<em>$2</em>');
   const lines = safe.split('\n');
   const out = [];
   let list = null;
+  let table = null;
   const closeList = () => { if (list) { out.push(`</${list}>`); list = null; } };
+  const closeTable = () => { if (table) { out.push('</tbody></table></div>'); table = null; } };
+  const cells = row => row.trim().replace(/^\||\|$/g, '').split(/(?<!\\)\|/).map(c => inline(c.trim().replace(/\\\|/g, '|')));
   for (let line of lines) {
+    if (/^\s*\|.*\|\s*$/.test(line)) {
+      closeList();
+      if (/^\s*\|[\s:|-]+\|\s*$/.test(line)) continue;  // header separator row
+      if (!table) { table = true; out.push(`<div class="table-wrap"><table class="fact-table"><thead><tr>${cells(line).map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`); continue; }
+      out.push(`<tr>${cells(line).map(c => `<td>${c}</td>`).join('')}</tr>`);
+      continue;
+    }
+    closeTable();
     const codeToken = line.match(/^@@AIRE_CODE_(\d+)@@$/);
     if (codeToken && blocks[Number(codeToken[1])] !== undefined) { closeList(); out.push(blocks[Number(codeToken[1])]); continue; }
     let match;
@@ -50,14 +63,14 @@ function renderMarkdown(text) {
     if (/^(A\.I\.R\.E\. Analysis|A\.I\.R\.E\. stored graph results|Summary \(model interpretation\)|Verified stored facts|Model interpretation|Uncertainty|Evidence provenance|Retrieved tool facts|Retrieved code evidence \[.*)$/.test(line)) {
       closeList(); out.push(`<h3>${line}</h3>`); continue;
     }
-    if ((match = line.match(/^[-*]\s+(.+)$/))) { if (list !== 'ul') { closeList(); list = 'ul'; out.push('<ul>'); } out.push(`<li>${match[1]}</li>`); continue; }
-    if ((match = line.match(/^\d+[.)]\s+(.+)$/))) { if (list !== 'ol') { closeList(); list = 'ol'; out.push('<ol>'); } out.push(`<li>${match[1]}</li>`); continue; }
+    if ((match = line.match(/^[-*]\s+(.+)$/))) { if (list !== 'ul') { closeList(); list = 'ul'; out.push('<ul>'); } out.push(`<li>${inline(match[1])}</li>`); continue; }
+    if ((match = line.match(/^\d+[.)]\s+(.+)$/))) { if (list !== 'ol') { closeList(); list = 'ol'; out.push('<ol>'); } out.push(`<li>${inline(match[1])}</li>`); continue; }
     closeList();
     if (!line.trim()) { out.push(''); continue; }
-    line = line.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    out.push(`<p>${line}</p>`);
+    out.push(`<p>${inline(line)}</p>`);
   }
   closeList();
+  closeTable();
   return out.join('\n');
 }
 
@@ -208,32 +221,76 @@ function finishAssistant(shell, result) {
   }
 }
 
+function shortId(value) {
+  const text = String(value ?? '');
+  return text.length > 28 ? `…${text.slice(-12)}` : text;
+}
+
 function renderAnswer(shell, answer, presentation) {
   const body = $('.answer-body', shell);
   body.innerHTML = renderMarkdown(answer);
   if (!presentation) return;
-  if (presentation.interpretation) {
-    const label = document.createElement('div');
-    label.className = 'interpretation-label'; label.textContent = 'AI interpretation · grounded in stored evidence';
-    body.prepend(label);
+  const badge = document.createElement('div');
+  if (presentation.verified) {
+    badge.className = 'answer-badge verified';
+    badge.textContent = 'Verified stored facts · deterministic · no AI model';
+  } else if (presentation.interpretation) {
+    badge.className = 'answer-badge interpretation';
+    badge.textContent = 'AI interpretation · grounded in stored evidence, not verified fact';
   }
+  if (badge.className) body.prepend(badge);
   const footer = document.createElement('p'); footer.className = 'analysis-footer';
-  footer.textContent = presentation.footer; body.appendChild(footer);
-  const section = (title, rows, raw = false) => {
+  footer.textContent = presentation.footer || ''; body.appendChild(footer);
+  const section = (title, count, build) => {
+    if (!count) return;
     const details = document.createElement('details'); details.className = 'analysis-details';
-    const summary = document.createElement('summary'); summary.textContent = title; details.appendChild(summary);
-    if (raw) {
-      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(rows, null, 2); details.appendChild(pre);
-    } else for (const row of rows) {
-      const p = document.createElement('p'); p.textContent = row.label || ''; details.appendChild(p);
-      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(row, null, 2); details.appendChild(pre);
-    }
+    const summary = document.createElement('summary'); summary.textContent = `${title} (${count})`; details.appendChild(summary);
+    build(details);
     body.appendChild(details);
   };
-  section('Evidence · Verified stored facts', presentation.evidence || []);
-  section('Call Relationships', presentation.relationships || []);
-  section('Security Checks', presentation.security || [], true);
-  section('Raw Analysis Details', presentation.raw, true);
+  const evidence = presentation.evidence || [];
+  section('Evidence · verified stored facts', evidence.length, details => {
+    const list = document.createElement('ul'); list.className = 'evidence-list';
+    for (const row of evidence) {
+      const item = document.createElement('li');
+      const label = document.createElement('span'); label.textContent = row.label || '';
+      const source = document.createElement('span'); source.className = 'tool-meta';
+      const table = row.provenance?.source_table || 'source';
+      source.textContent = ` · ${table} · ${shortId(row.evidence_id || row.provenance?.source_id)}`;
+      source.title = String(row.evidence_id || row.provenance?.source_id || '');
+      const raw = document.createElement('details'); raw.className = 'provenance';
+      const rawSummary = document.createElement('summary'); rawSummary.textContent = 'provenance';
+      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(row, null, 2);
+      raw.append(rawSummary, pre);
+      item.append(label, source, raw); list.appendChild(item);
+    }
+    details.appendChild(list);
+  });
+  const relationships = presentation.relationships || [];
+  section('Call relationships', relationships.length, details => {
+    const list = document.createElement('ul'); list.className = 'evidence-list';
+    for (const row of relationships) {
+      const item = document.createElement('li'); item.textContent = row.label || '';
+      item.title = String(row.provenance?.source_id || ''); list.appendChild(item);
+    }
+    details.appendChild(list);
+  });
+  const limitations = presentation.limitations || [];
+  section('Limitations', limitations.length, details => {
+    const list = document.createElement('ul');
+    for (const text of limitations) { const item = document.createElement('li'); item.textContent = text; list.appendChild(item); }
+    details.appendChild(list);
+  });
+  section('Tool output · full identifiers', presentation.tool_facts ? 1 : 0, details => {
+    const pre = document.createElement('pre'); pre.textContent = presentation.tool_facts; details.appendChild(pre);
+  });
+  const security = presentation.security || [];
+  section('Security checks', security.length, details => {
+    const pre = document.createElement('pre'); pre.textContent = JSON.stringify(security, null, 2); details.appendChild(pre);
+  });
+  section('Raw analysis record', presentation.raw ? 1 : 0, details => {
+    const pre = document.createElement('pre'); pre.textContent = JSON.stringify(presentation.raw, null, 2); details.appendChild(pre);
+  });
 }
 
 function previewAnswer(shell, data) {
@@ -500,6 +557,156 @@ async function showCrypto() {
   openToolResult('Crypto evidence', list);
 }
 
+// ---------------------------------------------------------------- M10 Function explorer
+const explorerCache = new Map();
+async function explorerTool(tool, args) {
+  const key = `${state.currentFunctionId}|${tool}|${JSON.stringify(args)}`;
+  if (explorerCache.has(key)) return explorerCache.get(key);
+  const result = await runTool(tool, {function:'it', ...args});
+  if (result.ok) { explorerCache.set(key, result); while (explorerCache.size > 64) explorerCache.delete(explorerCache.keys().next().value); }
+  return result;
+}
+function addr(a) { return `<button class="addr-link" data-addr="${escapeHtml(a)}">0x${escapeHtml(a)}</button>`; }
+function badge(text, kind = '') { return `<span class="badge ${kind}">${escapeHtml(text)}</span>`; }
+function verdictKind(v) { return v === 'CONSISTENT' ? 'ok' : v === 'POTENTIAL DISCREPANCY' ? 'warn' : 'muted'; }
+
+async function showExplorer(tab = 'overview') {
+  if (!state.currentFunctionId) { toast('Select a function first.'); return showFunctions(); }
+  let root = $('#explorer');
+  if (!root) {
+    root = document.createElement('section'); root.id = 'explorer'; root.className = 'explorer';
+    root.setAttribute('role', 'dialog'); root.setAttribute('aria-label', 'Function explorer');
+    document.body.appendChild(root);
+  }
+  root.classList.remove('hidden');
+  root.innerHTML = `<div class="explorer-head"><h3 id="explorerTitle">Function explorer</h3>
+    <nav class="explorer-tabs">${['overview','assembly','cfg','dataflow','decompiler'].map(t =>
+      `<button data-tab="${t}" class="${t === tab ? 'active' : ''}">${{overview:'Overview', assembly:'Assembly', cfg:'Control flow', dataflow:'Data flow', decompiler:'Decompiled vs assembly'}[t]}</button>`).join('')}</nav>
+    <button class="explorer-close" aria-label="Close explorer">×</button></div><div class="explorer-body" aria-live="polite">Loading…</div>`;
+  $('.explorer-close', root).addEventListener('click', () => root.classList.add('hidden'));
+  $$('.explorer-tabs button', root).forEach(b => b.addEventListener('click', () => showExplorer(b.dataset.tab)));
+  const body = $('.explorer-body', root);
+  body.addEventListener('click', event => {
+    const link = event.target.closest('.addr-link');
+    if (link) { event.preventDefault(); showExplorerAssembly(body, link.dataset.addr); }
+  });
+  try {
+    if (tab === 'overview') await showExplorerOverview(body);
+    else if (tab === 'assembly') await showExplorerAssembly(body);
+    else if (tab === 'cfg') await showExplorerCfg(body);
+    else if (tab === 'dataflow') await showExplorerDataflow(body);
+    else await showExplorerDecompiler(body);
+  } catch (error) { body.textContent = `Explorer failed: ${error.message}`; }
+}
+
+function explorerHeader(data) {
+  const f = data.function, b = data.binary, c = data.coverage || {};
+  $('#explorerTitle').textContent = `${f.name} · 0x${f.address}`;
+  const warn = data.evidence_source !== 'ghidra_pcode' ? `<p class="warning">${escapeHtml(c.note || 'Lower-confidence evidence (assembly text only).')}</p>`
+    : c.truncated ? `<p class="warning">Instruction facts truncated at ${c.instructions} instructions.</p>` : '';
+  return `<p class="tool-meta">${escapeHtml(b.name || '')} · ${escapeHtml(b.architecture || '')} · SHA-256 ${escapeHtml((b.sha256 || '').slice(0, 16))}… · ${c.instructions ?? '?'} instructions · ${c.blocks ?? '?'} blocks · evidence: ${data.evidence_source === 'ghidra_pcode' ? 'Ghidra P-code' : 'assembly text'}</p>${warn}`;
+}
+
+async function showExplorerOverview(body) {
+  const [ev, cv] = await Promise.all([explorerTool('function_evidence', {}), explorerTool('crossvalidate_function', {})]);
+  if (!ev.ok) { body.textContent = ev.error?.message || 'Unavailable'; return; }
+  const d = ev.data, report = cv.ok ? cv.data.crossvalidation : null;
+  const list = (items, render) => items.length ? `<ul>${items.map(render).join('')}</ul>` : '<p class="tool-meta">None.</p>';
+  body.innerHTML = explorerHeader(d) +
+    (report ? `<p>Decompiler cross-check: ${badge(report.verdict, verdictKind(report.verdict))}</p>` : '') +
+    `<h4>Calls</h4>${list(d.calls, c => `<li>${addr(c.address)} → ${escapeHtml(c.name || c.target || 'indirect')}</li>`)}
+     <h4>Conditions</h4>${list(d.conditional_branches, b => `<li>${addr(b.address)} <code>${escapeHtml(b.text)}</code> → 0x${escapeHtml(b.target)} when ${escapeHtml(b.condition || 'flag condition')}</li>`)}
+     <h4>Loops</h4>${list(d.loops, l => `<li>header ${addr(l.header)} · back-edge from ${addr(l.back_edge_from)} · exits ${l.exits.map(addr).join(', ')}</li>`)}
+     <h4>Strings</h4>${list(d.strings, s => `<li>${addr(s.address)} “${escapeHtml(s.value.slice(0, 80))}”</li>`)}
+     <h4>Writes outside the stack frame</h4>${list(d.non_stack_memory_writes, w => `<li>${addr(w.address)} <code>${escapeHtml(w.text)}</code></li>`)}
+     <h4>Parameters read</h4>${list(d.parameter_use, p => `<li>${escapeHtml(p.location)}${p.parameter ? ` (parameter ${p.parameter.ordinal} ${escapeHtml(p.parameter.name)})` : ''} first read at ${addr(p.first_reads[0])}</li>`)}
+     <p class="tool-meta">Deterministic evidence from stored Ghidra facts. Purpose is not asserted here; ask “What does this function do?” for a hedged, cited summary.</p>`;
+}
+
+async function showExplorerAssembly(body, focus = null, start = null) {
+  const result = await explorerTool('explain_instructions', {limit:200, ...(start ? {start} : {})});
+  if (!result.ok) { body.textContent = result.error?.message || 'Unavailable'; return; }
+  const d = result.data;
+  let block = null;
+  const rows = d.instructions.map(r => {
+    const sep = r.block !== block ? `<tr class="block-sep"><td colspan="3">block 0x${escapeHtml(r.block || '?')}</td></tr>` : '';
+    block = r.block;
+    // Trace targets: data registers (not address-forming base/index registers) and frame-pointer stack slots read.
+    const mem = r.reads.memory || {};
+    const addressRegs = new Set([mem.base, mem.index, (r.writes.memory || {}).base, (r.writes.memory || {}).index].filter(Boolean));
+    const reads = (r.reads.registers || []).filter(x => !/^(RIP|RSP|ESP)$/.test(x) && !addressRegs.has(x));
+    if (mem.kind === 'frame' && mem.base) reads.unshift(`[${mem.base}${mem.disp < 0 ? '-' : '+'}0x${Math.abs(mem.disp).toString(16)}]`);
+    const actions = [r.category === 'branch_conditional' ? `<button class="mini" data-branch="${r.address}">paths</button>` : '',
+      ...reads.slice(0, 3).map(x => `<button class="mini" data-trace="${r.address}" data-loc="${escapeHtml(x)}" title="Where does this value come from?">${escapeHtml(x)}?</button>`)].join(' ');
+    return sep + `<tr id="ins-${r.address}" class="${r.address === focus ? 'focus' : ''} cat-${r.category}"><td>${addr(r.address)}</td><td><code>${escapeHtml(r.text)}</code></td>
+      <td>${escapeHtml(r.explanation)}${r.confidence !== 'high' ? ` ${badge('confidence ' + r.confidence, 'muted')}` : ''} ${actions}<div class="detail" id="detail-${r.address}"></div></td></tr>`;
+  }).join('');
+  body.innerHTML = explorerHeader(d) + `<table class="asm-table"><tbody>${rows}</tbody></table>` +
+    (d.window.more ? `<button class="mini" id="asmMore">Next instructions</button>` : '');
+  if (d.window.more) $('#asmMore').addEventListener('click', () => {
+    const last = d.instructions[d.instructions.length - 1].address;
+    const next = (parseInt(last, 16) + 1).toString(16).padStart(8, '0');
+    showExplorerAssembly(body, null, d.instructions[d.instructions.length - 1].address);
+  });
+  $$('[data-branch]', body).forEach(b => b.addEventListener('click', async () => {
+    const r = await explorerTool('branch_paths', {address:b.dataset.branch});
+    const p = r.data?.paths; const out = $(`#detail-${b.dataset.branch}`);
+    out.innerHTML = !r.ok || p.error ? escapeHtml(p?.error || 'Unavailable') : ['when_true', 'when_false'].map(k =>
+      `<p><strong>${escapeHtml(p[k].label)}</strong> → 0x${escapeHtml(p[k].start || '?')}: ${escapeHtml(p[k].outcome)}${p[k].calls.length ? '; calls ' + p[k].calls.map(c => escapeHtml(c.name || c.target)).join(', ') : ''}</p>`).join('');
+  }));
+  $$('[data-trace]', body).forEach(b => b.addEventListener('click', async () => {
+    const r = await explorerTool('trace_value', {address:b.dataset.trace, location:b.dataset.loc});
+    const out = $(`#detail-${b.dataset.trace}`);
+    out.innerHTML = r.ok ? `<ul class="trace">${renderTrace(r.data.trace)}</ul><p class="tool-meta">${escapeHtml(r.data.limits)}</p>` : escapeHtml(r.error?.message || 'Unavailable');
+  }));
+  if (focus) $(`#ins-${focus}`, body)?.scrollIntoView({block:'center'});
+}
+
+function renderTrace(node, depth = 0) {
+  if (depth > 6) return '';
+  if (!node.definitions) return `<li>${escapeHtml(node.location)} at 0x${escapeHtml(node.at)}: ${escapeHtml(node.note || node.origin)}</li>`;
+  return node.definitions.map(d => {
+    if (!d.address) return `<li>${escapeHtml(node.location)}: ${escapeHtml(d.note)}</li>`;
+    const what = {constant:`constant ${d.value}`, call_result:`result of call to ${d.call?.target_name || d.call?.target}`,
+      stack_slot:'loaded from a stack slot', stored_value:'stored value', global_memory:'global memory', memory:'loaded through a pointer'}[d.origin] || d.origin;
+    const children = [d.from, d.pointer, ...(d.inputs || [])].filter(Boolean).map(c => renderTrace(c, depth + 1)).join('');
+    return `<li>${escapeHtml(node.location)} ← ${addr(d.address)} <code>${escapeHtml(d.text)}</code>: ${escapeHtml(what)}${children ? `<ul>${children}</ul>` : ''}</li>`;
+  }).join('');
+}
+
+async function showExplorerCfg(body) {
+  const r = await explorerTool('function_cfg', {});
+  if (!r.ok) { body.textContent = r.error?.message || 'Unavailable'; return; }
+  const g = r.data.cfg, loopHeads = new Set(g.loops.map(l => l.header));
+  body.innerHTML = explorerHeader(r.data) + `<p>${g.blocks.length} blocks · ${g.loops.length} loop(s) · ${g.unreachable_blocks.length} unreachable</p>
+    <table class="asm-table"><thead><tr><th>Block</th><th>Branch</th><th>Successors</th></tr></thead><tbody>` +
+    g.blocks.map(b => `<tr class="${b.reachable ? '' : 'muted'}"><td>${addr(b.start)}${loopHeads.has(b.start) ? ' ' + badge('loop header', 'ok') : ''}</td>
+      <td>${b.branch ? `${addr(b.branch.address)} when ${escapeHtml(b.branch.condition || '?')}` : ''}</td>
+      <td>${b.successors.map(e => `${addr(e.to)} <span class="tool-meta">${escapeHtml(e.kind)}</span>`).join('<br>')}${b.leaves_function.length ? '<br><span class="tool-meta">leaves function</span>' : ''}</td></tr>`).join('') +
+    '</tbody></table><p class="tool-meta">Loops are natural loops found from dominator back-edges.</p>';
+}
+
+async function showExplorerDataflow(body) {
+  const [params, usage] = await Promise.all([explorerTool('parameter_use', {}), explorerTool('return_usage', {})]);
+  const p = params.ok ? params.data : null, u = usage.ok ? usage.data : null;
+  body.innerHTML = (p ? explorerHeader(p) : '') + '<h4>Parameters read before written</h4>' +
+    (p && p.parameter_use.length ? '<ul>' + p.parameter_use.map(x => `<li>${escapeHtml(x.location)}${x.parameter ? ` = parameter ${x.parameter.ordinal} <code>${escapeHtml(x.parameter.name)}</code> (${escapeHtml(x.parameter.storage)})` : ' (not a Ghidra-recovered parameter)'} · first read ${x.first_reads.map(addr).join(', ')}</li>`).join('') + '</ul>' : '<p class="tool-meta">None.</p>') +
+    `<h4>How callers use the return value</h4><p class="tool-meta">Return storage: ${escapeHtml(u?.return_storage?.storage || '?')} (${escapeHtml(u?.return_storage?.type || '?')})</p>` +
+    (u && u.callsites.length ? '<ul>' + u.callsites.map(c => `<li><strong>${escapeHtml(c.caller)}</strong> call at 0x${escapeHtml(c.callsite)}: ${c.uses.length ? c.uses.map(x => `${escapeHtml(x.use)} at 0x${escapeHtml(x.address)}${x.then ? ' → ' + escapeHtml(x.then) : ''}`).join('; ') : escapeHtml(c.note)}</li>`).join('') + '</ul>' : '<p class="tool-meta">No stored direct callers.</p>') +
+    '<p class="tool-meta">Click a register button in the Assembly tab to trace where a value comes from.</p>';
+}
+
+async function showExplorerDecompiler(body) {
+  const [cv, dec] = await Promise.all([explorerTool('crossvalidate_function', {}), runTool('get_decompiled_text', {function:'it', max_chars:8000}, false)]);
+  if (!cv.ok) { body.textContent = cv.error?.message || 'Unavailable'; return; }
+  const report = cv.data.crossvalidation;
+  const findings = report.findings.map(f => `<li>${badge(f.status, verdictKind(f.status))} <strong>${escapeHtml(f.check)}</strong>: ${escapeHtml(f.summary)}${f.notes.length ? `<br><span class="tool-meta">${escapeHtml(f.notes[0])}</span>` : ''}</li>`).join('');
+  const text = dec.ok ? (dec.data.text || (dec.data.incomplete ? `Decompilation INCOMPLETE: ${dec.data.incomplete.message}` : 'No decompiled text stored.')) : 'Unavailable';
+  body.innerHTML = explorerHeader(cv.data) + `<p>Verdict: ${badge(report.verdict, verdictKind(report.verdict))}</p><ul>${findings}</ul>` +
+    (report.decompiler_warnings.length ? `<p class="warning">Ghidra warnings: ${escapeHtml(report.decompiler_warnings.join('; '))}</p>` : '') +
+    `<pre class="code-view">${escapeHtml(text)}</pre><p class="tool-meta">${escapeHtml(report.verdict_basis || '')}</p>`;
+}
+
 async function showDecompiled() {
   if (!state.currentFunctionId) { toast('Select a function from Functions first.'); return showFunctions(); }
   const result = await runTool('get_decompiled_text', {function:'it', max_chars:8000});
@@ -518,6 +725,7 @@ async function showToolView(name) {
   if (name === 'callgraph') return showCallGraph();
   if (name === 'findings') return showFindings();
   if (name === 'crypto') return showCrypto();
+  if (name === 'explorer') return showExplorer();
   if (name === 'decompiled') return showDecompiled();
   if (['assembly', 'xrefs', 'thunks', 'crosscheck'].includes(name)) {
     if (!state.currentFunctionId) { toast('Select a function first.'); return showFunctions(); }

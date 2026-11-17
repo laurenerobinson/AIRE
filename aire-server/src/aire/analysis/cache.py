@@ -12,6 +12,7 @@ from aire.knowledge.models import ProgramIndex
 from aire.pyghidra.indexer import IndexingError, index_binary, sha256_file
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION
+from aire.analysis.versions import INSTRUCTION_IR_VERSION as IR_VERSION
 from aire.profiling import profiled, stage
 from aire.analysis.versions import analyzer_versions
 from aire.analysis.progress import report_progress
@@ -61,6 +62,9 @@ def compatible_metadata(metadata, options=None):
     return (metadata.get('analyzer_versions') == versions
             and metadata.get('ghidra_version') == versions['ghidra']
             and _compatible_options(metadata.get('options'), options)
+            # M10: snapshots must carry structured instruction facts.
+            and isinstance(metadata.get('instruction_ir'), dict)
+            and metadata['instruction_ir'].get('version') == IR_VERSION
             and (not options.include_references or
                  (type(metadata.get('reference_facts_version')) is int and
                   metadata['reference_facts_version'] == REFERENCE_FACTS_VERSION)))

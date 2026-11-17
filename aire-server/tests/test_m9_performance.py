@@ -26,6 +26,7 @@ from aire.knowledge.models import BinaryRecord, ProgramIndex
 from aire.pyghidra import extractor
 from aire.pyghidra.options import IndexOptions
 from aire.pyghidra.references import REFERENCE_FACTS_VERSION
+from aire.analysis.versions import INSTRUCTION_IR_VERSION
 
 
 # ----------------------------------------------------------------- fakes
@@ -340,7 +341,7 @@ class MetadataFirstCacheTests(unittest.TestCase):
             metadata={'options': asdict(options), 'total_seconds': 12.5,
                       'analyzer_versions': analyzer_versions(),
                       'ghidra_version': analyzer_versions()['ghidra'],
-                      'reference_facts_version': REFERENCE_FACTS_VERSION, 'decompile_workers': 4})
+                      'reference_facts_version': REFERENCE_FACTS_VERSION, 'instruction_ir': {'version': INSTRUCTION_IR_VERSION}, 'decompile_workers': 4})
 
     def test_stale_snapshot_is_not_fully_loaded(self):
         stale = self.index(self.path, IndexOptions())

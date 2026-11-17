@@ -31,6 +31,7 @@ STAGES = (
     ('exports', 'Exports'),
     ('call_graph', 'Call graph'),
     ('xrefs', 'Xref collection'),
+    ('instruction_ir', 'Instruction facts / P-code (M10)'),
     ('serialization', 'Serialization'),
     ('database_save', 'Database save'),
     ('cache_load', 'Cache lookup / load'),
@@ -46,6 +47,7 @@ COUNTERS = (
     'database_saves', 'sha256_reads',
     'xrefs_collected', 'thunks_collected',
     'decompile_timeouts', 'decompile_retries', 'decompile_retry_recovered',
+    'ir_instructions',
 )
 
 
