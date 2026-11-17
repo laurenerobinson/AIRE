@@ -67,6 +67,17 @@ class CrossValidationTests(unittest.TestCase):
         self.assertEqual(status(report, 'call_targets'), DISCREPANCY)
         self.assertIn('0x00401010', [f for f in report['findings'] if f['check'] == 'call_targets'][0]['summary'])
 
+    def test_tail_call_is_compared_with_decompiled_call(self):
+        tail = dict(CALL, m='JMP', t='JMP 0x00401500', ft=None, term=True,
+                    flow='CALL_TERMINATOR')
+        document = dict(DOCUMENT, instructions=[tail if i is CALL else i for i in DOCUMENT['instructions']])
+        self.assertEqual(status(run(GOOD, document=document), 'call_targets'), CONSISTENT)
+        missing = run(GOOD.replace('  helper();\n', ''), document=document)
+        self.assertEqual(status(missing, 'call_targets'), DISCREPANCY)
+        self.assertIn('0x00401010', next(f['summary'] for f in missing['findings'] if f['check']=='call_targets'))
+        phantom = GOOD.replace('helper();', 'helper();\n  unrelated();')
+        self.assertEqual(status(run(phantom, document=document), 'call_targets'), DISCREPANCY)
+
     def test_phantom_known_function_is_flagged_but_pseudo_ops_are_not(self):
         self.assertEqual(status(run(GOOD.replace('helper();', 'helper();\n  unrelated();')), 'call_targets'), DISCREPANCY)
         self.assertNotEqual(status(run(GOOD.replace('helper();', 'helper();\n  iVar1 = CONCAT44(1,2);')),

@@ -148,6 +148,40 @@ class M9GhidraIntegrationTests(unittest.TestCase):
         self.assertEqual(report['rates']['relations'], 1.0)
         self.assertGreater(report['counts']['relations'], 10)
 
+    def test_m10_optimized_self_loops_exclude_preheaders(self):
+        from aire.analysis.assembly_intelligence import AssemblyIntelligence
+        path = REPOSITORY / 'tests/fixtures/m10/aire_test_binary_O2'
+        before = hashlib.sha256(path.read_bytes()).hexdigest()
+        result = analyze_binary(path, self.store)
+        ai = AssemblyIntelligence(self.store, result.binary_id)
+        loops = ai.cfg('calculate_checksum')['cfg']['loops']
+        # The preserved O2 fixture has a single-block checksum loop: the
+        # conditional branch jumps to the beginning of its own basic block.
+        self.assertEqual(len(loops), 1)
+        loop = loops[0]
+        self.assertEqual(loop['header'], loop['back_edge_from'])
+        self.assertEqual(loop['blocks'], [loop['header']])
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), before)
+
+    def test_m10_tail_calls_are_not_phantom_decompiled_calls(self):
+        from aire.analysis.assembly_intelligence import AssemblyIntelligence
+        cases = [
+            (REPOSITORY / 'tests/fixtures/m10/aire_test_binary_O2', 'print_banner', 'puts'),
+            (M9 / 'crypto_pe/aes_gcm.exe', '0041d270', 'BCryptCloseAlgorithmProvider'),
+            (M9 / 'crypto_pe/sha256_hash.exe', '0041d1a0', 'putchar'),
+            (M9 / 'crypto_pe/ecdsa_sign.exe', '0041d020', 'BCryptFinalizeKeyPair'),
+        ]
+        for path, selector, target in cases:
+            with self.subTest(binary=path.name):
+                result = analyze_binary(path, self.store)
+                ai = AssemblyIntelligence(self.store, result.binary_id)
+                finding = next(f for f in ai.crossvalidate(selector)['crossvalidation']['findings']
+                               if f['check'] == 'call_targets')
+                self.assertEqual(finding['status'], 'CONSISTENT', finding)
+                evidence = next(e for e in finding['evidence'] if e['name'] == target)
+                self.assertTrue(evidence['instruction_addresses'])
+                self.assertTrue(evidence['decompiled_lines'])
+
 
 if __name__ == '__main__':
     unittest.main()

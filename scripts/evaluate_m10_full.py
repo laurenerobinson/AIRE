@@ -145,6 +145,8 @@ def cfg_checks(ai, path, functions):
         starts = {b['start'] for b in graph['blocks']}
         record = ai.resolve(fid)
         own = {i['a'] for i in ai.document(record).get('instructions', [])}
+        tail_targets = {r['address']: r['call']['target']
+                        for r in ai.semantics(record, ai.document(record)) if r['category'] == 'tail_call'}
         for block in graph['blocks']:
             k = bisect.bisect_right(addresses, block['end']) - 1
             if k < 0:
@@ -156,6 +158,11 @@ def cfg_checks(ai, path, functions):
                 expected, kind = {target, nxt.get(last['a'])}, 'conditional'
             elif m == 'jmp' and target:
                 expected, kind = {target}, 'jump'
+                # Ghidra represents a terminal JMP to another function as a
+                # call, which is intentionally absent from the intraprocedural
+                # CFG. Still compare its stored destination with objdump.
+                if last['a'] in tail_targets and tail_targets[last['a']]:
+                    successors.add(tail_targets[last['a']])
             elif m.startswith('ret'):
                 expected, kind = set(), 'return'
             else:
@@ -264,13 +271,15 @@ def return_usage_checks(ai, functions, symbol_names):
     return {**dict(counts), 'mismatches': mismatches}
 
 
-def _tree_has_call(node, name):
+def _tree_has_call(node, name, symbol_names=None):
     if not isinstance(node, dict):
         return False
     for d in node.get('definitions', []):
-        if d.get('origin') == 'call_result' and name in ((d.get('call') or {}).get('target_name') or ''):
+        call = d.get('call') or {}
+        if d.get('origin') == 'call_result' and (name in (call.get('target_name') or '') or
+                (symbol_names or {}).get(call.get('target')) == name):
             return True
-        if any(_tree_has_call(c, name) for c in [d.get('from'), d.get('pointer'), *d.get('inputs', [])]):
+        if any(_tree_has_call(c, name, symbol_names) for c in [d.get('from'), d.get('pointer'), *d.get('inputs', [])]):
             return True
     return False
 
@@ -296,10 +305,12 @@ def origin_checks(ai, functions, symbol_names):
                             if memory and memory.get('kind') == 'frame' else setter_row['reads']['registers'][0])
                 trace = ai.trace(fid, setter, location)['trace']
         else:
-            call = next((r for r in rows if r['category'] == 'call' and case['call_target'] in (r['call']['target_name'] or '')), None)
+            call = next((r for r in rows if r['category'] == 'call' and (
+                case['call_target'] in (r['call']['target_name'] or '') or
+                symbol_names.get(r['call']['target']) == case['call_target'])), None)
             if call:
                 trace = ai.trace(fid, call['address'], case['argument_register'])['trace']
-        ok = trace is not None and _tree_has_call(trace, case['expected_call'])
+        ok = trace is not None and _tree_has_call(trace, case['expected_call'], symbol_names)
         results.append({'function': case['function'], 'question': case['question'],
                         'outcome': 'correct' if ok else 'incorrect_or_missing'})
     return results
@@ -314,6 +325,9 @@ def citation_checks(ai, store, binary, functions, limit=None):
         'SELECT address FROM functions WHERE binary_id=?', (binary.binary_id,))}
     strings = {r[0] for r in store._db.execute("SELECT address FROM artifacts WHERE binary_id=? AND address IS NOT NULL",
                                               (binary.binary_id,))}
+    referenced = {r[0] for r in store._db.execute(
+        'SELECT target_address FROM binary_references WHERE binary_id=? AND target_address IS NOT NULL',
+        (binary.binary_id,))}
     derived = set()
     for fid, *_ in functions:
         for row in ai.explain(fid, limit=400)['instructions']:
@@ -322,11 +336,16 @@ def citation_checks(ai, store, binary, functions, limit=None):
                 if memory.get('address'):
                     derived.add(memory['address'])
             derived |= {t for t in [((row.get('branch') or {}).get('target')), ((row.get('call') or {}).get('target'))] if t}
-    valid = instruction_addresses | entries | strings | derived
+    valid = instruction_addresses | entries | strings | referenced | derived
     counts, invalid = collections.Counter(), []
     for fid, address, name, thunk in functions[:limit]:
         answers = [aa.answer_function(ai, fid)[0], aa.answer_crossvalidate(ai, fid)[0]]
         rows = ai.explain(fid, limit=400)['instructions']
+        # The hex scanner also matches immediate operands in branch relations
+        # (e.g. RAX == 0x404030). They are evidence-backed literals, not claimed
+        # instruction addresses. Require the literal in this function's facts.
+        literals = {f'{value:08x}' for row in rows for value in row['constants']
+                    if 0 <= value <= 0xffffffff}
         branch = next((r for r in rows if r['category'] == 'branch_conditional'), None)
         if branch:
             answers.append(aa.answer_branch(ai, fid, branch['address'])[0])
@@ -336,6 +355,9 @@ def citation_checks(ai, store, binary, functions, limit=None):
                 counts['citations'] += 1
                 if cited in valid:
                     counts['valid'] += 1
+                elif cited in literals:
+                    counts['valid'] += 1
+                    counts['literal_occurrences'] += 1
                 else:
                     invalid.append((name, cited))
     return {**dict(counts), 'validity': round(counts['valid'] / counts['citations'], 4) if counts['citations'] else None,

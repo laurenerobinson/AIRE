@@ -67,7 +67,9 @@ def control_flow_graph(document):
     back_edges = [(s, e['to']) for s, edges in succ.items() for e in edges if e['to'] in dom.get(s, ())]
     loops = []
     for tail, head in back_edges:
-        body, stack = {head, tail}, [tail]
+        # The header is the boundary of the reverse walk. A self-edge has
+        # no other loop blocks; walking the header would absorb preheaders.
+        body, stack = {head, tail}, [tail] if tail != head else []
         while stack:
             node = stack.pop()
             for p in preds.get(node, []):

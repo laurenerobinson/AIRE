@@ -83,6 +83,14 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(paths['when_false']['outcome'], 'returns at 0x00401024')
         self.assertIn('error', fa.branch_paths(DOC, self.semantics, '00401000'))
 
+    def test_self_loop_excludes_preheader(self):
+        # A back-edge to the same block repeats only that block. Walking its
+        # predecessors would incorrectly absorb initialization into the loop.
+        loop = fa.control_flow_graph(DOC)['loops'][0]
+        self.assertEqual(loop['header'], loop['back_edge_from'])
+        self.assertEqual(loop['blocks'], ['00401007'])
+        self.assertEqual(loop['exits'], ['0040101b'])
+
     def test_value_origins(self):
         trace = fa.trace_value(DOC, self.semantics, '00401016', 'eax')
         origins = {d['origin'] for d in trace['definitions']}

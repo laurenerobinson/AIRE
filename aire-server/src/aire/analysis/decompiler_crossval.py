@@ -123,7 +123,7 @@ def _calls(record, semantics, context, body, warnings):
     expected, indirect = {}, set()
     unresolved = []
     for row in semantics:
-        if row['category'] == 'call':
+        if row['category'] in ('call', 'tail_call'):
             call = row['call']
             if call.get('indirect'):
                 indirect.add(_short(call.get('target_name')) or (f"FUN_{call['target']}" if call.get('target') else None))
