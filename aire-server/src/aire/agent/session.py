@@ -1,6 +1,7 @@
 """Mutable conversation state lives outside the immutable binary fact store."""
 from dataclasses import asdict, dataclass, field
 import json
+import os
 from pathlib import Path
 
 
@@ -56,7 +57,10 @@ class AgentSession:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         temporary = path.with_name(path.name + '.tmp')
-        temporary.write_text(json.dumps(self.to_dict(), ensure_ascii=True), encoding='utf-8')
+        temporary.unlink(missing_ok=True)
+        # Conversation memory holds analyst questions: owner-only regardless of umask.
+        with os.fdopen(os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'w', encoding='utf-8') as out:
+            out.write(json.dumps(self.to_dict(), ensure_ascii=True))
         temporary.replace(path)
 
     @classmethod

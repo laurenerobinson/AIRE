@@ -201,7 +201,7 @@ class BinaryLibraryTests(unittest.TestCase):
         with urlopen(base+'/api/bootstrap') as response:
             self.assertIsNone(json.load(response)['selected_binary_id'])
         for data, status in ((PE.read_bytes(),201), (b'not PE',400)):
-            request = Request(base+'/api/uploads?filename=demo.exe', data=data, headers={'Content-Type':'application/octet-stream'})
+            request = Request(base+'/api/uploads?filename=demo.exe', data=data, headers={'Content-Type':'application/octet-stream', 'Origin':base})
             if status == 201:
                 with urlopen(request) as response:
                     self.assertEqual(json.load(response)['format'],'PE')

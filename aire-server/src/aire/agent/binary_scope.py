@@ -3,13 +3,16 @@ import hashlib
 from pathlib import Path
 
 
-def resolve_binary(store, value):
+def resolve_binary(store, value, *, allow_paths=True):
+    """allow_paths=False for untrusted (HTTP) selectors: never touch the filesystem."""
+    if not isinstance(value, str) or not value:
+        raise ValueError('Binary selector must be a nonempty string')
     binaries = store.list_binaries()
     exact = [binary for binary in binaries if binary.binary_id == value]
     if exact:
         return exact[0]
-    path = Path(value).expanduser()
-    if path.is_file():
+    path = Path(value).expanduser() if allow_paths else None
+    if path is not None and path.is_file():
         digest = hashlib.sha256()
         with path.open('rb') as stream:
             for chunk in iter(lambda: stream.read(1024 * 1024), b''):

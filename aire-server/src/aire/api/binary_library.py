@@ -37,6 +37,15 @@ class BinaryValidationError(ValueError):
         self.report = report
 
 
+def redact_paths(text):
+    """Replace this machine's absolute repository/home prefixes in client-visible messages."""
+    text = str(text)
+    for prefix, label in ((str(REPOSITORY), '<repo>'), (str(Path.home()), '~')):
+        if len(prefix) > 1:
+            text = text.replace(prefix, label)
+    return text
+
+
 def _pe_fields(report):
     issues = [vars(issue) for issue in report.issues]
     return {'pe_valid': report.pe_valid, 'analysis_level': report.analysis,
@@ -192,7 +201,7 @@ class BinaryLibrary:
                 row['indexed'] = row['sha256'] in stored
                 row['cached'] = row['indexed'] and compatible_metadata(all_metadata.get(row['sha256'], {}))
             except (OSError, ValueError) as exc:
-                row.update(available=False, cached=False, indexed=False, error=str(exc),
+                row.update(available=False, cached=False, indexed=False, error=redact_paths(exc.strerror if isinstance(exc, OSError) and exc.strerror else exc),
                            sha256=fixture['expected_sha256'])
                 if getattr(exc, 'report', None):
                     row['validation'] = exc.report
@@ -310,7 +319,7 @@ class BinaryLibrary:
                 raise ValueError('Analysis identity differs from submitted SHA-256')
             self._update(key, **result)
         except Exception as exc:
-            self._update(key, status='failed', phase='Static analysis failed', error=str(exc)[:500])
+            self._update(key, status='failed', phase='Static analysis failed', error=redact_paths(exc)[:500])
         finally:
             self._update(key, status='failed' if 'error' in self._jobs[key] else 'completed',
                          total_seconds=time.perf_counter()-self._jobs[key]['_tick'])

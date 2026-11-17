@@ -84,3 +84,4 @@ firefox.log
 /docs/chatperf/**/*.log
 /docs/chatperf/baseline_2026-11-11/run1.jsonl
 /docs/chatperf/baseline_2026-11-11/stall.jsonl
+demo_artifacts/host_access/

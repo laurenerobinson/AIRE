@@ -636,10 +636,10 @@ async function showExplorerAssembly(body, focus = null, start = null) {
     const addressRegs = new Set([mem.base, mem.index, (r.writes.memory || {}).base, (r.writes.memory || {}).index].filter(Boolean));
     const reads = (r.reads.registers || []).filter(x => !/^(RIP|RSP|ESP)$/.test(x) && !addressRegs.has(x));
     if (mem.kind === 'frame' && mem.base) reads.unshift(`[${mem.base}${mem.disp < 0 ? '-' : '+'}0x${Math.abs(mem.disp).toString(16)}]`);
-    const actions = [r.category === 'branch_conditional' ? `<button class="mini" data-branch="${r.address}">paths</button>` : '',
-      ...reads.slice(0, 3).map(x => `<button class="mini" data-trace="${r.address}" data-loc="${escapeHtml(x)}" title="Where does this value come from?">${escapeHtml(x)}?</button>`)].join(' ');
-    return sep + `<tr id="ins-${r.address}" class="${r.address === focus ? 'focus' : ''} cat-${r.category}"><td>${addr(r.address)}</td><td><code>${escapeHtml(r.text)}</code></td>
-      <td>${escapeHtml(r.explanation)}${r.confidence !== 'high' ? ` ${badge('confidence ' + r.confidence, 'muted')}` : ''} ${actions}<div class="detail" id="detail-${r.address}"></div></td></tr>`;
+    const actions = [r.category === 'branch_conditional' ? `<button class="mini" data-branch="${escapeHtml(r.address)}">paths</button>` : '',
+      ...reads.slice(0, 3).map(x => `<button class="mini" data-trace="${escapeHtml(r.address)}" data-loc="${escapeHtml(x)}" title="Where does this value come from?">${escapeHtml(x)}?</button>`)].join(' ');
+    return sep + `<tr id="ins-${escapeHtml(r.address)}" class="${r.address === focus ? 'focus' : ''} cat-${escapeHtml(r.category)}"><td>${addr(r.address)}</td><td><code>${escapeHtml(r.text)}</code></td>
+      <td>${escapeHtml(r.explanation)}${r.confidence !== 'high' ? ` ${badge('confidence ' + r.confidence, 'muted')}` : ''} ${actions}<div class="detail" id="detail-${escapeHtml(r.address)}"></div></td></tr>`;
   }).join('');
   body.innerHTML = explorerHeader(d) + `<table class="asm-table"><tbody>${rows}</tbody></table>` +
     (d.window.more ? `<button class="mini" id="asmMore">Next instructions</button>` : '');

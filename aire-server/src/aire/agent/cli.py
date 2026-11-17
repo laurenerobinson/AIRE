@@ -45,10 +45,21 @@ def main(argv=None, *, input_fn=None, output=None, client=None):
     gui.add_argument('--session-dir', type=Path, help='GUI conversation directory (default: ~/.aire/gui-sessions)')
     gui.add_argument('--upload-dir', type=Path, help='Validated uploads and analysis timing records')
     gui.add_argument('--bind', default='127.0.0.1', help='Loopback bind address (default: 127.0.0.1)')
+    gui.add_argument('--allow-non-loopback-bind', action='store_true',
+                     help='Explicit opt-in: allow --bind to name one private IPv4 interface address, such as the '
+                          'VirtualBox NAT address 10.0.2.15 (never 0.0.0.0). Logged as a warning at startup.')
     gui.add_argument('--port', type=int, default=8765)
+    gui.add_argument('--public-port', type=int,
+                     default=int(os.environ['AIRE_GUI_PUBLIC_PORT']) if os.environ.get('AIRE_GUI_PUBLIC_PORT') else None,
+                     help='Host-side forwarded port the browser uses (accepted in Host/Origin); '
+                          'default: $AIRE_GUI_PUBLIC_PORT')
     gui.add_argument('--no-browser', action='store_true', help='Do not open the default browser automatically')
     gui.add_argument('--model')
     gui.add_argument('--ollama-host')
+    gui.add_argument('--allow-remote-ollama', action='store_true',
+                     default=os.environ.get('AIRE_OLLAMA_ALLOW_REMOTE') == '1',
+                     help='Explicit opt-in for a non-loopback --ollama-host such as http://10.0.2.2:11434 '
+                          '(also AIRE_OLLAMA_ALLOW_REMOTE=1). Cannot be changed from the GUI.')
     gui.add_argument('--num-ctx', type=int)
     gui.add_argument('--max-iterations', type=int, default=6)
     gui.add_argument('--max-tool-calls', type=int, default=8)
@@ -72,12 +83,14 @@ def main(argv=None, *, input_fn=None, output=None, client=None):
             application = GuiApplication(args.database, initial_binary=args.binary,
                 session_dir=args.session_dir,
                 upload_dir=args.upload_dir,
-                model_config=GuiModelConfig(args.ollama_host, args.model, args.num_ctx),
+                model_config=GuiModelConfig(args.ollama_host, args.model, args.num_ctx,
+                                             allow_remote_host=args.allow_remote_ollama),
                 limits=limits)
             if not args.no_prewarm and os.environ.get('AIRE_PREWARM', '1') != '0':
                 application.library.prewarm()  # non-blocking; lazy start-up remains the fallback
             return serve(application, host=args.bind, port=args.port,
-                         open_browser=not args.no_browser, output=write)
+                         open_browser=not args.no_browser, output=write,
+                         allow_non_loopback=args.allow_non_loopback_bind, public_port=args.public_port)
         model = client or OllamaClient(host=args.host, model=args.model, num_ctx=args.num_ctx)
         with _ReadOnlyRuleStore(args.database) as store:
             binary = resolve_binary(store, args.binary)

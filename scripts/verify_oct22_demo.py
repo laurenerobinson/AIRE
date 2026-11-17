@@ -43,6 +43,8 @@ def main():
     def request(endpoint, payload=None, raw=None, headers=None):
         data = raw if raw is not None else (json.dumps(payload).encode() if payload is not None else None)
         headers = headers or ({'Content-Type':'application/json'} if data is not None else {})
+        if data is not None:
+            headers = {'Origin': base, **headers}
         with urlopen(Request(base+endpoint, data=data, headers=headers), timeout=30) as response:
             return json.load(response)
     def wait(job):

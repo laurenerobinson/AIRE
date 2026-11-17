@@ -12,14 +12,17 @@ from functools import partial
 from collections import OrderedDict
 from copy import deepcopy
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import hmac
 import ipaddress
 import json
 import os
 from pathlib import Path
 import re
+import secrets
 import threading
 import time
 import logging
+from http.cookies import CookieError, SimpleCookie
 from urllib.parse import parse_qs, urlparse
 from uuid import uuid4
 import webbrowser
@@ -37,7 +40,8 @@ from aire.agent.runner import _binary_overview
 from aire.knowledge.application_relevance import RELEVANCE_POLICY_VERSION
 from aire.analysis.function_crosscheck import CROSSCHECK_POLICY_VERSION
 from aire.security.crypto_evidence import EVIDENCE_VERSION as CRYPTO_EVIDENCE_VERSION
-from aire.api.binary_library import BinaryLibrary, MAX_UPLOAD
+from aire.api.binary_library import BinaryLibrary, MAX_UPLOAD, redact_paths
+from aire.knowledge.database import KnowledgeStoreError
 
 _LOG = logging.getLogger('aire.performance')
 
@@ -46,6 +50,24 @@ _SESSION_RE = re.compile(r'^[0-9a-f]{32}$')
 _MAX_BODY = 1_000_000
 _MAX_TRANSCRIPT_MESSAGES = 80
 _MAX_TRANSCRIPT_TEXT = 60_000
+_SOCKET_TIMEOUT = 60  # seconds; a stalled client must not hold a handler thread forever
+_ERROR_LOG = logging.getLogger('aire.gui')
+_MAX_CONCURRENT_CHATS = 4  # expensive model/agent work; excess requests get 429, not a queued thread
+# Exact Host/Origin authorities: no other loopback spellings, no DNS names.
+_AUTHORITY_RE = re.compile(r'^(localhost|127\.0\.0\.1)(?::([0-9]{1,5}))?$', re.IGNORECASE)
+_TOKEN_QUERY_RE = re.compile(r'(token=)[^&\s"]+')
+_TOKEN_HEADER = 'X-AIRE-Token'
+
+
+def _public_error(exc):
+    """(name, message) safe to return to a client. Application errors keep their
+    curated message; OS errors drop file paths; anything else is generic and logged."""
+    if isinstance(exc, (GuiError, ValueError, KnowledgeStoreError)):
+        return type(exc).__name__, redact_paths(str(exc))[:500] or type(exc).__name__
+    if isinstance(exc, OSError):
+        return type(exc).__name__, exc.strerror or 'Operating system error'
+    _ERROR_LOG.error('Unhandled GUI request error', exc_info=exc)
+    return 'InternalError', 'Internal server error; details were written to the server log'
 
 
 class GuiError(RuntimeError):
@@ -57,6 +79,8 @@ class GuiModelConfig:
     host: str | None = None
     model: str | None = None
     num_ctx: int | None = None
+    # Set only from the CLI flag / environment at launch; no request can change it.
+    allow_remote_host: bool = False
 
 
 class GuiSessionStore:
@@ -64,7 +88,8 @@ class GuiSessionStore:
 
     def __init__(self, directory):
         self.directory = Path(directory).expanduser().resolve()
-        self.directory.mkdir(parents=True, exist_ok=True)
+        # Transcripts can contain analyst questions: owner-only on creation.
+        self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         self._guard = threading.RLock()
         self._session_locks = {}
         self._agents = OrderedDict()
@@ -96,7 +121,10 @@ class GuiSessionStore:
     def _atomic_json(path, data):
         encoded = json.dumps(data, ensure_ascii=True, allow_nan=False)
         temporary = path.with_name(path.name + '.tmp')
-        temporary.write_text(encoded, encoding='utf-8')
+        temporary.unlink(missing_ok=True)
+        # Transcripts hold analyst questions and model answers: owner-only regardless of umask.
+        with os.fdopen(os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'w', encoding='utf-8') as out:
+            out.write(encoded)
         temporary.replace(path)
 
     def create(self, binary_id):
@@ -249,7 +277,8 @@ class GuiApplication:
             if self._shared_client is None:
                 self._shared_client = (self.client_factory() if self.client_factory else
                     OllamaClient(host=self.model_config.host, model=self.model_config.model,
-                                 num_ctx=self.model_config.num_ctx))
+                                 num_ctx=self.model_config.num_ctx,
+                                 allow_remote_host=self.model_config.allow_remote_host is True))
             return self._shared_client
 
     def database_stamp(self):
@@ -293,7 +322,8 @@ class GuiApplication:
 
     def binary_metadata(self, binary_id):
         with self.store() as store:
-            binary_id = resolve_binary(store, binary_id).binary_id
+            # HTTP selectors are IDs or stored names only; never filesystem paths.
+            binary_id = resolve_binary(store, binary_id, allow_paths=False).binary_id
             stamp = self.database_stamp()
             data = AgentTools(store, binary_id).registry.run('binary_metadata', {})['data']
             self._check_database(stamp)
@@ -306,7 +336,7 @@ class GuiApplication:
             selected_id = binaries[0]['binary_id']
         if selected_id and selected_id not in {b['binary_id'] for b in binaries}:
             with self.store() as store:
-                selected_id = resolve_binary(store, selected_id).binary_id
+                selected_id = resolve_binary(store, selected_id, allow_paths=False).binary_id
         return {
             'product': 'A.I.R.E.',
             'subtitle': 'Artificial Intelligence Reverse Engineering Assistant',
@@ -706,9 +736,15 @@ class AireHttpServer(ThreadingHTTPServer):
     daemon_threads = True
     allow_reuse_address = True
 
-    def __init__(self, server_address, handler, application):
+    def __init__(self, server_address, handler, application, *, token=None, public_ports=()):
         self.application = application
+        self.token = token
         super().__init__(server_address, handler)
+        port = self.server_address[1]
+        # Host/Origin ports accepted: the guest port plus any host-side forwarded port.
+        self.allowed_ports = frozenset({port, *public_ports})
+        self.cookie_name = f'aire_token_{port}'
+        self.chat_slots = threading.BoundedSemaphore(_MAX_CONCURRENT_CHATS)
 
 
 class AireRequestHandler(SimpleHTTPRequestHandler):
@@ -716,43 +752,95 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
 
     protocol_version = 'HTTP/1.1'
     server_version = 'AIRELocal/1.0'
+    timeout = _SOCKET_TIMEOUT
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(_STATIC_DIR), **kwargs)
 
     def log_message(self, format, *args):
-        # Keep normal server logging concise and avoid reflecting request bodies.
+        # Keep normal server logging concise, avoid reflecting request bodies,
+        # and never write the access token (from /?token=...) to the log.
+        args = tuple(_TOKEN_QUERY_RE.sub(r'\1<redacted>', a) if isinstance(a, str) else a for a in args)
         super().log_message(format, *args)
 
     @property
     def app(self):
         return self.server.application
 
-    def _loopback_host(self, value):
+    def _authority(self, value):
+        """Normalized 'host:port' when value is exactly localhost/127.0.0.1 on an allowed port, else None.
+
+        DNS rebinding sends the attacker's hostname as Host; other loopback
+        spellings (127.0.0.2, [::1], 0x7f000001) and unexpected ports are refused.
+        """
+        match = _AUTHORITY_RE.fullmatch(value or '')
+        if not match:
+            return None
+        port = int(match.group(2) or 80)
+        if port not in self.server.allowed_ports:
+            return None
+        return f'{match.group(1).lower()}:{port}'
+
+    def _header_token_ok(self):
+        token = self.server.token
+        supplied = self.headers.get(_TOKEN_HEADER)
+        return bool(token and supplied) and hmac.compare_digest(supplied.encode(), token.encode())
+
+    def _cookie_token_ok(self):
+        token = self.server.token
         try:
-            hostname = urlparse('//' + value).hostname
-        except ValueError:
+            cookie = SimpleCookie(self.headers.get('Cookie', ''))
+        except CookieError:
             return False
-        if hostname == 'localhost':
-            return True
-        try:
-            return ipaddress.ip_address(hostname).is_loopback
-        except (ValueError, TypeError):
-            return False
+        morsel = cookie.get(self.server.cookie_name)
+        return bool(token and morsel and morsel.value) and hmac.compare_digest(morsel.value.encode(), token.encode())
+
+    def _authorized(self):
+        """Per-launch token (Jupyter-style). Servers created without a token (tests) skip this."""
+        return self.server.token is None or self._header_token_ok() or self._cookie_token_ok()
 
     def _trusted_request(self):
-        host = self.headers.get('Host', '')
-        if not self._loopback_host(host):
+        host = self._authority(self.headers.get('Host', ''))
+        if host is None:
+            return False
+        # Fetch metadata (Firefox/Chrome): only same-origin subrequests or direct navigation.
+        fetch_site = self.headers.get('Sec-Fetch-Site')
+        if fetch_site is not None and fetch_site not in ('same-origin', 'none'):
             return False
         origin = self.headers.get('Origin')
-        if origin:
-            try:
-                parsed = urlparse(origin)
-                if parsed.scheme not in ('http', 'https') or not self._loopback_host(parsed.netloc):
-                    return False
-            except ValueError:
+        if origin is not None:
+            # Same origin only: another web page (other site or other local port)
+            # must not drive uploads, analysis jobs, chats or sessions.
+            if not origin[:7].lower() == 'http://' or self._authority(origin[7:]) != host:
                 return False
+        elif self.command not in ('GET', 'HEAD') and not self._header_token_ok():
+            # Browsers always send Origin on POST. A missing Origin is accepted only
+            # from a non-browser client presenting the token in a custom header
+            # (which a cross-site page cannot send without a failing preflight).
+            return False
         return True
+
+    def _reject(self, status, error, message):
+        self.close_connection = True  # never parse an unread request body as the next request
+        return self._json(status, {'error': error, 'message': message})
+
+    def _forbidden(self):
+        return self._reject(403, 'Forbidden', 'A.I.R.E. GUI accepts same-origin requests to localhost only')
+
+    def _unauthorized(self):
+        return self._reject(401, 'Unauthorized', 'Missing or invalid A.I.R.E. access token. Open the tokenized URL '
+                            'printed in the terminal where the GUI was started.')
+
+    def _token_login(self):
+        """GET /?token=...: exchange the printed token for an HttpOnly SameSite=Strict cookie."""
+        supplied = parse_qs(urlparse(self.path).query).get('token', [''])[0]
+        if not (self.server.token and supplied and hmac.compare_digest(supplied.encode(), self.server.token.encode())):
+            return self._unauthorized()
+        self.send_response(303)
+        self.send_header('Location', '/')
+        self.send_header('Set-Cookie', f'{self.server.cookie_name}={self.server.token}; Path=/; HttpOnly; SameSite=Strict')
+        self.send_header('Content-Length', '0')
+        self.end_headers()
 
     def end_headers(self):
         self.send_header('X-Content-Type-Options', 'nosniff')
@@ -781,8 +869,8 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
         # as another HTTP request on a persistent connection.
         if self.command == 'POST':
             self.close_connection = True
-        message = str(exc)[:500] or type(exc).__name__
-        payload = {'error': type(exc).__name__, 'message': message}
+        name, message = _public_error(exc)
+        payload = {'error': name, 'message': message}
         report = getattr(exc, 'report', None)
         if isinstance(report, dict):
             payload['validation'] = report  # structured PE/ELF intake issues
@@ -799,7 +887,7 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
             raise GuiError('Request body is empty or exceeds size limit')
         try:
             value = json.loads(self.rfile.read(length))
-        except (ValueError, UnicodeError) as exc:
+        except (ValueError, UnicodeError, RecursionError) as exc:
             raise GuiError('Malformed JSON request') from exc
         if not isinstance(value, dict):
             raise GuiError('JSON request must be an object')
@@ -813,10 +901,21 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
         match = re.match(pattern, self._api_path())
         return match.group(1) if match else None
 
+    def do_HEAD(self):
+        if not self._trusted_request():
+            return self._forbidden()
+        if self._api_path().startswith('/api/'):
+            return self._reject(405, 'MethodNotAllowed', 'Use GET for API requests')
+        return super().do_HEAD()
+
     def do_GET(self):
         if not self._trusted_request():
-            return self._json(403, {'error': 'Forbidden', 'message': 'A.I.R.E. GUI accepts loopback requests only'})
+            return self._forbidden()
         path = self._api_path()
+        if path == '/' and 'token' in parse_qs(urlparse(self.path).query):
+            return self._token_login()
+        if path.startswith('/api/') and not self._authorized():
+            return self._unauthorized()
         try:
             if path == '/api/bootstrap':
                 selected = parse_qs(urlparse(self.path).query).get('binary_id', [None])[0]
@@ -854,7 +953,9 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         if not self._trusted_request():
-            return self._json(403, {'error': 'Forbidden', 'message': 'A.I.R.E. GUI accepts loopback requests only'})
+            return self._forbidden()
+        if not self._authorized():
+            return self._unauthorized()
         path = self._api_path()
         try:
             if path == '/api/uploads':
@@ -882,7 +983,13 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
                 result = self.app.run_tool(body.get('session_id'), body.get('tool'), body.get('arguments', {}))
                 return self._json(200 if result.get('ok') else 400, result)
             if path == '/api/chat':
-                return self._chat(body)
+                if not self.server.chat_slots.acquire(blocking=False):
+                    return self._reject(429, 'Busy', f'At most {_MAX_CONCURRENT_CHATS} chat requests run at once; '
+                                        'wait for one to finish')
+                try:
+                    return self._chat(body)
+                finally:
+                    self.server.chat_slots.release()
             return self._json(404, {'error': 'NotFound', 'message': 'Unknown API endpoint'})
         except GuiError as exc:
             return self._error(400, exc)
@@ -921,37 +1028,75 @@ class AireRequestHandler(SimpleHTTPRequestHandler):
                 cancelled=lambda: disconnected)
             emit('result', result.to_dict())
         except Exception as exc:
-            emit('error', {'error': type(exc).__name__, 'message': str(exc)[:500]})
+            name, message = _public_error(exc)
+            emit('error', {'error': name, 'message': message})
 
 
-def _validate_bind_host(host):
+def _validate_bind_host(host, allow_non_loopback=False):
+    """Loopback by default. A single private IPv4 interface address (e.g. the VirtualBox
+    NAT address 10.0.2.15) only with an explicit opt-in; never a wildcard address."""
     if host == 'localhost':
         return '127.0.0.1'
     try:
         address = ipaddress.ip_address(host)
     except ValueError as exc:
-        raise GuiError('GUI host must be localhost or a loopback IP address') from exc
-    if not address.is_loopback:
-        raise GuiError('GUI host must be loopback; remote binding is disabled')
+        raise GuiError('GUI host must be localhost or an IP address literal') from exc
+    if address.is_loopback:
+        return host
+    if not allow_non_loopback:
+        raise GuiError('GUI host must be loopback; remote binding is disabled '
+                       '(see --allow-non-loopback-bind for a VirtualBox NAT address)')
+    if (address.version != 4 or address.is_unspecified or address.is_multicast or address.is_link_local
+            or not address.is_private or address == ipaddress.ip_address('255.255.255.255')):
+        raise GuiError('Non-loopback GUI binding requires one private IPv4 interface address '
+                       '(for example the VirtualBox NAT address 10.0.2.15); wildcard, public, '
+                       'link-local, multicast and IPv6 addresses are refused')
     return host
 
 
-def create_server(application, host='127.0.0.1', port=8765):
-    host = _validate_bind_host(host)
+def _validate_port(port, label='Port'):
     if type(port) is not int or not 0 <= port <= 65535:
-        raise GuiError('Port must be between 0 and 65535')
-    return AireHttpServer((host, port), AireRequestHandler, application)
+        raise GuiError(f'{label} must be between 0 and 65535')
+    return port
 
 
-def serve(application, *, host='127.0.0.1', port=8765, open_browser=True, output=print):
-    server = create_server(application, host, port)
+def create_server(application, host='127.0.0.1', port=8765, *, token=None, public_ports=(),
+                  allow_non_loopback=False):
+    host = _validate_bind_host(host, allow_non_loopback)
+    _validate_port(port)
+    public_ports = tuple(_validate_port(p, 'Public port') for p in public_ports)
+    if token is not None and (not isinstance(token, str) or len(token) < 32):
+        raise GuiError('Access token must be a string of at least 32 characters')
+    if not ipaddress.ip_address(host).is_loopback and token is None:
+        raise GuiError('Non-loopback GUI binding requires the per-launch access token')
+    return AireHttpServer((host, port), AireRequestHandler, application, token=token, public_ports=public_ports)
+
+
+def serve(application, *, host='127.0.0.1', port=8765, open_browser=True, output=print,
+          allow_non_loopback=False, public_port=None):
+    token = secrets.token_urlsafe(32)  # per launch; required on every API request
+    server = create_server(application, host, port, token=token,
+                           public_ports=(public_port,) if public_port else (),
+                           allow_non_loopback=allow_non_loopback)
     actual_host, actual_port = server.server_address[:2]
-    url = f'http://{actual_host}:{actual_port}/'
+    loopback = ipaddress.ip_address(actual_host).is_loopback
     output('A.I.R.E. GUI')
-    output('Local URL: ' + url)
+    if not loopback:
+        warning = (f'WARNING: listening on non-loopback address {actual_host}:{actual_port} (explicit opt-in). '
+                   'Only Host localhost/127.0.0.1 on ports ' + ', '.join(map(str, sorted(server.allowed_ports))) +
+                   ' and the access token are accepted. Keep the VirtualBox port forward bound to host IP 127.0.0.1.')
+        _ERROR_LOG.warning(warning)
+        output(warning)
+    url = f'http://127.0.0.1:{actual_port}/?token={token}'
+    if loopback:
+        output('Local URL: ' + url)
+    if public_port:
+        output(f'Host-side URL (VirtualBox forward 127.0.0.1:{public_port}): '
+               f'http://127.0.0.1:{public_port}/?token={token}')
+    output('Treat the token like a password. It changes every launch.')
     output('Analysis database: ' + str(application.database))
     output('Press Ctrl-C to stop.')
-    if open_browser:
+    if open_browser and loopback:
         threading.Timer(0.25, partial(webbrowser.open, url)).start()
     try:
         server.serve_forever(poll_interval=0.25)

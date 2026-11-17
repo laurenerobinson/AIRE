@@ -230,5 +230,42 @@ def encode(document):
     return zlib.compress(json.dumps(document, separators=(',', ':'), ensure_ascii=True).encode(), 6)
 
 
+# Largest real document (4096-instruction cap) is ~1.9 MB decoded; a stored
+# blob is untrusted input, so bound inflation against decompression bombs.
+MAX_DECODED_IR_BYTES = 32 * 1024 * 1024
+# Real documents nest at most 7 levels. CPython's recursion guard does not
+# protect the C JSON decoder when a JVM shares the process (observed SIGSEGV at
+# 100,000 levels after PyGhidra start), so bound nesting before json.loads.
+MAX_IR_NESTING = 64
+_JSON_STRING = re.compile(rb'"(?:[^"\\]|\\.)*"')
+_INNERMOST = re.compile(rb'\[[^\[\]{}]*\]|\{[^\[\]{}]*\}')
+_BRACKET = re.compile(rb'[\[\]{}]')
+
+
+def _nesting_within(raw, limit=MAX_IR_NESTING):
+    """True if raw JSON nests at most `limit` containers (strings ignored)."""
+    text = _JSON_STRING.sub(b'', raw)
+    for _ in range(limit):
+        text, removed = _INNERMOST.subn(b'', text)
+        if not removed:
+            break
+    return not _BRACKET.search(text)
+
+
 def decode(blob):
-    return json.loads(zlib.decompress(blob))
+    """Bounded inverse of encode(); any malformed blob raises ValueError."""
+    try:
+        inflater = zlib.decompressobj()
+        raw = inflater.decompress(blob, MAX_DECODED_IR_BYTES)
+        if inflater.unconsumed_tail:
+            raise ValueError(f'instruction facts exceed {MAX_DECODED_IR_BYTES} decoded bytes')
+        if not inflater.eof:
+            raise ValueError('truncated instruction facts')
+        if not _nesting_within(raw):
+            raise ValueError(f'instruction facts nest deeper than {MAX_IR_NESTING} levels')
+        document = json.loads(raw)
+    except (zlib.error, TypeError, UnicodeError, RecursionError) as exc:
+        raise ValueError(f'undecodable instruction facts ({type(exc).__name__})') from exc
+    if not isinstance(document, dict):
+        raise ValueError('instruction facts must be a JSON object')
+    return document

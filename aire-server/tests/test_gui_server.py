@@ -87,7 +87,7 @@ class GuiServerTests(unittest.TestCase):
 
         body = json.dumps({'binary_id': 'b'}).encode('utf-8')
         request = Request(base + '/api/sessions', data=body, method='POST',
-                          headers={'Content-Type': 'application/json'})
+                          headers={'Content-Type': 'application/json', 'Origin': base})
         with urlopen(request, timeout=3) as response:
             created = json.loads(response.read())
             self.assertRegex(created['session_id'], r'^[0-9a-f]{32}$')
@@ -101,7 +101,7 @@ class GuiServerTests(unittest.TestCase):
         ]
         for endpoint, payload, expected in requests:
             request = Request(base + endpoint, data=json.dumps(payload).encode(),
-                              headers={'Content-Type': 'application/json'})
+                              headers={'Content-Type': 'application/json', 'Origin': base})
             with urlopen(request, timeout=3) as response:
                 result = json.loads(response.read())
                 self.assertIn(expected, result.get('data', result))
@@ -110,7 +110,7 @@ class GuiServerTests(unittest.TestCase):
             self.assertEqual(json.loads(response.read())['current_function_id'], 'b:a')
 
         request = Request(base + '/api/sessions', data=b'{broken',
-                          headers={'Content-Type': 'application/json'})
+                          headers={'Content-Type': 'application/json', 'Origin': base})
         with self.assertRaises(HTTPError) as caught:
             urlopen(request, timeout=3)
         self.assertEqual(caught.exception.code, 400)
@@ -119,7 +119,7 @@ class GuiServerTests(unittest.TestCase):
         body = json.dumps({'session_id': created['session_id'],
                            'question': 'Show me the most important functions.'}).encode('utf-8')
         request = Request(base + '/api/chat', data=body, method='POST',
-                          headers={'Content-Type': 'application/json'})
+                          headers={'Content-Type': 'application/json', 'Origin': base})
         with urlopen(request, timeout=5) as response:
             packets = [json.loads(line) for line in response.read().splitlines() if line.strip()]
         self.assertTrue(any(packet['type'] == 'event' for packet in packets))
