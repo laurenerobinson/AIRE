@@ -10,6 +10,10 @@ M6 adds bounded advisory naming suggestions with strict evidence/name validation
 M7 adds two deterministic, evidence-backed CWE signals without LLM dependencies.
 M8 adds a bounded read-only agent, public operational activity and follow-up sessions.
 The optional local GUI/API uses the same agent and read-only tools.
+M9 adds format-aware ELF/PE intake, references/thunks, crypto evidence and
+decompiler recovery/performance work. M10 adds persisted instruction IR,
+instruction explanations, CFG/loops, bounded value flow, decompiler checks and
+the Function explorer. See [M10](../docs/M10_ASSEMBLY_INTELLIGENCE.md).
 Semantic retrieval remains unimplemented. The Java v1 plugin is unchanged.
 
 ## Conversational agent (M8)
@@ -36,12 +40,27 @@ aire-server/.venv/bin/aire gui tests/fixtures/simple_elf/aire_test_binary \
   --database analysis.sqlite
 ```
 
-The selected binary must already be indexed in the database. The GUI defaults to
-`http://127.0.0.1:8765/`; use `--no-browser` to skip automatic browser launch.
+The selected binary must already be indexed in the database. The default origin is
+`http://127.0.0.1:8765/`; open the full per-launch tokenized URL printed by the
+server. Use `--no-browser` to skip automatic browser launch.
 Conversation state lives separately under `~/.aire/gui-sessions/`.
 See [GUI workspace](../docs/GUI.md) for preparation, tools, and limits.
+For the current Windows 11 Chrome/Ollama and Ubuntu API split, use
+[Windows Host Inference](../README.md#running-aire-with-windows-host-inference):
+host origin `127.0.0.1:8770`, NAT guest bind `10.0.2.15:8770`, Ollama origin
+`http://10.0.2.2:11434`, model `qwen2.5-coder:1.5b`, context 4096. Both the
+private-IPv4 bind and remote Ollama origin require explicit launch opt-ins.
+The GUI honors `AIRE_OLLAMA_ALLOW_REMOTE=1`/`--allow-remote-ollama`; the separate
+`aire chat` CLI above does not expose that GUI opt-in and remains loopback-only.
+Host listener/NAT, external reachability, Chrome and Adapter 2 checks remain pending.
 
-Validated environment: Python 3.11, PyGhidra 3.1.0, Ghidra 12.1.3, JDK 21.
+November 17 audit environment: Python 3.12.3, PyGhidra 3.1.0, Ghidra 12.1.3,
+OpenJDK 21.0.13.0.3 on Ubuntu 24.04.5. Earlier M1 validation used Python 3.11.
+The Codex host-access review reports 649 executed / 645 passed / zero failures
+or errors / four live-model skips, with Ghidra and headless Ubuntu Firefox
+155.0.1 enabled. These results were not independently rerun for the documentation
+update. The earlier Phase 2 621-pass result is separate; see
+[security evidence](../docs/HOST_ACCESS_SECURITY_REVIEW.md).
 PyGhidra is an optional `indexing` dependency; pure record/unit-test imports do
 not need it. Use the existing configured venv; no installation is needed here.
 

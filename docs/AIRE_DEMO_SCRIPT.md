@@ -1,3 +1,10 @@
+> **Historical v1 presentation; not the current MS-defense script.** Use
+> [MS_DEFENSE_M10.md](MS_DEFENSE_M10.md) for current speaker notes and evidence
+> limits, and [DEMO_M10.md](DEMO_M10.md) for the browser demonstration.
+> Claims below about zero exfiltration risk, “ten times faster,” best models
+> and calibrated confidence are unsupported and must not be reused as findings.
+> Local inference now runs on Windows; Ghidra/API/storage run inside Ubuntu.
+>
 > Historical demo preserved from v1. Claimed results are presentation examples,
 > not measured guarantees. The addresses below belong to an older RAPTOR build.
 > Use `tests/binaries/raptor7_aire` and the matching

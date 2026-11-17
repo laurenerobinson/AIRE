@@ -1,5 +1,31 @@
 # Current state
 
+As of November 17, 2026, M1–M10 functionality includes the Python GUI/API,
+format-aware ELF/PE intake, reference/thunk and crypto evidence, and M10
+instruction IR, explanations, CFG/loop/limited value-flow reasoning and
+decompiler cross-validation. The Java v1 naming extension remains a separate
+workflow. The following earlier milestone sections preserve their measured
+results; they are not a statement that M8 or M10 is unimplemented.
+
+Windows 11 now runs isolated Chrome and local Ollama inference with selected
+`qwen2.5-coder:1.5b` / context 4096. Ubuntu VirtualBox runs the API and all static
+analysis/storage. Intended NAT communication: Windows `127.0.0.1:8770` → guest
+`10.0.2.15:8770`; guest → Windows Ollama `http://10.0.2.2:11434`. Addresses
+must be verified before reuse. See [architecture](ARCHITECTURE.md) and
+[launch instructions](../README.md#running-aire-with-windows-host-inference).
+
+The November 17 Codex [host-access audit](HOST_ACCESS_SECURITY_REVIEW.md)
+reports 649 tests executed, 645 passed, zero failures/errors and four live-model
+skips on Python 3.12.3, with Ghidra and headless Firefox 155.0.1 in Ubuntu.
+This is attributed evidence, not a fresh run or Windows Chrome validation.
+Per-launch tokens, cookies, exact Host/Origin/fetch-metadata gates, bind/model
+opt-ins, private session files and bounded chats are implemented. Windows
+bindings, final NAT confinement, external-device tests, Chrome login and
+Adapter 2 still require verification. Phase 6 evaluation is incomplete; see
+the [defense evidence ledger](MS_DEFENSE_M10.md).
+
+## Earlier M8 and October implementation context
+
 M8 implements the initial A.I.R.E. conversational agent: eighteen validated
 read-only tools, immediate activity callbacks, a bounded model action loop,
 binary-scoped persistent follow-up sessions and `aire chat <binary>`. Existing
@@ -71,7 +97,7 @@ include parsing, formatting, synchronization and coordination.
 `SuggestionsTableModel` hold UI state; `AirePluginPackage` supplies registration.
 All 11 canonical Java files were preserved byte-for-byte.
 
-## Ollama
+## Java v1 Ollama behavior
 
 `OllamaSuggestionProvider` uses Java HttpClient and bundled Gson 2.10.1 to POST
 non-streaming JSON to `/api/generate`. Defaults: `http://localhost:11434` and
@@ -101,7 +127,7 @@ result; network, missing-model and timeout failures reach UI error states.
 Connection timeout is 3 seconds, request timeout 240 seconds. Logs include
 model output and context summaries, which may contain analyzed information.
 
-## Corpus and limitations
+## Preserved v1 corpus and limitations
 
 Six C sources, eight x86-64 ELF binaries, two historical maps and the original
 demo survive. See [test inventory](../tests/README.md). The RAPTOR historical
@@ -126,7 +152,8 @@ The Python API `aire.pyghidra.indexer.index_binary` returns a serializable
 ProgramIndex containing binary metadata, every discovered internal/external
 function, decompilation, bounded assembly, structural metrics, defined strings,
 imports, exports, direct call edges, warnings, and timing metadata. It uses
-PyGhidra 3.1.0 / Ghidra 12.1.3 / JDK 21 / Python 3.11. No target execution,
+PyGhidra 3.1.0 / Ghidra 12.1.3 / JDK 21 / Python 3.11 in that historical M1 run
+(November 17 used Python 3.12.3). No target execution,
 explicit Ghidra program edits, project saves, or original binary writes occur.
 
 Real integration passed against `tests/binaries/aire_test_stripped`: ELF,
@@ -374,7 +401,9 @@ execution, Ghidra edits or binary writes occur during scanning. See
 
 Semantic/vector retrieval, embeddings, vulnerability confirmation, CVE matching, taint analysis, dynamic validation, exploit generation,
 autonomous actions, and automatic renaming/comments/signatures remain
-unimplemented. The GUI/API exposes existing read-only functionality on loopback;
-browser indexing and interactive node-graph visualization remain unimplemented.
+unimplemented in the Python workflow. The GUI/API exposes read-only investigations
+with explicit validated intake/index jobs handled by a separate writer worker.
+It defaults to loopback; a private IPv4 NAT bind requires explicit opt-in and
+per-launch authentication. Interactive node-graph visualization remains unimplemented.
 Richer deterministic security checks and source/sink/context
 facts remain future work after the M8 read-only agent. The Java v1 plugin remains unchanged.

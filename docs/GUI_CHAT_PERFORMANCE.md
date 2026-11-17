@@ -1,5 +1,12 @@
 # GUI chat workspace implementation and measurements
 
+> The measurements below are historical and retain their original environment.
+> Current Chrome and Ollama run on Windows 11; the API/static pipeline remain
+> in Ubuntu. Reported responsiveness improved after the split, without a
+> measured speedup. See [current launch](../README.md#running-aire-with-windows-host-inference)
+> and [VM limitations](VM_STABILITY_DIAGNOSTICS.md). Guest-local historical
+> URLs require a launch token on current code; Windows Chrome checks are pending.
+
 The later application relevance policy and new warm-model benchmark are recorded
 in [APPLICATION_RELEVANCE.md](APPLICATION_RELEVANCE.md). The measurements below
 are historical GUI implementation measurements. Current whole-binary selection

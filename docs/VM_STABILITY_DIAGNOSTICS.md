@@ -2,6 +2,33 @@
 
 Investigation: 2026-11-17, America/Chicago (CST, UTC−06:00). Guest: `aire-VirtualBox`.
 
+## Deployment update after the investigation
+
+The current November 17 demonstration uses Windows 11 for isolated Chrome and
+Ollama (`qwen2.5-coder:1.5b`), with the Python API, Ghidra/PyGhidra, SQLite and
+deterministic assembly/flow/security analysis in Ubuntu. See the
+[architecture](ARCHITECTURE.md) and [launch workflow](../README.md#running-aire-with-windows-host-inference).
+GUI responsiveness reportedly improved after moving Chrome and inference off
+the guest. This is an operator observation, **not a benchmark or measured speedup**.
+The split reduces resource contention inside the VM; it does not automatically
+resolve VM scheduling, timer, kernel or host power-management problems.
+
+The original VM resource allocation was excessive relative to recorded needs:
+the M9/hardening configuration exposed about 23 GiB RAM and four vCPUs, and
+this diagnostic boot exposed 15 vCPUs and 25.82 GiB usable RAM. Earlier measured
+analysis peaks were about 3–4 GB. These are separate historical observations;
+the final Windows allocation and host headroom have not been independently
+verified. Nearly full guest storage (97–99% in the recorded runs) remains a
+capacity risk; moving inference does not prove disk space was reclaimed.
+
+The historical Windows VirtualBox **NEM / Windows Hypervisor Platform performance
+limitation** is recorded as a possible backend issue in
+[M9 stability notes](M9_VIRTUALBOX_STABILITY.md). No corresponding host VBox.log
+was supplied here to establish the backend or its contribution to these stalls.
+Do not present NEM as the proven cause of every observed pause or infer that
+moving Chrome/Ollama disabled it. The original diagnostic evidence below is
+preserved with its original host-visibility limits.
+
 ## Assessment
 
 **The freezes affect guest kernel scheduling, beyond A.I.R.E. application threads. The specific underlying cause remains unconfirmed without host telemetry and VBox.log.** The strongest candidates are VirtualBox/host vCPU scheduling or virtual interrupt/timer delivery, including a guest-kernel/VirtualBox interaction. Guest RAM exhaustion and ordinary guest CPU saturation have little supporting evidence. The nearly full root filesystem is a separate, confirmed capacity problem that needs remediation, but its causal connection to the long freezes is unproven.

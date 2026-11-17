@@ -1,5 +1,11 @@
 # A.I.R.E. M9 — final comparison and readiness
 
+> Historical November 11 M9 measurements, not split-host benchmarks. Current
+> Windows Chrome/Ollama deployment, later tests and pending host checks are in
+> [the November 17 update](M10_DOCUMENTATION_UPDATE_2026-11-17.md). Later
+> [VM diagnostics](VM_STABILITY_DIAGNOSTICS.md) qualify the definitive host
+> attribution below: the precise cause of scheduling stalls remains unresolved.
+
 2026-11-11. Nothing committed, pushed, reset or cleaned. Pre-M9 backup:
 `~/aire_backups/m9-pre-20261110-153900/`. Details: `M9_PERFORMANCE.md`, `M9_CORRUPT_PE.md`,
 `M9_CRYPTO_PE.md`, `M9_VIRTUALBOX_STABILITY.md`, runbook `DEMO_M9_PROGRESS_CHECK.md`.

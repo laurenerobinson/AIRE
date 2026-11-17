@@ -4,10 +4,20 @@ M10 makes A.I.R.E. explain how executable code works at the instruction, functio
 call-graph level, cross-check Ghidra's decompiled C against lower-level evidence, and
 answer analyst questions with verifiable citations. **Deterministic evidence is the source
 of truth; a local language model may only narrate it, and its narration is validated.**
-Evaluation results: [M10_EVALUATION.md](M10_EVALUATION.md). Demo: [DEMO_M10.md](DEMO_M10.md).
+Evaluation: **incomplete**; the planned `docs/M10_EVALUATION.md` and merged
+`docs/m10/eval_full.json` are absent. Existing phase/per-unit results and the
+scoped November 17 evidence are distinguished in
+[M10_INTEGRATION_HARDENING.md](M10_INTEGRATION_HARDENING.md).
+Demo: [DEMO_M10.md](DEMO_M10.md).
 Progress log: [M10_CHECKPOINT.md](M10_CHECKPOINT.md).
 
 ## Architecture
+
+The [deployment diagram](ARCHITECTURE.md) places this entire static pipeline
+inside Ubuntu. Isolated Chrome and Ollama (`qwen2.5-coder:1.5b`) run on Windows 11;
+the API reaches the model through NAT at `http://10.0.2.2:11434` with explicit
+opt-in. Model inference is local to the laptop, outside the VM. All addresses
+and host confinement must be verified for the current machine.
 
 ```
 Ghidra analysed Program (indexing, once)
@@ -129,7 +139,7 @@ address, instruction addresses, assembly/P-code-derived explanations, confidence
 limitations. The existing function cards ("Summarize this function", "Explain this assembly")
 keep the M8 model pipeline.
 
-Narration: if `AIRE_M10_NARRATION` ≠ 0 and Ollama answers within `AIRE_M10_NARRATION_SECONDS`
+Narration: if `AIRE_M10_NARRATION=1` (default off) and Ollama answers within `AIRE_M10_NARRATION_SECONDS`
 (default 60), the local model's summary is appended only when every cited `0x…` address
 appears in the deterministic answer/function and every mnemonic it ties to an address
 matches; otherwise it is rejected with the reason. Ollama unavailable → deterministic answer only.
@@ -148,5 +158,10 @@ clickable addresses, inline branch paths and value traces.
   without a template are reported as flags only.
 * Purpose statements are rule-derived and hedged; application-level intent is not proven.
 * Snapshots indexed before M10 need re-analysis for P-code evidence.
-* Local-model narration on this VM can trigger host-level freezes (see M9 VirtualBox notes);
-  deterministic answers are unaffected.
+* Earlier VM-hosted inference coincided with long scheduling stalls. Windows
+  inference and Chrome reduce guest resource contention, but deterministic
+  answers also depend on guest scheduling. No measured split-host speedup or
+  elimination of stalls has been established.
+* Cross-validation checks selected observable properties, not semantic equivalence;
+  citations establish traceability, not truth of every interpretation. Phase 6
+  completion and live-model robustness remain future validation work.

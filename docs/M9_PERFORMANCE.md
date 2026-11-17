@@ -1,5 +1,9 @@
 # M9 Phase 1 — performance results
 
+> Historical VM measurements; these are not split-host speedup results. For
+> current deployment and scheduling caveats, see [architecture](ARCHITECTURE.md)
+> and [VM diagnostics](VM_STABILITY_DIAGNOSTICS.md). Original timings remain unchanged.
+
 Measured 2026-11-10/11 on the development VM. All raw data is preserved in
 `docs/m9/benchmarks/progress.jsonl` (one JSON line per repetition, every request's
 exclusive stage timings, Ghidra per-analyzer times, facts digest, peak RSS and, for

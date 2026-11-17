@@ -4,6 +4,15 @@ No packages were installed during reconstruction. Commands below are manual
 setup/build instructions, not actions already performed. Run from repository
 root unless stated otherwise.
 
+Current deployment: [Windows Host Inference](../README.md#running-aire-with-windows-host-inference)
+uses isolated Windows Chrome/Ollama with Ubuntu static analysis. The Java v1
+build guidance below is separate from the Python browser/API workflow. The
+November 17 Codex audit used Python 3.12.3 and reported 645 passes out of 649
+executed, four live-model skips, zero failures/errors, with Ghidra and headless
+Ubuntu Firefox 155.0.1. See [host-access review](HOST_ACCESS_SECURITY_REVIEW.md)
+for controls and the outstanding Windows checks. No full suite was rerun for
+documentation maintenance.
+
 ## Ghidra
 
 The original README and packaged filenames identify Ghidra 12.0.1 PUBLIC as
@@ -45,7 +54,8 @@ Suggest, select a candidate, then Apply.
 
 ## Python venv and PyGhidra
 
-M1 is validated with the existing `aire-server/.venv` (Python 3.11), PyGhidra
+The current `aire-server/.venv` was audited with Python 3.12.3 (historical M1
+validation used Python 3.11), PyGhidra
 3.1.0, Ghidra 12.1.3 and JDK 21. `GHIDRA_INSTALL_DIR` and `JAVA_HOME` must point
 to the configured installations. Do not replace them to run these checks.
 PyGhidra is declared as the optional `indexing` dependency; unit tests need only
@@ -163,7 +173,7 @@ per-stage timings and warm means for target-only/direct/depth-3 bundles. The
 example file contains deterministic rendered evidence. SQLite files are temporary
 and removed by integration tests. No tools/models are installed or called.
 
-## Ollama
+## Java v1 Ollama configuration
 
 The Java extension uses a separately managed local Ollama service. Install it
 manually if needed, provision the chosen model locally, and start `ollama serve`
@@ -241,7 +251,8 @@ options and measured results are in [M6 naming](M6_NAMING.md).
 The naming CLI exposes candidate listing, one function and explicit bounded batch
 modes; no apply/rename/write flags exist. Suggestions are transient and advisory.
 Do not add persistence or application as an incidental naming change. M7 security
-rules run independently of naming/model output; M8 has not started.
+rules run independently of naming/model output. M8's read-only agent and GUI/API
+and M9/M10 evidence/assembly modules are implemented; see [roadmap](ROADMAP.md).
 
 
 ## M7 security rule development

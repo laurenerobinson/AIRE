@@ -1,5 +1,13 @@
 # M8 — read-only A.I.R.E. agent
 
+Current deployment note (2026-11-17): the GUI/API shares this agent and now
+includes M9 provenance and M10 assembly tools. Windows 11 hosts isolated Chrome
+and Ollama; Ubuntu hosts analysis. Use [Windows Host Inference](../README.md#running-aire-with-windows-host-inference)
+for the GUI's explicit remote-Ollama opt-in; the standalone `aire chat` examples
+below retain their loopback-only configuration. Historical model/test results
+are preserved; the latest Codex audit's four live-model cases were skipped.
+See [host-access controls and pending Windows checks](HOST_ACCESS_SECURITY_REVIEW.md).
+
 M8 adds conversational orchestration over the existing persisted analysis. It
 does not change the M1 indexer, SQLite schema, graph algorithms, naming rules,
 security rules, or Java plugin. The analysis database is opened read-only by the

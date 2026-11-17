@@ -1,5 +1,11 @@
 # Roadmap
 
+Current scope (2026-11-17): M1–M10 static functionality is implemented, including
+the browser GUI/API and assembly intelligence. Completion of implementation
+does not imply completed evaluation. [M10 Phase 6](M10_CHECKPOINT.md) remains
+incomplete; Windows deployment verification and defense rehearsal are pending.
+See [architecture](ARCHITECTURE.md) and [defense evidence](MS_DEFENSE_M10.md).
+
 M0 is established. M1 is complete with a passing real controlled-binary
 integration test. M2 is complete with a passing real SQLite round trip.
 M3 is complete with passing deterministic query tests and real persisted-graph
@@ -9,7 +15,8 @@ binary-summary and a clean full live regression remain pending after
 runtime/resource timeouts.
 M6 advisory function naming is implemented and committed (`ed8881e`, `aire-m6`).
 M7 deterministic security rules and the M8 read-only conversational agent are
-implemented. Richer stored provenance and later analysis remain planned.
+implemented. M9 subsequently added richer references, format-aware analysis,
+crypto evidence and recovery/performance work; M10 adds assembly intelligence.
 
 | Milestone | Scope |
 | --- | --- |
@@ -22,8 +29,8 @@ implemented. Richer stored provenance and later analysis remain planned.
 | M6 (implemented) | Analyst-controlled whole-binary naming suggestions; no automatic renaming |
 | M7 (implemented) | Versioned deterministic CWE rule framework; two API signals |
 | M8 (implemented) | Read-only tools, visible activity, bounded agent, sessions and CLI |
-| M9 | Evidence/confidence model |
-| M10 | Dynamic validation prototype |
+| M9 (implemented) | Reference/thunk provenance, format-aware ELF/PE intake, crypto evidence, caching/parallel decompilation/recovery |
+| M10 (implemented; evaluation incomplete) | Instruction IR, semantics, CFG/loops, bounded data flow, decompiler cross-validation, agent/GUI integration |
 | M11 | Benchmark/evaluation |
 | M12 | Reporting/final integration |
 
@@ -116,7 +123,8 @@ change or write-back is added. See [M7 validation](M7_SECURITY_RULES.md).
 
 ## M8 acceptance
 
-Twelve validated read-only tools delegate to existing M2–M7 functionality.
+The initial twelve validated read-only tools delegated to M2–M7 functionality;
+subsequent M9/M10 tools extend the registry with evidence and assembly queries.
 Serializable activity exposes execution, retrieval, selected functions and
 grounded results without private chain-of-thought. Iteration, tool-call, context,
 deadline and cancellation controls bound orchestration. Session state is separate
@@ -124,7 +132,15 @@ from immutable facts. `aire chat <binary>` opens an existing database read-only.
 Deterministic tests mock the model; debug/stripped integrations and opt-in local
 inference record limitations. See [M8 implementation and validation](M8_AGENT.md).
 
-## Recommended next milestone — evaluation and richer stored provenance
+## Next work — finish evaluation and verify the split-host demonstration
+
+Complete the missing Phase 6 units and merged report, then assess broader model
+quality separately from citation validity. Rehearse Windows Chrome token login,
+verify Windows ports 8770/11434, NAT Host IP, external-device rejection and
+Adapter 2. Retain the small pre-indexed deterministic fallback. Dynamic
+validation was a historical M10 proposal; it is not the implemented M10 scope
+and remains future work. No target execution or automatic write-back is implemented.
+
 
 Expand the small deterministic security checks and begin richer source/sink/
 context analysis with explicit provenance and positive/negative controls. First

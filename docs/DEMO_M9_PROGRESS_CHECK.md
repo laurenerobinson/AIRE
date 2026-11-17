@@ -1,5 +1,12 @@
 # A.I.R.E. — M9 progress-check demonstration
 
+> Historical November 11 VM-local runbook. Port 8767, bare-URL login and timings
+> below belong to that run. Current launches require the printed tokenized URL.
+> For Windows Chrome/Ollama and Ubuntu API on host port 8770, use the
+> [current workflow](../README.md#running-aire-with-windows-host-inference)
+> and [M10 demo](DEMO_M10.md). Historical Firefox helpers need authentication
+> handling before reuse; never save tokens in output reports.
+
 Prepared 2026-11-11. The October 22 runbook (`docs/DEMO_2026-10-22.md`) and its artifacts are
 unchanged; this demo uses its own store `demo_artifacts/m9/m9.sqlite` (126 MB). No target is
 ever executed. All numbers below are measured on the development VM; see the limitations.

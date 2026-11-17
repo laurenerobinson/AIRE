@@ -1,5 +1,13 @@
 # A.I.R.E. Competitive Research and Implementation Plan
 
+> Historical October 13 archive-based research, not the current implementation
+> inventory. “Placeholder API,” missing browser GUI, schema-v1 and future
+> P-code statements describe that snapshot. M9/M10 added stored references,
+> thunks, GUI/API, instruction IR and assembly/flow/decompiler tools. Use
+> [current state](docs/CURRENT_STATE.md), [architecture](docs/ARCHITECTURE.md)
+> and [defense evidence](docs/MS_DEFENSE_M10.md). Original research and results
+> below are preserved.
+
 **Research date:** October 13, 2026  
 **Subject:** A.I.R.E. — AI-Assisted Reverse Engineering  
 **Basis:** Uploaded `AIRE-main.zip` snapshot (archive header commit `f29db6606c8eff84af140dd409db2202bf9000d2`, stamped October 5, 2026), current publicly accessible competitor GitHub documentation, and local Python unit test execution.  

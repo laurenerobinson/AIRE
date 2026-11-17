@@ -1,5 +1,10 @@
 # M5 local grounded chat
 
+> The status and environment measurements below describe the historical M5
+> validation. M6–M10, the browser GUI/API and split-host deployment have since
+> been implemented; see [current state](CURRENT_STATE.md). Those later changes
+> do not convert failed/timed-out historical model requests into passes.
+
 Status: **M5 targeted live validation passed at `num_ctx=4096`** with local
 `qwen2.5-coder:1.5b`. Both simple-ELF variants returned validated structured
 responses with supported call relationships. Binary-summary validation remains
@@ -13,7 +18,8 @@ remains 32768, which previously OOMed on this 1.9 GiB RAM / 1 GiB swap VM.
 The successful low-memory requests used 4096 and bounded evidence. No models
 were installed, targets executed/modified, or M1–M4 behavior changed.
 See [the validation report](M5_VALIDATION.md) for measurements, regression results,
-failed attempts, fixture hashes and limitations. M6 has not started.
+failed attempts, fixture hashes and limitations. M6 advisory naming is now
+implemented; the historical M5 results remain unchanged.
 
 ## Trust boundary and implemented pipeline
 
@@ -298,12 +304,10 @@ Stripped selection uses the debug partner's address and checks that its name is
 not process_input. Model statements are not graded by exact natural-language
 wording; arbitrary interpretation entailment still requires analyst review.
 
-Not implemented: semantic/vector retrieval, embeddings, CWE engine, vulnerability
-detection or confirmation, CVE matching, taint analysis, dynamic validation,
-exploit generation, autonomous actions, automatic naming/comments/signatures,
-HTTP API, GUI, chat history, token estimation or cancellation.
-
-M6 recommendation: analyst-controlled naming suggestions across the whole binary
-using this evidence/prompt/validation pipeline, with function-ID provenance,
-uncertainty and explicit review. **M6 must not automatically rename functions.**
-M6 has not started. Binary-summary live validation remains pending.
+This document's M5 measurements are historical. M6 advisory naming, M7 narrow
+CWE signals, M8 agent/session/cancellation controls, the GUI/API and M9/M10
+evidence/assembly intelligence have since been implemented. The Python pipeline
+does not automatically apply names, comments or signatures. Semantic/vector
+retrieval, vulnerability confirmation, CVE matching, general taint analysis,
+dynamic target execution and exploit generation remain unimplemented.
+For current deployment and validation boundaries see [current state](CURRENT_STATE.md).

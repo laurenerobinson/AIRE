@@ -1,6 +1,6 @@
 # A.I.R.E. local analysis workspace
 
-The A.I.R.E. GUI is a loopback-only web workspace layered directly over the
+The A.I.R.E. GUI is a local web workspace layered directly over the
 existing M8 agent. It does not implement a second analysis engine. Chat requests
 use `AgentRunner`, tool-panel requests use the same `AgentTools` registry, and
 conversation state uses `AgentSession` plus a separate UI transcript.
@@ -8,6 +8,13 @@ Investigations open the analysis database through the existing read-only store;
 explicit intake jobs write snapshots through the serialized index worker.
 
 ## Launch
+
+For the current Windows 11 Chrome / Ubuntu API / Windows Ollama deployment,
+use [Running A.I.R.E. with Windows Host Inference](../README.md#running-aire-with-windows-host-inference).
+The Windows origin is `http://127.0.0.1:8770`, forwarded by VirtualBox NAT to
+`10.0.2.15:8770`; the guest reaches Ollama at `http://10.0.2.2:11434` only
+with the explicit GUI launch opt-in. These addresses must be checked before reuse.
+The following example is the separate guest-local/default workflow.
 
 From the repository root, use the existing A.I.R.E. virtual environment and
 Ollama configuration:
@@ -28,9 +35,12 @@ Upload** to validate a local ELF/PE, start static analysis, or open a repository
 fixture. See [the October 22 runbook](DEMO_2026-10-22.md) for verified commands,
 binary paths, measured timings and limitations.
 
-The default URL is `http://127.0.0.1:8765/`. Use `--port` to change the port and
-`--no-browser` to prevent automatic browser launch. Remote binding is rejected;
-the GUI accepts loopback hosts only.
+The default origin is `http://127.0.0.1:8765/`. Open the full tokenized URL printed
+at launch; the bare origin cannot authenticate API calls. Use `--port` to change
+the port and `--no-browser` to prevent automatic browser launch. Non-loopback
+binding requires `--allow-non-loopback-bind` and one private IPv4 interface
+address; wildcard/public binds are rejected. `--public-port` adds the forwarded
+port to the exact localhost/127.0.0.1 Host allowlist; it does not configure NAT.
 
 ## Preparing the small development fixture
 
@@ -74,6 +84,7 @@ The right-side Analysis Tools panel maps directly to existing read-only tools:
 | Call Graph | `get_callers`, `get_callees` |
 | Findings | `security_findings` |
 | Decompiled View | `get_decompiled_text` |
+| Function explorer | `function_evidence`, `explain_instructions`, `function_cfg`, `branch_paths`, `trace_value`, `parameter_use`, `return_usage`, `crossvalidate_function` |
 
 Selecting a function updates the existing `AgentSession.current_function_id`, so
 follow-ups such as "What calls it?" and the code views share the same binary-scoped
@@ -87,14 +98,25 @@ directory. Each GUI conversation has an `.agent.json` file produced through
 `AgentSession.save()` and a bounded `.transcript.json` used to reconstruct the
 visible chat history. The SQLite analysis database is not modified by GUI chat,
 function selection, or tool views.
+New session directories are 0700; agent/transcript files are created 0600
+regardless of umask. Existing directories are not automatically re-permissioned.
 
 ## Local service boundary
 
 `aire.api.server` now implements a small standard-library HTTP service. It adds no
-runtime dependency. Requests are limited to loopback, JSON bodies are bounded,
+runtime dependency. Launch defaults to loopback, JSON bodies are bounded,
 static assets use a restrictive content-security policy, tool names/arguments are
 validated by the existing registry, and the server never accepts model-supplied
 code for execution.
+Production launches require a per-launch token on every API route, exchanged
+for an HttpOnly, SameSite=Strict cookie or supplied in `X-AIRE-Token`. Exact
+Host/port, matching Origin and fetch-metadata checks apply; no CORS is enabled.
+At most four chats run concurrently (429 above the limit), with no global
+connection cap. Static assets remain token-free but pass the origin/Host gate.
+Use a dedicated Chrome profile: cookies are not isolated by port. Windows
+listener/firewall/NAT, external-device and Chrome login checks remain pending.
+See [host-access review](HOST_ACCESS_SECURITY_REVIEW.md) for tested controls
+and accepted limitations. This is not a LAN/internet service.
 
 Chat uses newline-delimited JSON for the existing `AgentEvent` activity stream,
 immediate verified overview facts, and progressive model summary text. Summary

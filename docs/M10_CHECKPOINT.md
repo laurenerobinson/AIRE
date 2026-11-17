@@ -1,5 +1,19 @@
 # M10 checkpoint — Evidence-Grounded Assembly Intelligence
 
+> Historical November 11 development log. “Nothing committed” and phase status
+> below describe that run. The implementation was subsequently preserved in the
+> [November 17 checkpoint](M10_PRE_HARDENING_CHECKPOINT.md) and hardened in
+> [integration](M10_INTEGRATION_HARDENING.md), [security](M10_SECURITY_HARDENING.md)
+> and [host-access](HOST_ACCESS_SECURITY_REVIEW.md) reviews. Current inference
+> runs on Windows alongside isolated Chrome; static analysis remains in Ubuntu.
+> The latest reported Codex audit is 649 executed / 645 passed / 4 live-model
+> skipped, zero failed/errors, including Ghidra and Ubuntu headless Firefox.
+> Full Phase 6 evaluation is still incomplete. `docs/m10/eval_full.json` and
+> `docs/M10_EVALUATION.md` mentioned below are absent; `eval_full_run1_prefix.json`
+> and the available per-unit reports are historical/partial evidence.
+> GUI narration now defaults off and requires `AIRE_M10_NARRATION=1`; the
+> “default on” statement below is historical. See the [current demo](DEMO_M10.md).
+
 Baseline: commit `8e402e4` (M9). Nothing committed/pushed. Working store for M10:
 `demo_artifacts/m10/m10.sqlite` (gitignored `*.sqlite`).
 

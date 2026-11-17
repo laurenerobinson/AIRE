@@ -1,5 +1,53 @@
 # A.I.R.E. 2.0 architecture
 
+Current deployment (2026-11-17): Windows 11 runs Chrome in an isolated profile
+and local Ollama inference (`qwen2.5-coder:1.5b`, port 11434). Ubuntu in
+VirtualBox runs the API, Ghidra/PyGhidra and the SQLite analysis store. The
+addresses below describe this NAT configuration, not portable defaults.
+See [Windows launch instructions](../README.md#running-aire-with-windows-host-inference).
+
+```mermaid
+flowchart LR
+    subgraph LAPTOP["Laptop boundary - Windows 11 host"]
+        CHROME["Chrome - isolated A.I.R.E. profile"]
+        FORWARD["Intended host loopback listener 127.0.0.1:8770 - verification pending"]
+        OLLAMA["Local Ollama - qwen2.5-coder:1.5b - intended 127.0.0.1:11434"]
+        subgraph VM["VM trust boundary - Ubuntu VirtualBox guest"]
+            API["Python GUI/API - 10.0.2.15:8770 - opt-in bind and token gate"]
+            ANALYZER["Ghidra and PyGhidra - static analysis worker"]
+            DB[("SQLite facts and compressed instruction IR")]
+            ANALYSIS["Instruction semantics, CFG, call graph, bounded flow, decompiler checks, CWE rules"]
+            AGENT["Read-only conversational agent - fixed tools"]
+            STATE["Separate uploads and private session files"]
+            API -->|"Explicit validated intake"| ANALYZER
+            ANALYZER -->|"Index writer"| DB
+            DB -->|"Read-only queries"| ANALYSIS
+            ANALYSIS --> AGENT
+            API <--> AGENT
+            API --> STATE
+        end
+        CHROME <-->|"HTTP and per-launch token cookie"| FORWARD
+        FORWARD <-->|"VirtualBox NAT forward - crosses VM boundary"| API
+        AGENT <-->|"HTTP via NAT host alias 10.0.2.2:11434 - explicit remote opt-in"| OLLAMA
+    end
+    UNTRUSTED["Untrusted binary input"] -->|"Upload and validation"| API
+```
+
+The laptop boundary contains both execution environments. Inference is local
+to the laptop but **runs on Windows, outside the VM**. Static indexing and
+deterministic instruction/flow/security reasoning run in Ubuntu. Evidence and
+model text cross the VM boundary; neither binary-derived text nor model output
+is trusted as instructions. The browser also displays decompiled code and
+binary-derived strings outside the guest. Targets are never executed.
+
+The diagram's host listeners are intended restrictions, not independently
+verified Windows facts. Host port forwarding must bind only `127.0.0.1`, and
+host Ollama must remain local. NAT host-loopback access, when enabled, lets the
+guest reach other host loopback services as well. Verify both Windows ports,
+Adapter 2, firewall/external reachability and Chrome authentication as described
+in the [security review](HOST_ACCESS_SECURITY_REVIEW.md). No LAN or internet
+deployment is supported by this assessment.
+
 M8 now layers a read-only tool registry, serializable public activity, bounded
 model action runner, separate conversational sessions and `aire chat <binary>`
 over M2–M7. Tools reuse existing retrieval, evidence, graph and rule modules.
@@ -13,7 +61,11 @@ indexing. M2 implements SQLite persistence of ProgramIndex. The broader
 pipeline includes M3 stored CALL queries, M4 bounded evidence, M5 local chat and
 M6 advisory function naming. M5 is committed; targeted local inference passed.
 M7 adds deterministic security signals on a separate stored-fact branch.
-AI explanation of findings and dynamic validation remain future work.
+M9 adds format-aware intake, exact references/thunks, crypto evidence and
+decompilation recovery. M10 adds stored instruction IR, generic P-code semantics,
+x86/x86-64 branch relations and bounded register/frame-slot flow, cross-validation,
+agent tools and a Function explorer. Full equivalence, vulnerability confirmation
+and dynamic validation remain future work; M10 evaluation is incomplete.
 Existing v1 remains a separate per-function Ghidra Java workflow.
 
 ```mermaid
@@ -58,8 +110,10 @@ supporting and contradicting evidence visible.
 | aire.knowledge | Records, persistence, retrieval | M2 SQLite, M3 connectivity queries and separate transient application relevance; no semantic/vector retrieval |
 | aire.ai | Deterministic evidence, grounded chat, advisory naming | M4/M5/M6 implemented; no rename/write-back |
 | aire.security | Findings and deterministic rules | M7 versioned rules, immutable fact snapshots, transient signals |
-| aire.validation | Optional approved isolated validation | Documentation only |
-| aire.api | Local loopback GUI/service boundary | Standard-library HTTP; read-only analysis access |
+| aire.validation | Format validation | Implemented PE structure checks; dynamic target validation remains future work |
+| aire.analysis | Assembly, flow and decompiler evidence | M9 text checks and M10 instruction-IR reasoning; bounded, not full equivalence |
+| aire.agent | Read-only conversational orchestration | Fixed validated tools, separate sessions and bounded model actions |
+| aire.api | Local GUI/service boundary | Standard-library HTTP; default loopback or explicit private-IPv4 bind for NAT |
 
 ## Local GUI boundary
 
@@ -67,6 +121,13 @@ The optional `aire gui` command serves static HTML/CSS/JavaScript from
 `aire.api.server`. Chat uses `AgentRunner`; analysis panels use `AgentTools`.
 Public `AgentEvent` activity streams as newline-delimited JSON. GUI session and
 transcript files are separate from analysis facts. See [GUI.md](GUI.md).
+The production CLI generates a new access token at each launch. API access
+requires its cookie/header; static files also receive exact Host, Origin and
+fetch-metadata checks. Login sets an HttpOnly, SameSite=Strict cookie. Ports are
+the guest port and explicitly configured public port. Four concurrent chats are
+allowed; excess requests receive 429. This does not cap all HTTP connections.
+New session directories use 0700 and session/transcript files 0600. Explicit
+upload/index jobs may write analysis snapshots; conversational tools cannot.
 
 ## Implemented M1 → M2 → M3 → M4 → M5 → M6 path
 
@@ -463,4 +524,6 @@ calls use MEDIUM. No data flow or bounds proof is implied by either strength.
 Security IDs hash canonical source identity and rule version; timing is separate
 from deterministic content. No database schema changes or result persistence,
 network access, shell/model tools, target execution or program write-back exist.
-See [M7 rule contracts](M7_SECURITY_RULES.md). M8 remains unimplemented.
+See [M7 rule contracts](M7_SECURITY_RULES.md), [M8 agent](M8_AGENT.md) and
+[M10 assembly intelligence](M10_ASSEMBLY_INTELLIGENCE.md). These stages are
+implemented; their historical validation scopes and current limits remain distinct.

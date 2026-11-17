@@ -2,29 +2,48 @@
 
 Shows an analyst selecting a function, reading its assembly in plain English, exploring branches and
 value origins, and checking every claim against cited instruction addresses. All answers below are
-deterministic (no language model); they were produced by the code in this working tree on the store
-`demo_artifacts/m10/m10.sqlite`. Background: [M10_ASSEMBLY_INTELLIGENCE.md](M10_ASSEMBLY_INTELLIGENCE.md);
-measured accuracy: [M10_EVALUATION.md](M10_EVALUATION.md).
+deterministic (no language model); they were recorded from the prepared store
+`demo_artifacts/m10/m10.sqlite`. Background: [M10_ASSEMBLY_INTELLIGENCE.md](M10_ASSEMBLY_INTELLIGENCE.md).
+These are fixture-specific examples, not a completed accuracy benchmark.
+`docs/M10_EVALUATION.md` and the merged Phase 6 report are absent. See the scoped
+[November 17 integration audit](M10_INTEGRATION_HARDENING.md) for later evidence.
 
 Nothing in this demo executes an analysed binary.
 
-## 1. Start the GUI (≈ 5 s with the existing store)
+## 1. Start the split-host GUI
+
+Use isolated Windows 11 Chrome and Windows Ollama (`qwen2.5-coder:1.5b`).
+Follow the full [host setup](../README.md#running-aire-with-windows-host-inference)
+for model presence, NAT, Chrome launch, token login, listener checks and shutdown.
+After verifying this VM's NAT addresses, start in Ubuntu:
 
 ```bash
 cd ~/aire
 export GHIDRA_INSTALL_DIR=/home/laurene/tools/ghidra
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 export PYTHONPATH=aire-server/src
-export AIRE_M10_NARRATION=0          # recommended on this VM: deterministic answers only (see "Narration")
+export AIRE_OLLAMA_HOST=http://10.0.2.2:11434
+export AIRE_OLLAMA_ALLOW_REMOTE=1
+export AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b
+export AIRE_OLLAMA_NUM_CTX=4096
+export AIRE_M10_NARRATION=0          # M10 narration off; M8 model cards can still infer
 aire-server/.venv/bin/aire gui \
   --database demo_artifacts/m10/m10.sqlite \
-  --session-dir demo_artifacts/m10/sessions \
-  --upload-dir demo_artifacts/m10/uploads \
-  --port 8768 --no-browser --no-prewarm
-# open http://127.0.0.1:8768/
+  --bind 10.0.2.15 \
+  --allow-non-loopback-bind \
+  --port 8770 \
+  --public-port 8770 \
+  --no-browser
+# Open this launch's printed Host-side URL in isolated Windows Chrome.
 ```
 
-The store already contains the indexed demo binaries (`aire_test_binary`, its stripped and `-O2` builds,
+The intended host origin is `http://127.0.0.1:8770`; direct guest-IP browsing
+is rejected by Host checks. Never record tokens in this runbook. Local-only
+Windows listeners/NAT, Chrome login, external-device rejection and Adapter 2
+remain **pending verification**. For an existing-store-only rehearsal,
+`--no-prewarm` avoids starting the analyzer. No split-host startup benchmark exists.
+
+The prepared store was reported to contain the indexed demo binaries (`aire_test_binary`, its stripped and `-O2` builds,
 the three CNG PEs and `sleigh.exe`). To rebuild it from scratch (Ghidra analysis, several minutes per PE):
 `PYTHONPATH=aire-server/src aire-server/.venv/bin/python scripts/m10_index.py` (see the script header).
 
@@ -102,15 +121,18 @@ Verdict: CONSISTENT
 
 A real discrepancy for contrast: select **aes_gcm.exe** → `FUN_004075e0`. The verdict is **POTENTIAL
 DISCREPANCY**: the function writes its result to XMM0 and has conditional branches, but Ghidra decompiled it
-as `void` with the computation discarded (confirmed by manual review; see M10_EVALUATION.md §Cross-validation).
+as `void` with the computation discarded (reported manual review, corroborated
+by the [integration audit](M10_INTEGRATION_HARDENING.md)). This heuristic finding
+does not establish decompiler equivalence elsewhere.
 
 ## 7. Review cited evidence
 
 Every chat answer starts with the binary (name, SHA-256 prefix, language), the function name and entry address,
 and the evidence source (`Ghidra P-code and instruction facts`, or a **low-confidence** assembly-text fallback for
 snapshots indexed before M10). Every `0x…` in an answer is a link in the GUI that jumps to that instruction in
-the Assembly tab; the evaluation checks that each cited address is a real instruction, function entry, string or
-referenced address in that binary (validity 1.0 on the ELF builds — see M10_EVALUATION.md).
+the Assembly tab. The evaluator checks stored instructions, entries and
+referenced addresses, with handling for immediate literals. Saved ELF results
+are historical; citation validity does not establish semantic correctness.
 
 Other questions answered deterministically: *What does this function do?*, *Explain these instructions*,
 *How is the return value used?*, *Where is input validation performed?*. The function cards
@@ -121,15 +143,39 @@ Other questions answered deterministically: *What does this function do?*, *Expl
 With `AIRE_M10_NARRATION=1` and Ollama running (`qwen2.5-coder:1.5b`), a short model summary may be appended
 after the deterministic answer, within `AIRE_M10_NARRATION_SECONDS` (default 60). It is shown only if every
 address it cites appears in the deterministic evidence and every instruction it names matches; otherwise it is
-rejected with the reason. On this VirtualBox VM Ollama load has coincided with host CPU stalls, so leave it off
-for demos.
+rejected with the reason. Earlier VM-hosted inference coincided with scheduling
+stalls. Inference now runs on Windows; leave M10 narration off for deterministic
+rehearsal. Regular M8 cards can still request generation. The four live-model
+regression cases remain skipped in the latest reported audit.
 
 ## Reproduce the automated checks
 
 ```bash
 cd ~/aire
-PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m pytest -q aire-server/tests/test_m10_*.py   # 47 tests
-scripts/run_m10_eval_resumable.sh        # Phase 6 evaluation, one binary per process, resumable
-python3 -m json.tool docs/m10/eval_full.json | less
-PYTHONPATH=aire-server/src aire-server/.venv/bin/python scripts/verify_m10_browser.py   # Firefox GUI check (port 8768)
+PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m pytest -q aire-server/tests/test_m10_*.py
+# Inspect preserved partial evidence without generating a new result.
+python3 -m json.tool docs/m10/eval_full/aes_gcm.json | less
 ```
+
+These optional commands were not run during documentation maintenance. The
+November 17 Codex host-access audit reports **649 executed / 645 passed / zero
+failed/errors / 4 live-model skipped**, Python 3.12.3, Ghidra enabled and Firefox
+155.0.1 headless in Ubuntu, with synthetic payloads and a fake model. This does
+not verify Windows Chrome. The historical Function explorer browser report is
+[browser_verification.json](m10/browser_verification.json), from guest-local
+port 8768 before token hardening.
+
+`scripts/verify_m10_browser.py` accepts `--url` but defaults to the old bare URL
+and writes its URL into a report. Its original invocation cannot authenticate
+a hardened launch; do not give it a real token URL that would be persisted.
+Use `test_host_access_security.py`'s authenticated temporary-server browser test
+for automated coverage and rehearse Chrome manually without recording credentials.
+Updating historical helper code is outside this documentation-only task.
+
+For Phase 6 follow-up, review `scripts/evaluate_m10_full.py`: resumable units
+skip saved steps by name, so old results are not evidence for current code.
+Use new ignored output paths via `--database`, `--out-dir` and `--output`;
+complete all units before a merge. `scripts/run_m10_eval_resumable.sh` writes
+to historical docs paths, so do not run it unchanged when preserving results.
+Keep generated stores/logs/profiles out of Git. The [defense ledger](MS_DEFENSE_M10.md)
+lists missing units and rehearsal tasks.

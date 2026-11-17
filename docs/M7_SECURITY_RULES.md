@@ -4,7 +4,9 @@ M7 adds a small offline rule framework over stored program facts. Its output is
 an evidence-backed **security signal requiring analyst review**, never a
 confirmed vulnerability. No LLM is required to create, validate or render a
 finding. M6 is committed at `ed8881e` / `aire-m6`; this milestone leaves M1–M6
-implementation and SQLite schema v1 unchanged. M8 has not started.
+implementation and SQLite schema v1 unchanged at that historical milestone.
+M8's read-only agent, the GUI/API, M9 schema-v2 evidence and M10 assembly
+intelligence have since been implemented; see the [current roadmap](ROADMAP.md).
 
 ## Public API and rule contract
 

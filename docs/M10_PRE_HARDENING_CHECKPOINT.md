@@ -1,5 +1,13 @@
 # M10 pre-hardening Git checkpoint — 2026-11-17
 
+> Historical preservation checkpoint; the outstanding-work list records the
+> state at that checkpoint. Subsequent [integration](M10_INTEGRATION_HARDENING.md),
+> [Phase 2 security](M10_SECURITY_HARDENING.md) and
+> [host-access](HOST_ACCESS_SECURITY_REVIEW.md) audits supply later results.
+> Current deployment and unresolved checks are in the
+> [documentation update](M10_DOCUMENTATION_UPDATE_2026-11-17.md). Full Phase 6
+> evaluation remains incomplete; checkpoint passes are not live-model passes.
+
 Branch: `checkpoint/m10-pre-hardening`.
 Commit message: `checkpoint(m10): preserve assembly intelligence implementation before hardening`.
 This record describes preservation checks, not completion of M1–M10 hardening.

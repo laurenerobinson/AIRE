@@ -1,5 +1,12 @@
 # Controlled test corpus
 
+The original eight binaries described below are only the preserved corpus.
+The current repository also includes simple/M10 ELF variants, professor ELF
+and PE32/x86, imported fixtures, and M9 x86/x86-64 PE corruption/crypto/large
+fixtures. See [format-specific evidence](../docs/BINARY_FORMAT_SUPPORT.md) and
+[M10 limits](../docs/M10_ASSEMBLY_INTELLIGENCE.md); architecture, ABI, addresses
+and analysis completeness must be checked per binary/build.
+
 All six original C sources, eight intentional binaries, and two original maps
 were preserved byte-for-byte. No binary was executed during reconstruction.
 Binaries are Linux x86-64 ELF, dynamically linked. Except `analysis_target`

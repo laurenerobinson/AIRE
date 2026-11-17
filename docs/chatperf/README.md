@@ -1,5 +1,11 @@
 # GUI chat performance
 
+> Historical VM-hosted inference measurements and subsequent deterministic
+> fast-path results. Current inference and isolated Chrome run on Windows 11;
+> the API and static analysis remain in Ubuntu. No controlled split-host speedup
+> has been measured. Follow [current setup](../../README.md#running-aire-with-windows-host-inference)
+> and retain the measured conditions/skips below when citing these numbers.
+
 ## Baseline (2026-11-11, before Step 1) — `baseline_2026-11-11/`
 
 Profiled `GuiApplication.run_chat` (the `/api/chat` code path) on `demo_artifacts/m9/m9.sqlite` with

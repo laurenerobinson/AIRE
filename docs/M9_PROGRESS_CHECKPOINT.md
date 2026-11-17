@@ -1,5 +1,10 @@
 # M9 progress checkpoint
 
+> Historical November 10–11 checkpoint. “M10 not started” belongs to that date.
+> M10 assembly intelligence is now implemented; see the
+> [current overview](M10_ASSEMBLY_INTELLIGENCE.md). Phase 6 evaluation and
+> Windows deployment verification remain incomplete.
+
 > **Update 2026-11-11 00:40** — see the *Update log* at the end for the newest state.
 
 Written 2026-11-10 23:58 (local), after recovery from the unexpected VM shutdown.

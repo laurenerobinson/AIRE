@@ -1,5 +1,15 @@
 # M1–M10 integration hardening — Phase 1
 
+> Historical Phase 1 evidence, including the scoped measurements below. Later
+> [Phase 2](M10_SECURITY_HARDENING.md) and the November 17 Codex
+> [host-access review](HOST_ACCESS_SECURITY_REVIEW.md) extend this evidence;
+> the latter reports 649 tests executed, 645 passed, zero failures/errors and
+> four live-model skips, with Ghidra and headless Ubuntu Firefox 155.0.1 enabled.
+> These counts are attributed reports, not a new documentation-audit test run.
+> The current deployment is [Windows Chrome/Ollama plus Ubuntu analysis](ARCHITECTURE.md).
+> Windows security verification and full M10 evaluation remain incomplete.
+> “NOT TESTED in this phase” below remains true for this historical phase.
+
 Date: 2026-11-17. Branch: `checkpoint/m10-pre-hardening`.
 Preserved checkpoint: `60816837fd64d84ec718464c67e9654d3f9a9b44`. Changes in this phase are **uncommitted**; nothing was pushed.
 

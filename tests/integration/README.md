@@ -1,5 +1,21 @@
 # Integration checks
 
+Latest reported evidence (November 17 Codex audit): **649 executed, 645 passed,
+zero failures/errors, four live-model skipped**, Python 3.12.3, Ghidra enabled
+and Firefox 155.0.1 headless in Ubuntu enabled. Earlier Phase 2: 625 executed,
+621 passed, four skipped. These are separate attributed runs, not new results
+from documentation maintenance. Browser coverage used synthetic hostile text,
+a temporary local server/profile and a fake model, including token login and
+escaped rendering. Windows Chrome/network checks remain pending. See the
+[host-access report](../../docs/HOST_ACCESS_SECURITY_REVIEW.md) and
+[defense evaluation gaps](../../docs/MS_DEFENSE_M10.md).
+
+The existing full-suite command in the security report enables
+`AIRE_RUN_GHIDRA_TESTS=1` and `AIRE_RUN_BROWSER_TESTS=1`; live model gates remain
+off. The browser gate requires existing Firefox and uses Marionette without
+installing a browser driver. Historical M1–M7 commands below describe their
+individual test scopes; they do not enable Windows-host model inference.
+
 M1 provides the opt-in PyGhidra integration test below. The archived demo in
 docs/AIRE_DEMO_SCRIPT.md remains a manual v1 scenario, not an automated test.
 

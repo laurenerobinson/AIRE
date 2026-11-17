@@ -3,14 +3,28 @@
 Date: 2026-11-17 · Branch `checkpoint/m10-pre-hardening` (working tree, includes uncommitted M10 Phase 2 work) ·
 Python 3.12.3 · Firefox 155.0.1 (VM, headless test) · **Nothing committed or pushed.**
 
-**Threat model.** The GUI is served from the Ubuntu VM and opened in Firefox on the Windows host through a
-VirtualBox NAT port forward bound to host `127.0.0.1`. Any website in another tab, and any local Windows process,
+**Current deployment clarification (documentation audit, 2026-11-17).** This file is the
+repository evidence for the November 17 Codex host-access audit. No separate document
+titled *A.I.R.E. Host-Access Change Audit* was located in the inspected workspace.
+The current working branch is `m10-host-access-hardening`; the branch above records
+the review's original context. No checkout or history rewrite is implied.
+
+**Threat model.** The GUI is served from the Ubuntu VM and currently opened in
+isolated Google Chrome on Windows 11 through VirtualBox NAT. Host `127.0.0.1:8770`
+must forward to guest `10.0.2.15:8770`; the host binding remains to be independently
+verified. Any website in another tab, and any local Windows process,
 can send requests to `localhost`. Binary-derived strings and model output reach a browser outside the VM.
-Optional: Ollama on Windows reached from the VM at `http://10.0.2.2:11434`.
+Ollama inference now runs on Windows, reached from the VM at
+`http://10.0.2.2:11434`, with selected model `qwen2.5-coder:1.5b` and context 4096.
+These are configuration values, not evidence that this model completed live tests.
+The automated browser evidence below used **Firefox 155.0.1 headless inside Ubuntu**,
+not Windows Chrome. The original spare-port probes and results are preserved.
 
 ## Verdict
 
-**SAFE WITH CONDITIONS.** The conditions are listed at the end of this document.
+**Conditional local-demonstration assessment; Windows verification is incomplete.**
+The original audit verdict was “SAFE WITH CONDITIONS.” It does not certify host
+firewall/NAT settings, Chrome, dependencies, or LAN/internet exposure.
 
 ## Results
 
@@ -69,7 +83,17 @@ Analysis results, evidence references and citations are unchanged; the full suit
 | Before, targeted: `test_ollama_client` on this tree prior to edits | 33 | 33 | 0 | 0 | 0 | 1.5 s |
 | **After, full suite** (`AIRE_RUN_GHIDRA_TESTS=1`, `AIRE_RUN_BROWSER_TESTS=1`, Python 3.12.3) | **649** | **645** | **0** | **0** | **4** | 604 s |
 
-The 4 skips are the live-model opt-ins (`test_live_demo`, `test_debug_live_ollama`, `test_stripped_live_ollama`, `test_stripped_live_naming`). They are **NOT TESTED**, not passed. The run also used the documented command (core dumps off, `nice -n 10`). Log: `demo_artifacts/host_access/full_suite.log` (not git-ignored; delete it if you don't want it).
+These are **reported November 17 Codex audit results**, incorporated without a
+new full-suite run during documentation maintenance. The 4 skips are the
+live-model opt-ins (`test_live_demo`, `test_debug_live_ollama`,
+`test_stripped_live_ollama`, `test_stripped_live_naming`); they are **NOT TESTED**,
+not passed. Browser coverage used a temporary Firefox profile and local test
+server, synthetic hostile function/string/import/decompiled/model text and a
+fake model provider. It exercised real token login and literal-text rendering;
+the audit reports that disabling escaping made the browser test fail. It did
+not exercise Windows forwarding or Chrome. The run used core dumps off and
+`nice -n 10`. Raw log reference: `demo_artifacts/host_access/full_suite.log`;
+runtime logs, profiles and transcripts must stay out of Git.
 
 ## Manual checks (live server, `curl`)
 
@@ -150,16 +174,19 @@ Request log lines: `"GET /?token=<redacted> HTTP/1.1" 303 -`. The token appears 
 Two observations from the health check:
 
 - `/api/health` made one metadata request (`/api/tags`) to `10.0.2.2:11434`, and **a Windows-side Ollama answered**. No prompt was sent.
-- The configured model `qwen2.5-coder:1.5b` is **not** in that Ollama's model list (`llama3.2:latest` only). Pull it on Windows or set `AIRE_OLLAMA_MODEL=llama3.2:latest`.
+- At audit time the selected model `qwen2.5-coder:1.5b` was **not** in that
+  endpoint's model list (`llama3.2:latest` only). This is a historical observation;
+  verify/install the intended Qwen model on Windows before rehearsal, following
+  the current README. Do not infer inference success from `/api/tags`.
 
 ## Remaining risks and unverified items
 
 | ID | Risk | Severity | Note |
 |----|------|----------|------|
 | R1 | **The Windows side was not verified** (port-forward Host IP, firewall, Ollama bind). Ollama answering on `10.0.2.2` means either VirtualBox "localhost reachable" is on or Ollama listens beyond loopback. The VM cannot tell which. | HIGH until you run the checklist | See the checklist below |
-| R2 | Cookies are not port-scoped. The `aire_token_<port>` cookie is also sent to *other* `127.0.0.1` ports you visit in the same Firefox profile. A malicious local Windows server could collect it if you browse to it. | LOW–MEDIUM | Use the dedicated profile; the token changes every launch |
-| R3 | The token sits in the terminal and in Firefox history (the `/?token=` URL, before the redirect). | LOW | Same model as Jupyter; use the dedicated profile and close the terminal when done |
-| R4 | Plain HTTP over the forward. Traffic stays on host loopback and in the VirtualBox NAT engine. | LOW | Do not forward on a non-loopback host IP |
+| R2 | Cookies are not port-scoped. The `aire_token_<port>` cookie is also sent to other `127.0.0.1` ports visited in the same browser profile. A malicious local Windows server could collect it. | LOW–MEDIUM | Use dedicated Chrome; the token changes every launch |
+| R3 | The token is visible in the launch terminal and may remain in browser history before the redirect. | LOW | Keep the profile dedicated; avoid capturing or sharing the launch URL |
+| R4 | Plain HTTP, without a Secure cookie flag. Traffic is confined to host loopback and NAT only if Windows is configured correctly. | LOW under that condition | Do not forward on a non-loopback host IP; host verification is pending |
 | R5 | A few `app.js` `innerHTML` interpolations of server-computed integers are not escaped (`:539,:607,:622,:681,:693`). They are not exploitable unless the analysis database is tampered with. CSP blocks inline script anyway. | LOW | Left unchanged (the brief asks to fix confirmed issues only). One-line hardening if wanted. |
 | R6 | `ThreadingHTTPServer` has no global connection cap. Slow clients are bounded by the 60 s socket timeout, and a hostile *web page* cannot reach the API without the token. A local Windows process that can connect can still occupy threads. | LOW | — |
 | R7 | Prompt injection against a live model is unmeasured (also Phase 2 R2). Model text is display-only and the tools are read-only. | MEDIUM | Keep `AIRE_M10_NARRATION=0` |
@@ -169,54 +196,101 @@ Two observations from the health check:
 
 ## Host-side checklist (Windows)
 
-The examples use guest port **8767** and host port **8767**. If they differ, pass `--public-port <host port>`.
+This is a **pending verification checklist**, not a record of checks completed.
+Use the current [Windows inference launch workflow](../README.md#running-aire-with-windows-host-inference)
+for isolated Chrome, model checks, the exact Ubuntu command, shutdown and troubleshooting.
+The examples below use guest/host port **8770**. The earlier manual evidence above
+deliberately used ports 18767/28767 and remains historical.
 
 1. **VirtualBox port forward.** Settings → Network → Adapter 1 (NAT) → Advanced → Port Forwarding:
 
    | Name | Protocol | Host IP | Host Port | Guest IP | Guest Port |
    |------|----------|---------|-----------|----------|------------|
-   | aire-gui | TCP | **127.0.0.1** | 8767 | 10.0.2.15 | 8767 |
+   | aire-gui | TCP | **127.0.0.1** | 8770 | 10.0.2.15 | 8770 |
 
    Never leave Host IP blank (blank means all host interfaces). Command-line equivalent, with the VM running:
-   `VBoxManage controlvm "<VM name>" natpf1 "aire-gui,tcp,127.0.0.1,8767,10.0.2.15,8767"`
-2. **Confirm the listener.** In `cmd`, run `netstat -ano | findstr :8767`.
-   - Expected, exactly one line: `TCP    127.0.0.1:8767    0.0.0.0:0    LISTENING    <PID>`.
+   `VBoxManage controlvm "<VM name>" natpf1 "aire-gui,tcp,127.0.0.1,8770,10.0.2.15,8770"`
+   Inspect existing rules before adding a duplicate; confirm with `VBoxManage showvminfo "<VM name>" --machinereadable`.
+2. **Confirm the listener.** In `cmd`, run `netstat -ano | findstr :8770`.
+   - Expected listening address: `TCP    127.0.0.1:8770    0.0.0.0:0    LISTENING    <PID>` (ignore unrelated established connections).
    - `tasklist /FI "PID eq <PID>"` should show `VirtualBoxVM.exe`.
-   - **Any `0.0.0.0:8767` or `[::]:8767` line means the rule is wrong.** Stop and fix it.
+   - Any wildcard, LAN or IPv6 listener for 8770 requires investigation before use.
+   - In Ubuntu, verify `ss -ltn 'sport = :8770'` shows only `10.0.2.15:8770` for this API instance.
 3. **Windows Firewall.** Decline (Cancel, or untick both Private and Public) any "Allow access" prompt for:
    - `VirtualBoxVM.exe` / `VirtualBox Headless Frontend`
    - `ollama.exe` / `ollama app.exe`
 
    A loopback-only setup needs no inbound rule. Check that none exists: `wf.msc` → Inbound Rules → no *Allow* rule for those programs on Public/Private.
-4. **Dedicated Firefox profile.**
-   - Create it with `"C:\Program Files\Mozilla Firefox\firefox.exe" -P` → Create Profile… → `aire`.
-   - Launch with `"C:\Program Files\Mozilla Firefox\firefox.exe" -P aire -no-remote "http://127.0.0.1:8767/?token=<token from VM terminal>"`.
-   - In that profile: no extensions, no Sync sign-in, no other browsing.
+4. **Dedicated Chrome profile and token authentication.**
+   - Use the README's `--user-data-dir` launch; no extensions, Sync or unrelated browsing.
+   - In a fresh profile, a bare `/api/bootstrap` request must fail with 401.
+     Open the current launch's printed Host-side URL, then confirm bootstrap
+     succeeds, the URL redirects to `/`, and the cookie is HttpOnly and SameSite=Strict.
+   - Restart the API and confirm the old cookie/token fails, then use the new launch URL.
+     Do not record token values in screenshots, notes or transcripts.
 5. **Windows Ollama on loopback only.**
    - Run `netstat -ano | findstr :11434`. Expected: `TCP 127.0.0.1:11434 … LISTENING` only. A `0.0.0.0:11434` line means fix it.
-   - Run `echo %OLLAMA_HOST%` and PowerShell `[Environment]::GetEnvironmentVariable('OLLAMA_HOST','User')`. Both must be empty or `127.0.0.1`, **not** `0.0.0.0`. Restart Ollama after changing it.
+   - Inspect `echo %OLLAMA_HOST%` in cmd and PowerShell
+     `[Environment]::GetEnvironmentVariable('OLLAMA_HOST','User')` (also inspect
+     the Machine scope). Require a default/explicit loopback configuration,
+     such as `127.0.0.1:11434`, never `0.0.0.0`. Restart Ollama after changing
+     its environment; verify the actual listener rather than inferring it from
+     a different shell's environment.
    - The VM reaches it as `10.0.2.2`, which VirtualBox NAT maps to host loopback when "localhost reachable" is enabled.
    - If Ollama is on `127.0.0.1` and the VM gets "connection refused", enable it: `VBoxManage modifyvm "<VM name>" --nat-localhostreachable1 on` (VM powered off). Do not bind Ollama to `0.0.0.0` instead. Trade-off: this lets the guest reach **all** host loopback services.
-6. **VM side launch** (in the VM terminal; port 8767 must be free, so stop any old GUI first):
+6. **VM side launch** (port 8770 must be free; stop any old GUI normally first):
 
    ```bash
    cd ~/aire
    export AIRE_OLLAMA_HOST=http://10.0.2.2:11434   # only if using Windows Ollama
    export AIRE_OLLAMA_ALLOW_REMOTE=1               # explicit opt-in; omit to stay loopback-only
-   export AIRE_OLLAMA_MODEL=llama3.2:latest        # a model that exists on that Ollama
+   export AIRE_OLLAMA_MODEL=qwen2.5-coder:1.5b     # verify it is installed on Windows
+   export AIRE_OLLAMA_NUM_CTX=4096
    export AIRE_M10_NARRATION=0
    aire-server/.venv/bin/aire gui --database demo_artifacts/m10/m10.sqlite \
-     --bind 10.0.2.15 --allow-non-loopback-bind --port 8767 --public-port 8767 --no-browser
+     --bind 10.0.2.15 --allow-non-loopback-bind --port 8770 --public-port 8770 --no-browser
    ```
 
-   - Copy the printed `Host-side URL … ?token=…` into the `aire` Firefox profile on Windows.
-   - The bind is NAT-only, so the VM's own browser cannot use it. For in-VM use, launch without `--bind`/`--allow-non-loopback-bind`.
-   - Verify in the VM that `ss -ltn | grep 8767` shows `10.0.2.15:8767`, never `0.0.0.0:8767`.
+   - Copy the printed Host-side URL into isolated Chrome on Windows. The direct
+     guest-IP browser URL is rejected by the Host allowlist. For a separate
+     in-VM workflow, omit `--bind`/`--allow-non-loopback-bind` and use its own
+     printed loopback launch URL.
+   - Verify the NAT IPs before reuse; they describe this VirtualBox configuration.
+7. **External-device connectivity.** From a different device on the same
+   network, try the Windows LAN addresses on TCP 8770 and 11434, including IPv6
+   where applicable. Both services must be unreachable. Record the addresses,
+   network and outcomes without tokens. Host-only checks do not replace this test.
+8. **Adapter 2.** Inspect Settings → Network and `showvminfo` on Windows.
+   The audit's `ip -br addr` saw only NAT `enp0s3`, but does not prove Adapter 2
+   is disabled in saved configuration. Record enabled state, attachment type
+   and any guest address before using the split-host setup.
 
-## Conditions for "SAFE WITH CONDITIONS"
+## Conditions for the local demonstration
 
-1. Windows checklist items 1–3 pass: forward on host `127.0.0.1` only, `netstat` shows no `0.0.0.0:8767`, firewall prompts declined.
-2. You open the GUI only in the dedicated `aire` Firefox profile, through the tokenized URL.
+1. Windows checklist items 1–3 and 7–8 pass: forwarding only on `127.0.0.1:8770`, intended firewall policy, no external reachability, Adapter 2 reviewed.
+2. Dedicated Chrome and the token-authentication checks in item 4 pass.
 3. If you use Windows Ollama: it listens on `127.0.0.1:11434` only (item 5), and you accept the localhost-reachable trade-off.
 4. Keep `AIRE_M10_NARRATION=0`. Treat model text as interpretation.
-5. Run `pip-audit` once on the listed versions from a networked machine.
+5. Obtain a separate dependency audit against the recorded versions. None was
+   performed during this documentation update and no packages were installed.
+
+## Control evidence and accepted limits
+
+Automated evidence is the reported Codex suite, not Windows configuration
+inspection. The host-access regressions cover fresh launch tokens, cookie/header
+authentication, exact Host/port and Origin/fetch-metadata gates, non-loopback bind
+and remote-Ollama opt-ins, 0600 session files, four-chat concurrency, bounded
+bodies and escaped rendering. Phase 2 separately covers read-only tool/scope
+restrictions, validated ELF/PE intake, path/session isolation, and IR decoding
+bounded to 32 MiB and nesting depth 64. New session directories are 0700;
+existing directories are not automatically re-permissioned.
+
+Manual VM-side evidence above covers spare-port listeners and HTTP probes,
+plus Windows Ollama metadata connectivity. **No Windows listener, final NAT
+rule, external-device, Chrome login or Adapter 2 check is claimed complete.**
+Accepted limitations include plain HTTP under local confinement, browser cookies
+shared across ports, token exposure to terminal/history, no global HTTP-thread
+cap, and unmeasured live-model injection resistance. The read-only agent cannot
+execute a target or shell; explicit GUI intake jobs still write uploads and
+analysis snapshots. Static signals do not confirm vulnerabilities and citation
+validation does not prove prose correct.

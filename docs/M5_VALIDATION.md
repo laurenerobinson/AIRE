@@ -1,5 +1,13 @@
 # M5 implementation and validation report
 
+> Historical September M5 experiments and environment. Statements below about
+> missing GUI/API, references, CWE rules or “M6 has not started” describe that
+> milestone, not the current repository. M6–M10 and the split-host browser/API
+> workflow have since been implemented; see [current state](CURRENT_STATE.md)
+> and [the November 17 security evidence](HOST_ACCESS_SECURITY_REVIEW.md).
+> Original successes, errors, timeouts, hardware conditions and limitations
+> remain preserved; no model experiment was rerun for documentation maintenance.
+
 ## Configurable context and targeted live validation — 2026-09-22/23
 
 The required unstripped and stripped targeted live pipelines passed using local

@@ -1,5 +1,14 @@
 # Verification report
 
+> Historical reconstruction verification. Environment/tool absences and the
+> two-test result below describe reconstruction, not the current M10 tree.
+> The November 17 Codex [host-access review](HOST_ACCESS_SECURITY_REVIEW.md)
+> reports 649 executed, 645 passed, 0 failed/errors, 4 live-model skipped on
+> Python 3.12.3 with Ghidra and headless Ubuntu Firefox 155.0.1 enabled.
+> Earlier Phase 2: 625 executed / 621 passed / 4 skipped, preserved separately
+> in [M10_SECURITY_HARDENING.md](M10_SECURITY_HARDENING.md). Neither result
+> completes Windows Chrome/NAT/listener verification or full M10 evaluation.
+
 Reconstruction checks were performed without installing packages or executing
 test binaries. No Ghidra UI or model session was started.
 

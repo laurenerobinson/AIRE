@@ -1,5 +1,19 @@
 # M1–M10 hardening — Phase 2: security and reliability
 
+> Historical Phase 2 report. Its **625 executed / 621 passed / 4 live-model
+> skipped** result is preserved below. The subsequent November 17 Codex
+> [host-access audit](HOST_ACCESS_SECURITY_REVIEW.md) reports **649 executed,
+> 645 passed, 0 failed/errors and 4 live-model skips**, Python 3.12.3, Ghidra
+> enabled and Firefox 155.0.1 headless in Ubuntu. It added token authentication,
+> exact Host/Origin/fetch-metadata gates, explicit NAT-bind and Windows Ollama
+> opt-ins, 0600 files and bounded chats. The former no-auth risk R1 is superseded.
+> Windows Chrome, ports 8770/11434, final NAT confinement, external reachability
+> and Adapter 2 remain pending. See the [current launch workflow](../README.md#running-aire-with-windows-host-inference).
+> The [later diagnostics](VM_STABILITY_DIAGNOSTICS.md) qualify the host-cause
+> assertions below: guest scheduling stalls are observed, but their precise
+> cause is unresolved. Disk/free-space and crash-file observations below are
+> historical; the later report found a different remaining crash file.
+
 Date: 2026-11-17. Branch: `checkpoint/m10-pre-hardening`.
 Phase 1 committed separately as `87f87b1` (`fix(m10): harden Ghidra integration and analysis correctness`; not pushed).
 **Phase 2 changes are uncommitted.** Nothing was pushed, reset, or force-written.
@@ -13,7 +27,8 @@ Phase 1 committed separately as `87f87b1` (`fix(m10): harden Ghidra integration 
   commands, mutate facts, or cite evidence that does not exist. The most serious finding (S3) was a **process crash**
   that tampered IR could cause; it is fixed and verified with the JVM in-process.
 * Reliability: the long pauses are **host-level VM descheduling**, not A.I.R.E. code (see performance findings). They
-  are still unresolved, can last more than a minute, and cannot be fixed inside the guest.
+  are still unresolved and can last more than a minute. This was the Phase 2
+  attribution; the later diagnostics require host telemetry before assigning cause.
 * Blockers before the defense:
   1. Free disk is **~255 MB (99%)**. Remove the ~396 MB crash report from the S3 crash (R3).
   2. Mitigate host-side VM freezes (performance findings): close host workloads, give the VM dedicated cores, keep saved evidence as a fallback.
@@ -134,9 +149,9 @@ Raw logs and monitor JSONL are in `demo_artifacts/m10/security_phase2/` (git-ign
 
 | ID | Risk | Severity | Disposition |
 | --- | --- | --- | --- |
-| R1 | No authentication: any process of **any local OS user** can reach 127.0.0.1 and list/read all sessions (`GET /api/sessions` without `binary_id`). | LOW for a single-user demo VM | Accepted by design; adding auth tokens would be a new feature |
+| R1 | Historical Phase 2: no authentication allowed local users/processes to list/read sessions. | LOW in that scope | Superseded by the November 17 host-access token gate; not per-user/multi-tenant authorization |
 | R2 | Live-model prompt injection resistance is unmeasured; static tests prove only that a compliant model cannot reach a shell, mutate data, or cite non-existent evidence. | MEDIUM | Keep `AIRE_M10_NARRATION=0`; present model text as interpretation (existing badges) |
-| R3 | A `/var/crash/_usr_lib_python3.12_unittest___init__.py.1000.crash` (~396 MB) was produced by the S3 crash. Free disk is now ~255 MB (99%). Deleting it was not permitted to the assistant. | HIGH for VM stability | **User action:** remove it (`rm /var/crash/_usr_lib_python3.12_unittest___init__.py.1000.crash`) before the defense |
+| R3 | Historical: a ~396 MB unittest crash report left ~255 MB free (99% used). | HIGH for VM stability | Later diagnostics found that file absent and a different ~133 MB report present. Recheck capacity and archive needed evidence before any manual cleanup. |
 | R4 | The read-only store does not verify integrity at open; a damaged page can surface mid-request as a clean 400 error. | LOW | Acceptable; the demo uses known stores |
 | R5 | Interactive browser behaviour (malformed responses, upload dialog) not exercised in this phase. | LOW | Rehearse with the demo script |
 | R7 | Host-level VM freezes (up to 73.9 s observed) during heavy work. | HIGH for a live demo | Host-side mitigation; rehearse with fallbacks |

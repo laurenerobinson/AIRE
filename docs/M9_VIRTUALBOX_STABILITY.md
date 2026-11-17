@@ -1,5 +1,12 @@
 # M9 — VirtualBox stability investigation
 
+> Historical November 11 observations/recommendations. Later
+> [VM diagnostics](VM_STABILITY_DIAGNOSTICS.md) distinguish observed guest stalls
+> from an unproven host/backend cause. Chrome and Ollama now run on Windows 11;
+> analysis stays in Ubuntu. Reported GUI responsiveness improved without a
+> measured speedup or proof that scheduling/NEM limitations were eliminated.
+> Original observations and recommendations follow.
+
 Read-only investigation from inside the guest (2026-11-11). **No host or guest setting was
 changed** (the only service action was the user-approved, since-resumed tracker pause).
 Host-side items below are recommendations for the user.
