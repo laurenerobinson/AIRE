@@ -138,7 +138,8 @@ class ChatIntegrationTests(unittest.TestCase):
         self.run_question('stripped', FakeModel())
 
     def local_client(self, kind):
-        client = OllamaClient()
+        allow_remote = os.environ.get('AIRE_OLLAMA_ALLOW_REMOTE') == '1'
+        client = OllamaClient(allow_remote_host=allow_remote)
         try:
             models = client.list_models()
         except (OllamaConnectionError, OllamaTimeoutError) as exc:
@@ -149,7 +150,7 @@ class ChatIntegrationTests(unittest.TestCase):
             reason = f'No installed selected model: {model!r}; available models: {models}. No model pulled.'
             self.reports[kind + '_live'] = {'status': 'skipped', 'reason': reason}
             self.skipTest(reason)
-        return OllamaClient(host=client.host, model=model)
+        return OllamaClient(host=client.host, model=model, allow_remote_host=allow_remote)
 
     @unittest.skipUnless(os.environ.get('AIRE_RUN_OLLAMA_TESTS') == '1', 'Opt-in local Ollama inference')
     def test_debug_live_ollama(self):

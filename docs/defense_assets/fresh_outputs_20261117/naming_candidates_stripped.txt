@@ -1,0 +1,9 @@
+$ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m aire.ai.naming demo_artifacts/m10/defense_20261117/demo.sqlite 08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188 --candidates --limit 8
+FUN_0040116d -> ground truth (nm on debug build, same address): calculate_checksum
+FUN_00401340 -> ground truth (nm on debug build, same address): add_values
+FUN_0040139f -> ground truth (nm on debug build, same address): choose_operation
+FUN_004011bc -> ground truth (nm on debug build, same address): validate_input
+FUN_00401367 -> ground truth (nm on debug build, same address): secret_operation
+FUN_0040142b -> ground truth (nm on debug build, same address): print_result
+FUN_004012f8 -> ground truth (nm on debug build, same address): process_input
+FUN_00401146 -> ground truth (nm on debug build, same address): print_banner

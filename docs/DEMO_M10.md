@@ -1,5 +1,13 @@
 # DEMO — M10 Evidence-Grounded Assembly Intelligence
 
+For the November 20 defense, use the November 17
+[readiness checkpoint](DEMO_READINESS_REPORT.md),
+[launch and presentation runbook](DEMO_READY_RUNBOOK.md) and
+[backup checklist](DEMO_BACKUP_CHECKLIST.md). Final Windows deployment and
+live-model validation remain pending. The fixture explanations below remain
+useful; the new rehearsal uses a separate compact store and preserves this
+document's original store.
+
 Shows an analyst selecting a function, reading its assembly in plain English, exploring branches and
 value origins, and checking every claim against cited instruction addresses. All answers below are
 deterministic (no language model); they were recorded from the prepared store

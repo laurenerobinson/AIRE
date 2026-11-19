@@ -131,10 +131,12 @@ with BinaryKnowledgeStore(sys.argv[1]) as store:
     @unittest.skipUnless(os.environ.get('AIRE_RUN_NAMING_LIVE_TESTS') == '1', 'Opt-in one-function Ollama naming')
     def test_stripped_live_naming(self):
         # Once explicitly enabled, service/model errors fail rather than mask as skips.
-        client = OllamaClient()
+        allow_remote = os.environ.get('AIRE_OLLAMA_ALLOW_REMOTE') == '1'
+        client = OllamaClient(allow_remote_host=allow_remote)
         self.assertEqual(client.model, 'qwen2.5-coder:1.5b')
         self.assertEqual(client.num_ctx, 4096)
-        self.assertEqual(client.host, 'http://127.0.0.1:11434')
+        expected_host = os.environ.get('AIRE_OLLAMA_HOST', 'http://127.0.0.1:11434') if allow_remote else 'http://127.0.0.1:11434'
+        self.assertEqual(client.host, expected_host)
         self.assertIn(client.model, client.list_models())
         self.run_naming(client, live=True)
 

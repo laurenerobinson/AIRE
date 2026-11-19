@@ -1,0 +1,41 @@
+A.I.R.E. security signals for 23d1152ddce4f04449f515a64e1482e9a877dd35d71e7f17fccfc8ec9805fe4a
+Rules evaluated: 2; failed: 0
+
+[AIRE-CWE-120-UNBOUNDED-COPY v1.0.0]
+Status: SIGNAL
+1 resolved strcpy call signal(s); analyst review required.
+CWE: CWE-120
+Evidence strength: LOW
+Function: 23d1152ddce4f04449f515a64e1482e9a877dd35d71e7f17fccfc8ec9805fe4a:00401156
+Location: 00401183
+Resolved CALL to import-named thunk strcpy at 00401183; an exact matching external import is stored. The strcpy API does not enforce destination bounds. Additional source/destination and input-control analysis is required.
+Evidence:
+- Stored function "copy_input" at 00401156; external=False, thunk=False. [EVIDENCE:6a88efc9febe2b620221fd105f48e9b65bf6e14d56ce80fb63c734edc8beaf3e]
+- Stored function "strcpy" at 00401050; external=False, thunk=True. [EVIDENCE:e48423ed8b98416addda9cd2034d60f202b22a08c4e4242db9d882609577da8a]
+- Stored resolved CALL from "copy_input" (00401156) to "strcpy" (00401050) at 00401183. [EVIDENCE:8b4ddc03137338c5e4fc080aa7c06d37f96d95e0e8141d25b968064e7d671367]
+- Stored IMPORT "<EXTERNAL>::strcpy" at EXTERNAL:00000002. [EVIDENCE:9d483414d09fdbbfee1eff9621392aba24172eac0dda80ccde579f7829ec827e]
+- Stored function "strcpy" at EXTERNAL:00000002; external=True, thunk=False. [EVIDENCE:8e376abb0c873b3526d8b80eb6a52b49817314a7fd85432722f80290c3aca9cb]
+Contradicting evidence:
+- None recorded; this is not proof of absence.
+Assumptions:
+- Stored loader/import/function identities are treated as static observations, not runtime binding proof.
+- API association uses exact thunk name/namespace plus a matched external import; analyst verification is required.
+Limitations:
+- Destination capacity and source length have not been proven.
+- External input control, reachability and runtime API binding have not been established.
+- No argument, taint, source/sink flow or surrounding bounds-check analysis is performed.
+- This is a security signal requiring analyst review, not a confirmed vulnerability.
+- Thunk-to-external binding is not persisted; no such edge is inferred.
+
+[AIRE-CWE-242-DANGEROUS-API v1.0.0]
+Status: NOT_APPLICABLE
+No exact gets import/external/thunk prerequisite is stored.
+- Stored analysis_completed coverage fields: true.
+- Stored options coverage fields: {"include_call_edges": true, "include_imports": true}.
+Limit: Destination capacity and source length have not been proven.
+Limit: External input control, reachability and runtime API binding have not been established.
+Limit: No argument, taint, source/sink flow or surrounding bounds-check analysis is performed.
+Limit: This is a security signal requiring analyst review, not a confirmed vulnerability.
+Limit: Absence applies only to the stored analyzed facts; it is not a safety assessment.
+Note: Static stored-fact scope only; signals/candidates are not confirmed vulnerabilities or exploitability estimates.
+Note: The stored index contains 5 diagnostics; unresolved calls are not inferred.

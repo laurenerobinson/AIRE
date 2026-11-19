@@ -1,0 +1,35 @@
+%% Diagram 2 — Binary analysis and knowledge pipeline (M1 → M2 → M3/M4)
+%% Sources: aire-server/src/aire/pyghidra/indexer.py:115-252, extractor.py, graph_builder.py:8-28,
+%% references.py, instruction_ir.py, knowledge/database.py:202-212,262-267, knowledge/retrieval.py,
+%% ai/context_builder.py, analysis/cache.py
+
+flowchart TB
+    A[/"Binary path (ELF / PE)"/] --> H1["SHA-256 before<br/>indexer.py:124-133"]
+    H1 --> P["Start or reuse PyGhidra JVM (process-wide lock)<br/>indexer.py:137-139 · headless, temp settings/cache dirs"]
+    P --> PR["Create disposable temporary Ghidra project<br/>indexer.py:144-147"]
+    PR --> IMP["Import binary (program_loader) → MessageLog warnings<br/>indexer.py:150-163"]
+    IMP --> AA["Ghidra static auto-analysis<br/>pyghidra.analyze — indexer.py:164-172"]
+    AA --> EX
+
+    subgraph EX["Fact extraction (no target execution)"]
+        direction TB
+        B1["Binary metadata<br/>format · language/ABI · compiler spec · image base"]
+        F1["Functions: internal + external, sorted<br/>indexer.py:177-181"]
+        F2["Per function: decompiled C (parallel decompile workers,<br/>timeout → retry once), bounded assembly, metrics<br/>extractor.extract_functions"]
+        F3["M10 instruction IR + raw P-code per function<br/>instruction_ir.py (AIRE_INSTRUCTION_IR)"]
+        F4["Artifacts: strings · imports · exports<br/>extractor.extract_artifacts"]
+        F5["Direct CALL edges with callsite address<br/>computed calls → warning, omitted<br/>graph_builder.py:8-28"]
+        F6["References · thunk chains · program info (schema v2)<br/>references.py"]
+    end
+
+    EX --> PI["ProgramIndex (immutable, serializable)<br/>+ metadata: versions, timings, retry/incomplete lists"]
+    PI --> REL["Release program — never saved<br/>indexer.py:237-239"]
+    REL --> H2{"SHA-256 after == before?<br/>indexer.py:242-250"}
+    H2 -- "no" --> ERR["IndexingError — result discarded"]
+    H2 -- "yes" --> SAVE["BinaryKnowledgeStore.save_program_index<br/>BEGIN IMMEDIATE … commit / rollback<br/>database.py:202-212, 262-267"]
+    SAVE --> DB[("SQLite tables: binaries · functions · artifacts ·<br/>function_edges · warnings · analysis_metadata ·<br/>binary_references · thunk_relations ·<br/>program_information · function_ir")]
+
+    DB --> Q["M3 ProgramQueryService<br/>callers · callees · callsites · bounded BFS ·<br/>shortest path · connectivity rankings"]
+    DB --> C["M4 ContextBuilder → EvidenceBundle<br/>bounded text · provenance · explicit truncations"]
+    Q --> C
+    C --> OUT["Consumers: M5 chat · M6 naming · M7 rules · M8 tools · M10 analyses"]

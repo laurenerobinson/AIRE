@@ -1,0 +1,37 @@
+%% Diagram 3 — AI agent, deterministic security analysis and response validation
+%% Sources: aire-server/src/aire/api/server.py:511-526,575-640; agent/fact_answers.py:150,665;
+%% agent/assembly_answers.py:33-41,257-272; agent/runner.py:267-510; agent/tools.py:37-188;
+%% ai/chat.py:279-324; ai/prompt_builder.py:295-335; security/rule_engine.py:135-175;
+%% security/rules/api_calls.py:21-87; ai/naming_prompt.py:61-95
+
+flowchart TB
+    Q["Analyst question (GUI chat or `aire chat`)<br/>scoped to one stored binary + session"] --> R1{"Deterministic route?<br/>fact_answers.classify / assembly_answers.route<br/>(GUI only)"}
+    R1 -- "yes: facts, branch, trace,<br/>cross-validation, function summary" --> DET["Answer rendered directly from stored facts<br/>every 0x… address is a citation link<br/>NO model call"]
+    R1 -- "no" --> AG["AgentRunner.run — limits: iterations · tool calls ·<br/>deadline · cancellation · planning-char budget"]
+
+    AG --> PRE["Pre-model exact steps<br/>exact symbol lookup · overview skeleton ·<br/>regex-routed xref/string/thunk queries"]
+    PRE --> PLAN{"Needs model planning?"}
+    PLAN -- "yes" --> LLM1["Model selects ONE action as JSON<br/>schema enum = registered tool names<br/>tool data labelled untrusted"]
+    LLM1 --> REG["ToolRegistry.run — tools.py:62-100<br/>unknown tool → error · type/bound checks ·<br/>100 kB result budget · exceptions → structured error"]
+    PLAN -- "no" --> REG
+    REG --> TOOLS["27 read-only tools over SQLite (mode=ro)<br/>graph · strings · xrefs · decompiled · assembly ·<br/>security_findings · crypto · M10 analyses"]
+    TOOLS --> SEC["M7 RuleEngine (no model)<br/>exact import + external fn + resolved CALL<br/>→ SIGNAL / NOT_APPLICABLE / INSUFFICIENT_EVIDENCE"]
+    TOOLS --> EVB["retrieve_evidence → EvidenceBundle<br/>(always the final tool; slot reserved)"]
+    SEC --> EVB
+
+    EVB --> G{"Graph question or deterministic mode?<br/>runner.py:467-470"}
+    G -- "yes" --> GR["Stored graph results only<br/>(no prose that could reverse an edge)"]
+    G -- "no" --> LLM2["M5 synthesis prompt → Ollama"]
+    LLM2 --> V["Validation — prompt_builder.py:295-335, chat.py:279-300<br/>strict JSON · exact fields · citation IDs must exist ·<br/>CROSSCHECK can't be a 'fact' · behavior claims need code/edge refs ·<br/>contradiction & register-claim checks"]
+    V -- "invalid twice" --> REJ["ChatError: answer withheld<br/>retrieved tool facts still shown (status partial)"]
+    V -- "valid" --> ANS["Answer = summary + cited interpretations<br/>+ fixed caveats appended (chat.py:309-316)"]
+    V -- "one interpretation unsupported" --> OMIT["That interpretation omitted<br/>reason added to uncertainties"]
+    OMIT --> ANS
+
+    DET --> UI["Analyst review: provenance, activity log, citations"]
+    GR --> UI
+    ANS --> UI
+    REJ --> UI
+
+    NAME["M6 naming (CLI) — suggestions must be snake_case,<br/>non-generic, not address-bearing, cite target evidence<br/>naming_prompt.py:87-95 · NO write-back"] --> UI
+    UI --> HUMAN["Analyst decides. Python backend never renames,<br/>comments or patches. (Only the separate Java plugin<br/>can rename — on explicit Apply.)"]

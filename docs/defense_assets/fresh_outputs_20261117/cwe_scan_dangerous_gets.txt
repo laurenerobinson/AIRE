@@ -1,0 +1,41 @@
+A.I.R.E. security signals for 58e3a13496fa765a7650930ea3dbff5bf645809941fbb4844d85dc1b2859135c
+Rules evaluated: 2; failed: 0
+
+[AIRE-CWE-120-UNBOUNDED-COPY v1.0.0]
+Status: NOT_APPLICABLE
+No exact strcpy import/external/thunk prerequisite is stored.
+- Stored analysis_completed coverage fields: true.
+- Stored options coverage fields: {"include_call_edges": true, "include_imports": true}.
+Limit: Destination capacity and source length have not been proven.
+Limit: External input control, reachability and runtime API binding have not been established.
+Limit: No argument, taint, source/sink flow or surrounding bounds-check analysis is performed.
+Limit: This is a security signal requiring analyst review, not a confirmed vulnerability.
+Limit: Absence applies only to the stored analyzed facts; it is not a safety assessment.
+
+[AIRE-CWE-242-DANGEROUS-API v1.0.0]
+Status: SIGNAL
+1 resolved gets call signal(s); analyst review required.
+CWE: CWE-242
+Evidence strength: LOW
+Function: 58e3a13496fa765a7650930ea3dbff5bf645809941fbb4844d85dc1b2859135c:00401156
+Location: 00401178
+Resolved CALL to import-named thunk gets at 00401178; an exact matching external import is stored. The gets API has no destination-size argument. Additional source/destination and input-control analysis is required.
+Evidence:
+- Stored function "read_input" at 00401156; external=False, thunk=False. [EVIDENCE:471ddf1317c7f2c3565cae548a3291d974494d9dc2f1cf43e8e299fc9cd72465]
+- Stored function "gets" at 00401060; external=False, thunk=True. [EVIDENCE:f15b06428cebb737de64f347cdac220d619d57cd6672e5a063cf4ffc9466dcb7]
+- Stored resolved CALL from "read_input" (00401156) to "gets" (00401060) at 00401178. [EVIDENCE:ab49a67700cbfb56fc0819cbbcac1d9cf36d8777d1f42b8cf1822eef0af5f6f4]
+- Stored IMPORT "<EXTERNAL>::gets" at EXTERNAL:00000003. [EVIDENCE:8015e3a5623b19a2b3ef1e9b4822433c2d6dddcede932cf78c49b4a0adacca69]
+- Stored function "gets" at EXTERNAL:00000003; external=True, thunk=False. [EVIDENCE:f26bdb3bad7e3ecb6fe692a99396bdacba5e6b701df653e57447bc10b02c5579]
+Contradicting evidence:
+- None recorded; this is not proof of absence.
+Assumptions:
+- Stored loader/import/function identities are treated as static observations, not runtime binding proof.
+- API association uses exact thunk name/namespace plus a matched external import; analyst verification is required.
+Limitations:
+- Destination capacity and source length have not been proven.
+- External input control, reachability and runtime API binding have not been established.
+- No argument, taint, source/sink flow or surrounding bounds-check analysis is performed.
+- This is a security signal requiring analyst review, not a confirmed vulnerability.
+- Thunk-to-external binding is not persisted; no such edge is inferred.
+Note: Static stored-fact scope only; signals/candidates are not confirmed vulnerabilities or exploitability estimates.
+Note: The stored index contains 5 diagnostics; unresolved calls are not inferred.

@@ -1,0 +1,56 @@
+%% Diagram 1 — End-to-end A.I.R.E. architecture (as implemented, 2026-11-17)
+%% Sources: aire-server/src/aire/agent/cli.py:26-89, api/server.py:55-59,798-841,1077,
+%% api/binary_library.py:341-346, api/index_worker.py:1-25, ai/ollama_client.py:59-115,
+%% ghidra-plugin/src/main/java/aire/AirePlugin.java:21-22, AireSuggestionsProvider.java:432-445
+%% The Java extension and the Python backend share NO code path or data store.
+
+flowchart LR
+    subgraph WIN["Windows 11 host (laptop)"]
+        CH["Chrome — dedicated profile<br/>http://127.0.0.1:8770"]
+        OLW["Ollama (Windows)<br/>qwen2.5-coder:1.5b · num_ctx 4096<br/>127.0.0.1:11434"]
+    end
+
+    subgraph NAT["VirtualBox NAT (deployment-specific)"]
+        FWD["Port forward<br/>host 127.0.0.1:8770 → guest 10.0.2.15:8770"]
+        GW["Guest → host gateway<br/>10.0.2.2:11434"]
+    end
+
+    subgraph VM["Ubuntu 24.04 VM — Python backend (aire-server)"]
+        direction TB
+        HTTP["aire gui — stdlib HTTP server<br/>per-launch token → HttpOnly SameSite=Strict cookie<br/>exact Host / Origin checks · CSP · ≤4 concurrent chats"]
+        APP["GuiApplication<br/>deterministic fast paths first<br/>(fact_answers · assembly_answers)"]
+        AGENT["AgentRunner (M8)<br/>bounded loop · 27 registered read-only tools"]
+        CHAT["AireChatService (M5)<br/>strict JSON + citation validation"]
+        RULES["RuleEngine (M7)<br/>CWE-120 / CWE-242 signals"]
+        M10["AssemblyIntelligence (M10)<br/>IR · CFG · branch paths · value trace · cross-validation"]
+        RO[("SQLite knowledge store<br/>schema v2 · opened mode=ro + query_only<br/>for all reads")]
+        WORKER["index_worker subprocess<br/>(only writer: explicit upload/index jobs)"]
+        GH["PyGhidra 3.1.0 → Ghidra 12.1.3 headless<br/>OpenJDK 21 · disposable unsaved project"]
+        BIN[/"Target binary<br/>(never executed; SHA-256 checked before/after)"/]
+        CLI["CLIs: aire chat · python -m aire.pyghidra.indexer<br/>python -m aire.security.rule_engine · python -m aire.ai.naming"]
+    end
+
+    subgraph GHIDRA_GUI["Separate workflow — Ghidra desktop + Java v1 extension"]
+        JPLUG["AIRE plugin (Java, 11 files)<br/>ContextExtractor → OllamaSuggestionProvider"]
+        OLJ["Ollama (default http://localhost:11434, gemma3:4b)"]
+        GPROG[("Analyst's Ghidra program")]
+    end
+
+    CH -- "plain HTTP, local-only forward,<br/>token cookie" --> FWD --> HTTP
+    HTTP --> APP --> AGENT
+    APP --> M10
+    AGENT --> CHAT
+    AGENT --> RULES
+    AGENT --> M10
+    AGENT --> RO
+    M10 --> RO
+    RULES --> RO
+    CHAT -- "bounded evidence prompt<br/>(remote host needs explicit opt-in)" --> GW --> OLW
+    HTTP -- "upload / analyze job" --> WORKER --> GH
+    GH -- "reads" --> BIN
+    WORKER -- "atomic snapshot save" --> RO
+    CLI --> RO
+    CLI -. "indexer CLI only" .-> GH
+
+    JPLUG --> OLJ
+    JPLUG -- "analyst clicks Apply →<br/>setName(USER_DEFINED) in a transaction" --> GPROG

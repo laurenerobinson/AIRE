@@ -1,0 +1,15 @@
+$ PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m aire.pyghidra.indexer tests/fixtures/simple_elf/aire_test_binary_stripped
+Program: aire_test_binary_stripped
+SHA-256: 08bbd1f43aecd39b3020290b75e66b4a748109d46c6c8b5c47b27c72f19fb188
+Format: Executable and Linking Format (ELF)
+Architecture: x86:LE:64:default
+Compiler spec: gcc
+Image base: 00400000
+Functions: 34
+Decompiled: 29
+Strings: 48
+Imports: 5
+Exports: 7
+Call edges: 29
+Warnings: 6
+Indexing seconds: 8.475

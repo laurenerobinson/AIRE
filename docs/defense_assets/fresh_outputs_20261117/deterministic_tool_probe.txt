@@ -1,0 +1,119 @@
+TOOLS 27 ['binary_metadata', 'list_functions', 'get_function', 'get_callers', 'get_callees', 'get_xrefs', 'get_function_strings', 'get_thunk_target', 'classify_function', 'find_call_path', 'rank_functions', 'rank_application_functions', 'get_artifacts', 'get_decompiled_text', 'get_assembly', 'crosscheck_function', 'retrieve_evidence', 'security_findings', 'crypto_evidence', 'explain_instructions', 'function_evidence', 'function_cfg', 'branch_paths', 'trace_value', 'parameter_use', 'return_usage', 'crossvalidate_function']
+
+## get_function {'function': 'validate_input'} ok=True 0.42 ms
+{"ok": true, "tool": "get_function", "data": {"function": {"function_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e:004011bc", "binary_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "address": "004011bc", "current_name": "validate_input", "signature": "int __stdcall validate_input(char * text, InputData * data)", "instruction_count": 48, "basic_block_count": 11, "branch_count": 8, "is_external": false, "is_thunk": false, "is_library": null, "namespace": "Global", "calling_convention": "__stdcall", "assembly_truncated": false}, "provenance": {"s
+
+## get_callers {'function': 'validate_input'} ok=True 0.36 ms
+{"ok": true, "tool": "get_callers", "data": {"selected_function": {"function": {"function_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e:004011bc", "binary_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "address": "004011bc", "current_name": "validate_input", "signature": "int __stdcall validate_input(char * text, InputData * data)", "instruction_count": 48, "basic_block_count": 11, "branch_count": 8, "is_external": false, "is_thunk": false, "is_library": null, "namespace": "Global", "calling_convention": "__stdcall", "assembly_truncated": fals
+
+## get_callees {'function': 'validate_input'} ok=True 0.77 ms
+{"ok": true, "tool": "get_callees", "data": {"selected_function": {"function": {"function_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e:004011bc", "binary_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "address": "004011bc", "current_name": "validate_input", "signature": "int __stdcall validate_input(char * text, InputData * data)", "instruction_count": 48, "basic_block_count": 11, "branch_count": 8, "is_external": false, "is_thunk": false, "is_library": null, "namespace": "Global", "calling_convention": "__stdcall", "assembly_truncated": fals
+
+## find_call_path {'source': 'main', 'target': 'calculate_checksum', 'max_depth': 4} ok=True 1.04 ms
+{"ok": true, "tool": "find_call_path", "data": {"found": true, "max_depth": 4, "functions": [{"function": {"function_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e:0040148d", "binary_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "address": "0040148d", "current_name": "main", "signature": "int __stdcall main(int argc, char * * argv)", "instruction_count": 71, "basic_block_count": 10, "branch_count": 8, "is_external": false, "is_thunk": false, "is_library": null, "namespace": "Global", "calling_convention": "__stdcall", "assembly_truncated": fal
+
+## get_function_strings {'function': 'validate_input'} ok=True 0.78 ms
+{"ok": true, "tool": "get_function_strings", "data": {"selected_function": {"function": {"function_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e:004011bc", "binary_id": "be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e", "address": "004011bc", "current_name": "validate_input", "signature": "int __stdcall validate_input(char * text, InputData * data)", "instruction_count": 48, "basic_block_count": 11, "branch_count": 8, "is_external": false, "is_thunk": false, "is_library": null, "namespace": "Global", "calling_convention": "__stdcall", "assembly_truncat
+
+## get_function {'function': 'no_such_function'} ok=False 0.07 ms
+{"ok": false, "tool": "get_function", "error": {"code": "FunctionNotFoundError", "message": "Unknown function 'no_such_function' in binary 'be852ca8fcb0945498f5e778acaa01cdbc064291cca222e039ebc94cb46b488e'"}}
+
+## get_callers {'function': 'validate_input', 'limit': 5000} ok=False 0.01 ms
+{"ok": false, "tool": "get_callers", "error": {"code": "invalid_arguments", "message": "limit is outside allowed bounds"}}
+
+## run_shell {} ok=False 0.00 ms
+{"ok": false, "tool": "run_shell", "error": {"code": "unknown_tool", "message": "Unknown tool"}}
+
+### M10 function (33.9 ms, 20 cited addresses)
+### Function analysis (deterministic evidence)
+
+**Function:** `validate_input` at `0x004011bc` — binary `aire_test_binary` (SHA-256 `be852ca8fcb09454…`, x86:LE:64:default)
+**Evidence source:** Ghidra P-code and instruction facts
+
+**Purpose (evidence-derived, hedged):** Appears to check values against constants and take a separate path when a check fails (an error-style message is referenced).
+
+**Evidence:**
+- Appears to check values against constants and take a separate path when a check fails (an error-style message is referenced) — `0x004011e1`, `0x004011e8`, `0x0040121a`, `0x00401220`, `0x004011ea`, `0x00401222` (compare-with-constant branches plus message references / multiple returns)
+- Contains 1 loop(s); the first is headed at 0x00401238 and exits to 0x00401222, 0x00401242 — `0x00401238`, `0x00401233` (CFG back-edge (dominator analysis))
+- Calls strlen, puts, calculate_checksum — `0x004011d3`, `0x004011ef`, `0x00401227`, `0x00401256` (direct/import call targets)
+- Writes to 2 non-stack memory location(s) (through pointers or globals), i.e. it has side effects beyond its return value — `0x0040124c`, `0x0040125f` (memory stores not relative to the stack/frame pointer)
+- Reads parameter 0 (RDI), parameter 1 (RSI) — `0x004011c4`, `0x004011c8` (read-before-write at entry)
+- `0x004011e1` `JZ 0x004011ea`: branches to `0x004011ea` when qword ptr [RBP + -0x10] == 0x0
+- `0x004011e8` `JBE 0x004011fb`: branches to `0x004011fb` when qword ptr [RBP + -0x10] <= 0x1f (unsigned)
+- `0x0
+
+### M10 branch (0.1 ms, 7 cited addresses)
+### Branch analysis
+
+**Function:** `validate_input` at `0x004011bc` — binary `aire_test_binary` (SHA-256 `be852ca8fcb09454…`, x86:LE:64:default)
+**Evidence source:** Ghidra P-code and instruction facts
+
+`0x004011e1` `JZ 0x004011ea`: Jumps to 0x004011ea when the flag condition ZF holds, i.e. when qword ptr [RBP + -0x10] == 0x0 (flags set by CMP qword ptr [RBP + -0x10],0x0 at 0x004011dc); otherwise continues at 0x004011e3.
+
+**Condition true (branch taken)** → starts at `0x004011ea`; reaches another branch at 0x004011f9 (JMP 0x00401267).
+- `0x004011ea` `MOV EDI,0x402028` — Copies 0x402028 into EDI — 0x00402028 is the address of the string "Input must contain 1 to 31 printable ASCII characters.".
+- `0x004011ef` `CALL 0x00401030` — Calls 0x00401030 (puts); execution resumes at 0x004011f4 after it returns; a return value, if any, is in EAX:4 (Ghidra-recovered int; signature source IMPORTED).
+- `0x004011f4` `MOV EAX,0x0` — Copies 0x0 into EAX.
+- `0x004011f9` `JMP 0x00401267` — Jumps unconditionally to 0x00401267.
+  Calls on this path: puts at `0x004011ef`
+
+**Condition false (falls through)** → starts at `0x004011e3`; reaches another branch at 0x004011e8 (JBE 0x004011fb).
+- `0x004011e3` `CMP qword ptr [RBP + -0x10],0x1f` — Compares qword ptr [RBP + -0x10] with 0x1f by subtraction without storing the result, setting flags (CF, OF, SF, ZF, PF).
+- `0x004011e8` `JBE 0x004011fb` — Jumps to 0x004011fb when the flag condition CF|ZF holds, i.e. when qword ptr [RBP + -0x10] <= 0x1f (unsigned)
+
+### M10 trace (0.9 ms, 3 cited addresses)
+### Value origin
+
+**Function:** `validate_input` at `0x004011bc` — binary `aire_test_binary` (SHA-256 `be852ca8fcb09454…`, x86:LE:64:default)
+**Evidence source:** Ghidra P-code and instruction facts
+
+- [RBP-0x10] at `0x004011dc` ← `0x004011d8` `MOV qword ptr [RBP + -0x10],RAX`: stored value
+  - RAX at `0x004011d8` ← `0x004011d3` `CALL 0x00401040`: return value of the call to strlen
+
+**Limits:** Intra-procedural reaching definitions over register families and frame-pointer stack slots; depth <= 6; memory through other pointers is not tracked.
+
+### M10 trace_PITFALL_unbracketed_slot (0.6 ms, 1 cited addresses)
+### Value origin
+
+**Function:** `validate_input` at `0x004011bc` — binary `aire_test_binary` (SHA-256 `be852ca8fcb09454…`, x86:LE:64:default)
+**Evidence source:** Ghidra P-code and instruction facts
+
+- RBP-0X10 at `0x004011dc` comes from function entry: RBP-0X10 holds its value from function entry (caller-provided or callee-saved state; not a recovered parameter)
+
+**Limits:** Intra-procedural reaching definitions over register families and frame-pointer stack slots; depth <= 6; memory through other pointers is not tracked.
+
+### M10 return_usage (5.9 ms, 2 cited addresses)
+### How the return value is used
+
+**Function:** `validate_input` at `0x004011bc` — binary `aire_test_binary` (SHA-256 `be852ca8fcb09454…`, x86:LE:64:default)
+**Evidence source:** Ghidra P-code and instruction facts
+
+Return storage per Ghidra: EAX:4 (int)
+
+- In `process_input` (call at `0x00401316`): tested at `0x0040131b` → Jumps to 0x00401326 when the flag condition !ZF holds, i.e. when EAX != 0 (flags set by TEST EAX,EAX at 0x0040131b); otherwise continues at 0x0040131f.
+
+**Limits:** straight-line use after each call site, until the register is overwritten or control leaves the block.
+
+### M10 crossvalidate (1.2 ms, 6 cited addresses)
+### Does the assembly support the decompiled code?
+
+**Function:** `validate_input` at `0x004011bc` — binary `aire_test_binary` (SHA-256 `be852ca8fcb09454…`, x86:LE:64:default)
+**Evidence source:** Ghidra P-code and instruction facts
+
+**Verdict:** CONSISTENT
+*Core checks (calls, string references, control flow, return value) decide CONSISTENT; any check can raise a POTENTIAL DISCREPANCY; constants, global data and arithmetic are supporting evidence.*
+
+- **call_targets** — CONSISTENT: All 3 assembly call target(s) appear in the decompiled text.
+- **string_references** — CONSISTENT: All 2 referenced string(s) appear in the decompiled text.
+- **control_flow** — CONSISTENT: 5 conditional branch(es), 1 back-edge(s); decompiled text has 10 conditional construct(s) and 1 loop(s).
+  - Branch and construct counts are not expected to be equal (short-circuit conditions, loop rotation, merged conditions); only presence is compared.
+- **return_value** — CONSISTENT: 2 value return(s) in the decompiled text; return register written before RET on 1/1 RET path(s).
+- **constants** — CONSISTENT: All 2 immediate constant(s) appear in the decompiled text.
+- **global_data** — CONSISTENT: No direct global-data accesses (other than strings).
+- **arithmetic** — INSUFFICIENT EVIDENCE: No recognized arithmetic operations to compare.
+
+Different-but-equivalent forms are not reported as discrepancies; POTENTIAL DISCREPANCY means analyst review is warranted, not that the decompiler is wrong.
+
+DB_SHA256_BEFORE f88fa14e2e1098fd0459e16aad23a855583ad2966b80911b7c46a8fa22b1d379 
+DB_SHA256_AFTER  f88fa14e2e1098fd0459e16aad23a855583ad2966b80911b7c46a8fa22b1d379 
+UNCHANGED True

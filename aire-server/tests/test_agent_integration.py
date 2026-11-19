@@ -84,7 +84,8 @@ class AgentIntegrationTests(unittest.TestCase):
 
     @unittest.skipUnless(os.environ.get('AIRE_RUN_AGENT_LIVE_TESTS') == '1', 'Opt-in agent Ollama validation')
     def test_live_demo(self):
-        client = OllamaClient(timeout_seconds=120)
+        client = OllamaClient(timeout_seconds=120,
+            allow_remote_host=os.environ.get('AIRE_OLLAMA_ALLOW_REMOTE') == '1')
         self.assertIn(client.model, client.list_models(), 'Selected model must already be installed')
         index = self.indices['debug']
         session = AgentSession(index.binary.binary_id)

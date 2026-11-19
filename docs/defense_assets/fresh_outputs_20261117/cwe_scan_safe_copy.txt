@@ -1,0 +1,26 @@
+A.I.R.E. security signals for b0af2881fbc03871a8d353545f29aff5590878d1499078e6c538d78d8ea6847c
+Rules evaluated: 2; failed: 0
+
+[AIRE-CWE-120-UNBOUNDED-COPY v1.0.0]
+Status: NOT_APPLICABLE
+No exact strcpy import/external/thunk prerequisite is stored.
+- Stored analysis_completed coverage fields: true.
+- Stored options coverage fields: {"include_call_edges": true, "include_imports": true}.
+Limit: Destination capacity and source length have not been proven.
+Limit: External input control, reachability and runtime API binding have not been established.
+Limit: No argument, taint, source/sink flow or surrounding bounds-check analysis is performed.
+Limit: This is a security signal requiring analyst review, not a confirmed vulnerability.
+Limit: Absence applies only to the stored analyzed facts; it is not a safety assessment.
+
+[AIRE-CWE-242-DANGEROUS-API v1.0.0]
+Status: NOT_APPLICABLE
+No exact gets import/external/thunk prerequisite is stored.
+- Stored analysis_completed coverage fields: true.
+- Stored options coverage fields: {"include_call_edges": true, "include_imports": true}.
+Limit: Destination capacity and source length have not been proven.
+Limit: External input control, reachability and runtime API binding have not been established.
+Limit: No argument, taint, source/sink flow or surrounding bounds-check analysis is performed.
+Limit: This is a security signal requiring analyst review, not a confirmed vulnerability.
+Limit: Absence applies only to the stored analyzed facts; it is not a safety assessment.
+Note: Static stored-fact scope only; signals/candidates are not confirmed vulnerabilities or exploitability estimates.
+Note: The stored index contains 6 diagnostics; unresolved calls are not inferred.
