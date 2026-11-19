@@ -1,5 +1,10 @@
 # Archive audit and migration report
 
+> **Scope note (2026-11-19).** This is the original *archive reconstruction
+> and migration* audit (M0). It is preserved as history. The current
+> whole-repository audit is
+> [REPOSITORY_AUDIT_2026-11-19.md](REPOSITORY_AUDIT_2026-11-19.md).
+
 ## Archive location and preservation
 
 The supplied workspace had no original-devx/ directory. Its extracted archive

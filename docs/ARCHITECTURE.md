@@ -5,6 +5,10 @@ and local Ollama inference (`qwen2.5-coder:1.5b`, port 11434). Ubuntu in
 VirtualBox runs the API, Ghidra/PyGhidra and the SQLite analysis store. The
 addresses below describe this NAT configuration, not portable defaults.
 See [Windows launch instructions](../README.md#running-aire-with-windows-host-inference).
+Detailed end-to-end flows with source references are in
+[SYSTEM_DATA_FLOW.md](SYSTEM_DATA_FLOW.md). Routes, schema and interfaces are
+in [API_AND_DATA_REFERENCE.md](API_AND_DATA_REFERENCE.md). Both were audited
+on 2026-11-19.
 
 ```mermaid
 flowchart LR

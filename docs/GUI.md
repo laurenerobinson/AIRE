@@ -24,6 +24,14 @@ aire-server/.venv/bin/aire gui tests/fixtures/simple_elf/aire_test_binary \
   --database analysis.sqlite
 ```
 
+> **2026-11-19 note.** The root `analysis.sqlite` (Oct 8) predates M10. It has
+> no `function_ir` table, so Function-explorer answers fall back to the
+> lower-confidence `assembly_text` source, and intake re-indexes known
+> binaries. For demonstrations, use
+> `demo_artifacts/m10/defense_20261117/demo.sqlite` or
+> `demo_artifacts/m10/m10.sqlite`. Both are Git-ignored local stores; see the
+> [defense runbook](DEFENSE_DEMO_RUNBOOK_2026-11-20.md).
+
 An optional selected binary must already exist in the persisted analysis database. As
 with `aire chat`, a file argument is resolved by SHA-256, while a stored binary
 ID or unique stored name also works. If the binary argument is omitted, the GUI

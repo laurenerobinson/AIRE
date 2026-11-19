@@ -8,6 +8,14 @@
 > Earlier Phase 2: 625 executed / 621 passed / 4 skipped, preserved separately
 > in [M10_SECURITY_HARDENING.md](M10_SECURITY_HARDENING.md). Neither result
 > completes Windows Chrome/NAT/listener verification or full M10 evaluation.
+>
+> **Fresh 2026-11-19 runs:**
+>
+> - default suite: 649 / 617 passed / 32 skips;
+> - Ghidra suite: 649 / 644 passed / 5 skips (live model and browser off);
+> - no failures.
+>
+> Details: [TEST_VALIDATION_2026-11-19.md](TEST_VALIDATION_2026-11-19.md).
 
 Reconstruction checks were performed without installing packages or executing
 test binaries. No Ghidra UI or model session was started.

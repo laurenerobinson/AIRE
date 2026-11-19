@@ -24,8 +24,11 @@ M7 evaluates versioned, deterministic CWE rules over stored facts, without a mod
 Its `strcpy` and `gets` signals preserve callsite/import provenance and require
 analyst review; they do not establish a vulnerability.
 See [M7 security rules](docs/M7_SECURITY_RULES.md), [M6 naming](docs/M6_NAMING.md) and [M5 chat](docs/M5_CHAT.md).
-M8 adds 18 read-only tools, immediate operational activity, bounded model actions,
-binary-scoped follow-up sessions and `aire chat <binary>` over an existing database.
+M8 added the agent: 18 read-only tools, immediate operational activity, bounded
+model actions, binary-scoped follow-up sessions and `aire chat <binary>` over an
+existing database. The current registry has **27** tools; M9 added
+`crypto_evidence` and M10 added eight assembly-intelligence tools (verified
+2026-11-19).
 See [agent architecture, CLI and validation](docs/M8_AGENT.md).
 Exact function/string and data references and separate thunk bindings are persisted
 in schema v2. Agent tools and evidence citations now expose these relationships;
@@ -265,6 +268,16 @@ This is attributed evidence, not a fresh run or Windows Chrome certification.
 The earlier Phase 2 result remains **621 passed / 4 skipped** separately.
 See [defense notes and evidence ledger](docs/MS_DEFENSE_M10.md) and the
 [documentation audit](docs/M10_DOCUMENTATION_UPDATE_2026-11-17.md).
+
+**Fresh 2026-11-19 audit run** (Python 3.12.3, live model and browser tests off):
+
+- default suite: **649 run, 617 passed, 32 opt-in skips**, 0 failures;
+- Ghidra-enabled suite: **649 run, 644 passed, 5 skips** (4 live-model,
+  1 browser), 0 failures, 11 min.
+
+See the [test validation report](docs/TEST_VALIDATION_2026-11-19.md), the
+[repository audit](docs/REPOSITORY_AUDIT_2026-11-19.md) and the
+[documentation index](docs/DOCUMENTATION_INDEX.md).
 
 ## Roadmap
 

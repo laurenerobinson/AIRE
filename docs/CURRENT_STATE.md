@@ -1,5 +1,20 @@
 # Current state
 
+> **2026-11-19 audit update.** The source was re-inspected and both suites
+> re-run:
+>
+> - default suite: 649 run / 617 passed / 32 opt-in skips;
+> - Ghidra-enabled suite: 649 / 644 / 5 skips (4 live-model, 1 browser);
+> - no failures in either.
+>
+> The agent registry has **27** tools. A fresh read-only probe answered 13
+> of 14 representative questions with no model call. Live model generation
+> and the Windows-side checks remain unverified. Sources:
+> [REPOSITORY_AUDIT_2026-11-19.md](REPOSITORY_AUDIT_2026-11-19.md),
+> [TEST_VALIDATION_2026-11-19.md](TEST_VALIDATION_2026-11-19.md) and
+> [FEATURE_TRACEABILITY.md](FEATURE_TRACEABILITY.md). The text below
+> preserves the November 17 and earlier measurements unchanged.
+
 As of November 17, 2026, M1–M10 functionality includes the Python GUI/API,
 format-aware ELF/PE intake, reference/thunk and crypto evidence, and M10
 instruction IR, explanations, CFG/loop/limited value-flow reasoning and

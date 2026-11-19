@@ -40,6 +40,10 @@ aire-server/.venv/bin/aire gui tests/fixtures/simple_elf/aire_test_binary \
   --database analysis.sqlite
 ```
 
+`analysis.sqlite` has no M10 instruction facts. Prefer
+`demo_artifacts/m10/defense_20261117/demo.sqlite` or
+`demo_artifacts/m10/m10.sqlite` (local, Git-ignored). See
+[BUG_AND_RISK_REGISTER.md](../docs/BUG_AND_RISK_REGISTER.md) BR-05.
 The selected binary must already be indexed in the database. The default origin is
 `http://127.0.0.1:8765/`; open the full per-launch tokenized URL printed by the
 server. Use `--no-browser` to skip automatic browser launch.
@@ -61,6 +65,14 @@ or errors / four live-model skips, with Ghidra and headless Ubuntu Firefox
 155.0.1 enabled. These results were not independently rerun for the documentation
 update. The earlier Phase 2 621-pass result is separate; see
 [security evidence](../docs/HOST_ACCESS_SECURITY_REVIEW.md).
+
+Fresh 2026-11-19 runs with live models and the browser test off:
+
+- default suite: 649 / 617 passed / 32 skips;
+- Ghidra-enabled suite: 649 / 644 passed / 5 skips;
+- no failures.
+
+See [TEST_VALIDATION_2026-11-19.md](../docs/TEST_VALIDATION_2026-11-19.md).
 PyGhidra is an optional `indexing` dependency; pure record/unit-test imports do
 not need it. Use the existing configured venv; no installation is needed here.
 

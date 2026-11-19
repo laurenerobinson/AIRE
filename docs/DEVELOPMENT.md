@@ -10,8 +10,25 @@ build guidance below is separate from the Python browser/API workflow. The
 November 17 Codex audit used Python 3.12.3 and reported 645 passes out of 649
 executed, four live-model skips, zero failures/errors, with Ghidra and headless
 Ubuntu Firefox 155.0.1. See [host-access review](HOST_ACCESS_SECURITY_REVIEW.md)
-for controls and the outstanding Windows checks. No full suite was rerun for
-documentation maintenance.
+for controls and the outstanding Windows checks.
+
+On 2026-11-19 both suites were re-run with live models disabled:
+
+- default: 649 / 617 passed / 32 skips;
+- Ghidra: 649 / 644 passed / 5 skips;
+- no failures.
+
+See [TEST_VALIDATION_2026-11-19.md](TEST_VALIDATION_2026-11-19.md).
+
+On this VM the login shell exports a *guest* `AIRE_OLLAMA_HOST`/`AIRE_OLLAMA_MODEL`.
+In-VM inference has frozen the guest before. To guarantee that no model
+runs, start test runs like this:
+
+```bash
+ulimit -c 0
+env -u AIRE_OLLAMA_MODEL -u AIRE_OLLAMA_HOST -u AIRE_OLLAMA_NUM_CTX -u AIRE_OLLAMA_ALLOW_REMOTE \
+  PYTHONPATH=aire-server/src aire-server/.venv/bin/python -m unittest discover -s aire-server/tests
+```
 
 ## Ghidra
 

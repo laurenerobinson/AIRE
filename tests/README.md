@@ -79,6 +79,13 @@ The demo in [docs/AIRE_DEMO_SCRIPT.md](../docs/AIRE_DEMO_SCRIPT.md) is historica
 presentation material, not an automated evaluation. Model outputs are variable;
 expected suggestions, confidence and insufficient-evidence responses are not
 asserted test results. No integration suite existed in the archive.
+*2026-11-19 note:* `aire-server/tests/` now contains 13 Ghidra-gated
+integration modules (`AIRE_RUN_GHIDRA_TESTS=1`). They cover these
+fixtures, the simple ELF fixtures, the M9 PEs and the M7 controls. All passed
+on 2026-11-19; see
+[TEST_VALIDATION_2026-11-19.md](../docs/TEST_VALIDATION_2026-11-19.md).
+`tests/fixtures/simple_elf/build.sh` *runs* the binaries it builds. Never
+use it during a demonstration.
 The Python tests now cover M1 identities, options, bounds, JSON serialization,
 failure recovery, and evidence isolation. The opt-in real Ghidra integration
 test verifies the controlled stripped fixture without executing it. See

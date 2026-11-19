@@ -6,6 +6,13 @@ does not imply completed evaluation. [M10 Phase 6](M10_CHECKPOINT.md) remains
 incomplete; Windows deployment verification and defense rehearsal are pending.
 See [architecture](ARCHITECTURE.md) and [defense evidence](MS_DEFENSE_M10.md).
 
+**2026-11-19 audit status.** Both test suites pass on the current tree (see
+[TEST_VALIDATION_2026-11-19.md](TEST_VALIDATION_2026-11-19.md)). Feature
+status is traced to source and tests in
+[FEATURE_TRACEABILITY.md](FEATURE_TRACEABILITY.md). Open defects and risks are
+in [BUG_AND_RISK_REGISTER.md](BUG_AND_RISK_REGISTER.md). M11 and M12 remain
+planned.
+
 M0 is established. M1 is complete with a passing real controlled-binary
 integration test. M2 is complete with a passing real SQLite round trip.
 M3 is complete with passing deterministic query tests and real persisted-graph
@@ -143,8 +150,11 @@ and remains future work. No target execution or automatic write-back is implemen
 
 
 Expand the small deterministic security checks and begin richer source/sink/
-context analysis with explicit provenance and positive/negative controls. First
-address persisted thunk binding and bounded argument/source/destination facts,
+context analysis with explicit provenance and positive/negative controls.
+Thunk bindings are already persisted (`thunk_relations`, schema v2). The M7
+rules do not yet consume them, so ELF PLT signals stay LOW strength
+([BR-12](BUG_AND_RISK_REGISTER.md)).
+First use those bindings and add bounded argument/source/destination facts,
 then design rules that can use those facts without guessing missing flows.
 Preserve SIGNAL/CANDIDATE versus confirmed-vulnerability distinctions. Do not
 introduce model-created findings, target execution or automatic changes as part

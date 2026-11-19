@@ -131,7 +131,16 @@ not provide a hard wall-clock execution guarantee. CLI Ctrl-C returns 130.
 | `retrieve_evidence` | optional `function`, `max_chars` | M4 target or M5 overview bundle |
 | `security_findings` | none | M7 evaluations, evidence, findings and qualifications |
 
-The current catalog contains 18 tools. Function selectors match exact stored IDs,
+At M8 completion the catalog contained the 18 tools above.
+
+**2026-11-19 audit:** the live registry (`agent/tools.py:124-188`) contains
+**27** tools: the 18 above, plus `crypto_evidence` (M9) and eight M10 tools.
+The M10 tools are `explain_instructions`, `function_evidence`, `function_cfg`,
+`branch_paths`, `trace_value`, `parameter_use`, `return_usage` and
+`crossvalidate_function`. See
+[API_AND_DATA_REFERENCE.md §5](API_AND_DATA_REFERENCE.md#5-agent-tool-catalog-27-tools-agenttoolspy124-188).
+
+Function selectors match exact stored IDs,
 names or address text. Ambiguous names remain errors. Function-local strings use
 stored reference IDs and exact instruction/data addresses; other artifacts retain
 binary scope. Missing code or stored

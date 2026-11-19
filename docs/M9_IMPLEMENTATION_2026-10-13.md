@@ -1,5 +1,10 @@
 # M9 foundation implementation — October 13, 2026
 
+> **Historical record.** These are the October 13 changes and results. For
+> the state verified on 2026-11-19, see
+> [REPOSITORY_AUDIT_2026-11-19.md](REPOSITORY_AUDIT_2026-11-19.md) and
+> [FEATURE_TRACEABILITY.md](FEATURE_TRACEABILITY.md).
+
 ## Audit and scope
 
 The complete research document was read before changes. It exists at
